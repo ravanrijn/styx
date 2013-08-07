@@ -8,6 +8,11 @@ Styx is a web console for Cloud Foundry V2.
 2. Create a new war using mvn clean package
 3. Push Styx to your Cloud Foundry
 
+# Screenshots
+
+![App Spaces](https://raw.github.com/ravanrijn/styx/master/appspaces.png)
+![App](https://raw.github.com/ravanrijn/styx/master/app.png)
+
 
 
 
