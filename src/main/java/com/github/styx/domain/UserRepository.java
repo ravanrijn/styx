@@ -23,7 +23,7 @@ public class UserRepository extends BaseRepository {
     @Autowired
     protected UserRepository(RestTemplate restTemplate, AsyncTaskExecutor asyncTaskExecutor, ObjectMapper objectMapper, String apiBaseUri, String uaaBaseUri, String loginBaseUri) {
         super(restTemplate, asyncTaskExecutor, objectMapper, apiBaseUri, uaaBaseUri);
-        this.loginBaseUri = loginBaseUri;
+        this.loginBaseUri = concatSlashIfNeeded(loginBaseUri);
     }
 
     public UserDetails login(String username, String password) {

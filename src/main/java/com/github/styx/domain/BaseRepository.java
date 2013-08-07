@@ -27,8 +27,15 @@ public abstract class BaseRepository {
         this.restTemplate = restTemplate;
         this.asyncTaskExecutor = asyncTaskExecutor;
         this.objectMapper = objectMapper;
-        this.apiBaseUri = apiBaseUri;
-        this.uaaBaseUri = uaaBaseUri;
+        this.apiBaseUri = concatSlashIfNeeded(apiBaseUri);
+        this.uaaBaseUri = concatSlashIfNeeded(uaaBaseUri);
+    }
+
+    protected String concatSlashIfNeeded(String uri) {
+        if (!uri.endsWith("/")) {
+            return uri.concat("/");
+        }
+        return uri;
     }
 
     protected ObjectMapper getMapper() {
