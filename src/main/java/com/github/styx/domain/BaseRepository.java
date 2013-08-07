@@ -85,8 +85,12 @@ public abstract class BaseRepository {
         return exchange(token, uaaBaseUri, HttpMethod.GET, path);
     }
 
-    protected ResponseEntity<String> apiGet(String token, String path) {
-        return exchange(token, apiBaseUri, HttpMethod.GET, path);
+    protected String apiGet(String token, String path) {
+        ResponseEntity<String> responseEntity = exchange(token, apiBaseUri, HttpMethod.GET, path);
+        if (!responseEntity.getStatusCode().equals(HttpStatus.OK)) {
+            throw new RepositoryException("Cannot perform api get for path [" + path + "]", responseEntity);
+        }
+        return responseEntity.getBody();
     }
 
     protected ResponseEntity<String> apiDelete(String token, String path) {
@@ -107,7 +111,7 @@ public abstract class BaseRepository {
         httpHeaders.add("Accept", "application/json");
         httpHeaders.add("Authorization", token);
         try {
-            return restTemplate.exchange(baseUri.concat(path), method, new HttpEntity<>(httpHeaders), String.class);
+            return restTemplate.exchange(baseUri.concat(path), method, new HttpEntity(httpHeaders), String.class);
         } catch (HttpClientErrorException e) {
             return new ResponseEntity(e.getResponseBodyAsString(), e.getResponseHeaders(), e.getStatusCode());
         }

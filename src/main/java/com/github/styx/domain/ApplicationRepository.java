@@ -72,7 +72,7 @@ public class ApplicationRepository extends BaseRepository {
     }
 
     public ResponseEntity<String> getInstanceLog(String token, String id, String instance, String logName) {
-        return apiGet(token, "v2/apps/".concat(id).concat("/instances/").concat(instance).concat("/files/logs/").concat(logName).concat(".log"));
+        return new ResponseEntity(apiGet(token, "v2/apps/".concat(id).concat("/instances/").concat(instance).concat("/files/logs/").concat(logName).concat(".log")), HttpStatus.OK);
     }
 
 }

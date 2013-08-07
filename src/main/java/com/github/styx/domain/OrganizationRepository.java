@@ -31,13 +31,9 @@ public class OrganizationRepository extends BaseRepository {
     }
 
     public void deleteById(String token, String id) {
-        ResponseEntity<String> organizationResponseEntity = apiGet(token, "v2/organizations/".concat(id).concat("?inline-relations-depth=1"));
-        if (!organizationResponseEntity.getStatusCode().equals(HttpStatus.OK)) {
-            throw new RepositoryException("Unable to get organization", organizationResponseEntity);
-        }
-
+        String organizationResponse = apiGet(token, "v2/organizations/".concat(id).concat("?inline-relations-depth=1"));
         try {
-            Object response = getMapper().readValue(organizationResponseEntity.getBody(), new TypeReference<Map<String, Object>>() {});
+            Object response = getMapper().readValue(organizationResponse, new TypeReference<Map<String, Object>>() {});
             for (Object app : eval("entity.spaces", response, List.class)) {
                 spaceRepository.deleteById(token, evalToString("metadata.guid", app));
             }
@@ -52,35 +48,29 @@ public class OrganizationRepository extends BaseRepository {
     }
 
     public Organization getById(final String token, final String id, final int depth) {
-        final ResponseEntity<String> organizationResponseEntity = apiGet(token, "v2/organizations/".concat(id).concat("?inline-relations-depth=").concat(valueOf(depth)));
-        if (organizationResponseEntity.getStatusCode().equals(HttpStatus.OK)) {
-            try {
-                final Organization organization = Organization.fromCloudFoundryModel(getMapper().readValue(organizationResponseEntity.getBody(), new TypeReference<Map<String, Object>>() {}));
-                return appendUsername(token, organization);
-            } catch (IOException e) {
-                throw new RepositoryException("Unable to map JSON response.", e);
-            }
+        String organizationResponse = apiGet(token, "v2/organizations/".concat(id).concat("?inline-relations-depth=").concat(valueOf(depth)));
+        try {
+            final Organization organization = Organization.fromCloudFoundryModel(getMapper().readValue(organizationResponse, new TypeReference<Map<String, Object>>() {}));
+            return appendUsername(token, organization);
+        } catch (IOException e) {
+            throw new RepositoryException("Unable to map JSON response.", e);
         }
-        throw new RepositoryException("Unable to map JSON response.", organizationResponseEntity);
     }
 
     public List<Organization> getAll(String token, int depth) {
-        final ResponseEntity<String> organizationResponseEntity = apiGet(token, "v2/organizations?inline-relations-depth=".concat(valueOf(depth)));
-        if (organizationResponseEntity.getStatusCode().equals(HttpStatus.OK)) {
-            try {
-                List<Organization> organizations = new ArrayList<>();
+        String organizationResponse = apiGet(token, "v2/organizations?inline-relations-depth=".concat(valueOf(depth)));
+        try {
+            List<Organization> organizations = new ArrayList<>();
 
-                Object response = getMapper().readValue(organizationResponseEntity.getBody(), new TypeReference<Map<String, Object>>() {});
-                for (Object organizationResource : eval("resources", response, List.class)) {
-                    Organization organization = Organization.fromCloudFoundryModel(organizationResource);
-                    organizations.add(appendUsername(token, organization));
-                }
-                return organizations;
-            } catch (IOException e) {
-                throw new RepositoryException("Unable to map JSON response.", e);
+            Object response = getMapper().readValue(organizationResponse, new TypeReference<Map<String, Object>>() {});
+            for (Object organizationResource : eval("resources", response, List.class)) {
+                Organization organization = Organization.fromCloudFoundryModel(organizationResource);
+                organizations.add(appendUsername(token, organization));
             }
+            return organizations;
+        } catch (IOException e) {
+            throw new RepositoryException("Unable to map JSON response.", e);
         }
-        throw new RepositoryException("Unable to map JSON response.", organizationResponseEntity);
     }
 
 }
