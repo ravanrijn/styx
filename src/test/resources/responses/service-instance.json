@@ -1,0 +1,107 @@
+{
+    "metadata": {
+        "guid": "4bb5ef8f-d37f-481a-992f-9b30c780187c",
+        "url": "/v2/service_instances/4bb5ef8f-d37f-481a-992f-9b30c780187c",
+        "created_at": "2013-07-19 15:41:46 +0200",
+        "updated_at": null
+    },
+    "entity": {
+        "name": "mysql",
+        "credentials": {
+            "name": "d64c1e89a179f4ce88b6e2f9786a01d6e",
+            "hostname": "172.21.28.144",
+            "host": "172.21.28.144",
+            "port": 3307,
+            "user": "ul4SQr9gV0bcU",
+            "username": "ul4SQr9gV0bcU",
+            "password": "pU0CC1nDa5Ece",
+            "node_id": "mysql_node_default_0"
+        },
+        "service_plan_guid": "df1bec3f-3a08-4114-97d9-70646fdb3c57",
+        "space_guid": "a4341e52-a6e4-47b5-b528-578ec95df851",
+        "gateway_data": {
+            "plan": "default",
+            "version": "5.5"
+        },
+        "dashboard_url": null,
+        "space_url": "/v2/spaces/a4341e52-a6e4-47b5-b528-578ec95df851",
+        "space": {
+            "metadata": {
+                "guid": "a4341e52-a6e4-47b5-b528-578ec95df851",
+                "url": "/v2/spaces/a4341e52-a6e4-47b5-b528-578ec95df851",
+                "created_at": "2013-07-19 13:36:37 +0200",
+                "updated_at": "2013-07-19 16:17:12 +0200"
+            },
+            "entity": {
+                "name": "development",
+                "organization_guid": "c188e4c7-1641-4124-9c1f-8f17ced7bd62",
+                "organization_url": "/v2/organizations/c188e4c7-1641-4124-9c1f-8f17ced7bd62",
+                "developers_url": "/v2/spaces/a4341e52-a6e4-47b5-b528-578ec95df851/developers",
+                "managers_url": "/v2/spaces/a4341e52-a6e4-47b5-b528-578ec95df851/managers",
+                "auditors_url": "/v2/spaces/a4341e52-a6e4-47b5-b528-578ec95df851/auditors",
+                "apps_url": "/v2/spaces/a4341e52-a6e4-47b5-b528-578ec95df851/apps",
+                "domains_url": "/v2/spaces/a4341e52-a6e4-47b5-b528-578ec95df851/domains",
+                "service_instances_url": "/v2/spaces/a4341e52-a6e4-47b5-b528-578ec95df851/service_instances",
+                "app_events_url": "/v2/spaces/a4341e52-a6e4-47b5-b528-578ec95df851/app_events"
+            }
+        },
+        "service_plan_url": "/v2/service_plans/df1bec3f-3a08-4114-97d9-70646fdb3c57",
+        "service_plan": {
+            "metadata": {
+                "guid": "df1bec3f-3a08-4114-97d9-70646fdb3c57",
+                "url": "/v2/service_plans/df1bec3f-3a08-4114-97d9-70646fdb3c57",
+                "created_at": "2013-07-19 13:01:55 +0200",
+                "updated_at": "2013-07-23 15:25:02 +0200"
+            },
+            "entity": {
+                "name": "default",
+                "free": true,
+                "description": "Shared server, shared VM, 1MB memory, 10MB storage, 10 connections",
+                "service_guid": "c106ea73-4b84-4bfd-8869-b83d3cb86f9d",
+                "extra": "",
+                "unique_id": "",
+                "service_url": "/v2/services/c106ea73-4b84-4bfd-8869-b83d3cb86f9d",
+                "service_instances_url": "/v2/service_plans/df1bec3f-3a08-4114-97d9-70646fdb3c57/service_instances"
+            }
+        },
+        "service_bindings_url": "/v2/service_instances/4bb5ef8f-d37f-481a-992f-9b30c780187c/service_bindings",
+        "service_bindings": [
+            {
+                "metadata": {
+                    "guid": "0f6ba88b-5b90-4294-a560-856ad739c6f6",
+                    "url": "/v2/service_bindings/0f6ba88b-5b90-4294-a560-856ad739c6f6",
+                    "created_at": "2013-07-19 15:42:06 +0200",
+                    "updated_at": null
+                },
+                "entity": {
+                    "app_guid": "bc931cab-f695-40e5-93f8-5e82215e9ea8",
+                    "service_instance_guid": "4bb5ef8f-d37f-481a-992f-9b30c780187c",
+                    "credentials": {
+                        "name": "d64c1e89a179f4ce88b6e2f9786a01d6e",
+                        "hostname": "172.21.28.144",
+                        "host": "172.21.28.144",
+                        "port": 3307,
+                        "user": "u0RK0WuIPpQ6R",
+                        "username": "u0RK0WuIPpQ6R",
+                        "password": "pDNnkegaqnPIu"
+                    },
+                    "binding_options": {
+
+                    },
+                    "gateway_data": {
+                        "plan": "default",
+                        "version": "5.5",
+                        "data": {
+                            "binding_options": {
+
+                            }
+                        }
+                    },
+                    "gateway_name": "9b6b5285-53e1-4cae-887b-8afff8d65fd2",
+                    "app_url": "/v2/apps/bc931cab-f695-40e5-93f8-5e82215e9ea8",
+                    "service_instance_url": "/v2/service_instances/4bb5ef8f-d37f-481a-992f-9b30c780187c"
+                }
+            }
+        ]
+    }
+}

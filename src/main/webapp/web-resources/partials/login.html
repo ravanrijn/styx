@@ -1,0 +1,38 @@
+<div class="container">
+    <div ng-show="error" class="alert alert-error">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Error!</strong> {{error}}
+    </div>
+    <div ng-show="authenticating">
+        <div class="well loading-well">
+            <div class="row-fluid">
+                <div class="span12">
+                    <h3 class="text-center">Hold on...</h3>
+                    <h5 class="text-center">We are validating your request!</h5>
+                    <div spin="defaultSpinnerConfig" spin-if="authenticating"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div ng-hide="authenticating">
+        <div class="row">
+            <div class="span4 offset4">
+                <div class="well well-large text-center">
+                    <h2 class="form-signin-heading">Please sign in...</h2>
+
+                    <form name="loginForm" class="form-signin" novalidate>
+                        <input name="userForm.email" id="username" type="text" class="input-block-level" placeholder="Email" ng-model="userForm.email" required>
+                        <input name="userForm.password" id="password" type="password" class="input-block-level" placeholder="Password" ng-model="userForm.password" required>
+                        <button class="btn btn-large btn-primary" ng-click="login(userForm)" ng-disabled="authenticate">Sign in</button>
+                    </form>
+
+                    <div spin="loginSpinnerConfig" spin-if="authenticate"></div>
+
+                    <ul ng-show="status.error" class="nav nav-list">
+                        <li><span class="label label-important">{{status.error}}</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

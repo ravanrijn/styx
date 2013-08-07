@@ -1,0 +1,105 @@
+<div class="container">
+    <div ng-show="error" class="alert alert-error">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Error!</strong> {{error}}
+    </div>
+    <div ng-show="loading">
+        <div class="well loading-well">
+            <div class="row-fluid">
+                <div class="span12">
+                    <h3 class="text-center">Hold on...</h3>
+                    <h5 class="text-center">We are loading your application!</h5>
+                    <div spin="defaultSpinnerConfig" spin-if="loading"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div ng-hide="loading">
+        <div class="well well-small">
+            <div class="well well-small light">
+                <h5 class="uppercase">{{application.name}}</h5>
+                <table class="table table-condensed">
+                    <thead>
+                    <tr>
+                        <th>HEALTH</th>
+                        <th>INSTANCES</th>
+                        <th>MEMORY</th>
+                        <th>BUILDPACK</th>
+                        <th>ENV</th>
+                        <th>URLS</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td><span class="badge badge-success" ng-show="application.state == 'STARTED'">{{application.health}}%</span>
+                            <span class="badge badge-important" ng-hide="application.state == 'STARTED'">{{application.health}}%</span></td>
+                        <td>{{application.instances}}</td>
+                        <td>{{application.memory}} MB</td>
+                        <td>{{application.buildpack}}</td>
+                        <td>{{application.environment}}</td>
+                        <td><div ng-repeat="url in application.urls">
+                                <a href="http://{{url}}">{{url}}</a>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <button class="btn btn-danger" data-toggle="modal" data-target="#modal">DELETE APP</button>
+            </div>
+
+            <div class="well well-small light">
+                <h5>BOUND SERVICES <span class="badge">{{application.serviceInstances.length}}</span></h5>
+                <table class="table table-condensed">
+                    <thead>
+                    <tr>
+                        <th>NAME</th>
+                        <th>SERVICE</th>
+                        <th>PLAN LEVEL</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="service in application.serviceInstances">
+                        <td>{{service.name}}</td>
+                        <td>{{service.servicePlan.service.provider}} {{service.servicePlan.service.name}} {{service.servicePlan.service.version}}</td>
+                        <td><a href="#" tooltip="{{service.servicePlan.description}}">{{service.servicePlan.name}}</a>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="well well-small light">
+                <h5>INSTANCES <span class="badge">{{application.instances}}</span></h5>
+                <table class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th>INSTANCE</th>
+                            <th>STATE</th>
+                            <th>IP</th>
+                            <th>PORT</th>
+                            <th>LOGS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="instance in application.applicationInstances">
+                            <td>{{$index}}</td>
+                            <td>{{instance.state}}</td>
+                            <td>{{instance.consoleIp}}</td>
+                            <td>{{instance.consolePort}}</td>
+                            <td><div><a href="#/app-log/{{organizationId}}/{{application.id}}/{{$index}}/stdout">stdout.log</a></div>
+                                <div><a href="#/app-log/{{organizationId}}/{{application.id}}/{{$index}}/stderr">stderr.log</a></div></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div id="modal" class="modal hide fade">
+        <div class="modal-body">
+            <p>Are you sure you want to delete this application?</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">CANCEL</button>
+            <button class="btn btn-danger" data-dismiss="modal" aria-hidden="true" ng-click="deleteApplication()">DELETE APP</button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,22 @@
+<div class="container">
+    <div ng-show="error" class="alert alert-error">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Error!</strong> {{error}}
+    </div>
+    <div class="well well-small">
+        <h5>Create Organization</h5>
+        <form name="organizationForm" class="form-horizontal">
+            <div class="control-group">
+                <label class="control-label" for="name">ORGANIZATION NAME</label>
+                <div class="controls">
+                    <input type="text" id="name" placeholder="Name" ng-model="organizationForm.name">
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <a href="#" class="btn" ng-click="createOrganization(organizationForm)">Create</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

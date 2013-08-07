@@ -1,0 +1,20 @@
+{
+    "metadata": {
+        "guid": "c2538b46-89a0-47d1-9f60-15698993a650",
+        "url": "/v2/services/c2538b46-89a0-47d1-9f60-15698993a650",
+        "created_at": "2013-07-19 13:01:54 +0200",
+        "updated_at": "2013-07-22 11:00:42 +0200"
+    },
+    "entity": {
+        "label": "postgresql",
+        "provider": "core",
+        "url": "http://172.21.28.144:42234",
+        "description": "PostgreSQL database (vFabric)",
+        "version": "9.1",
+        "info_url": null,
+        "active": true,
+        "unique_id": "core_postgresql",
+        "extra": null,
+        "service_plans_url": "/v2/services/c2538b46-89a0-47d1-9f60-15698993a650/service_plans"
+    }
+}

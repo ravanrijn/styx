@@ -1,0 +1,29 @@
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="brand" href="#">Cloud Foundry</a>
+            <div ng-hide="loadingData">
+                <ul class="nav">
+                    <li class="dropdown uppercase">
+                        <a class="dropdown-toggle" data-toggle="dropdown">ORG: {{organization.name}} <b
+                                class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li ng-repeat="organization in organizations" ng-hide="organization.selected"><a
+                                    href="#/app-spaces/{{organization.id}}">{{organization.name}}</a>
+                            </li>
+                            <li><a href="#/create-org/{{organization.id}}">CREATE NEW ORGANIZATION</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#/app-spaces/{{organization.id}}">APP SPACES</a></li>
+                    <li><a href="#/users/{{organization.id}}">USERS</a></li>
+                    <li><a href="#/org-settings/{{organization.id}}">ORG SETTINGS</a></li>
+                    <!--li><a href="#/marketplace/{{organization.id}}">MARKETPLACE</a></li-->
+                </ul>
+                <ul class="nav pull-right">
+                    <li><a href="#" class="uppercase">{{user.username}}</a></li>
+                    <li><a ng-click="logout()">LOG OUT</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

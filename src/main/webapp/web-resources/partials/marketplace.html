@@ -1,0 +1,26 @@
+<div class="container">
+    <div ng-show="error" class="alert alert-error">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Error!</strong> {{error}}
+    </div>
+    <div class="well well-small">
+        <h5>SERVICES MARKETPLACE</h5>
+        <div class="row-fluid">
+            <div class="span3">
+                <div class="well well-small light">
+                    <h5>Welcome to the Cloud Foundry Marketplace</h5>
+                    <p>Instantly add these services to your apps.</p>
+                </div>
+            </div>
+            <!-- TODO this will not work when there are more than 3 services -->
+            <div class="span3" ng-repeat="resource in services.resources">
+                <div class="well well-small light">
+                    <img src="img/{{resource.entity.label}}.png"/>
+                    <h5 class="uppercase">{{resource.entity.label}} {{resource.entity.version}}</h5>
+                    <p>{{resource.entity.description}}</p>
+                    <button class="btn">PLAN OPTIONS</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,124 @@
+<div class="container">
+    <div ng-show="error" class="alert alert-error">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Error!</strong> {{error}}
+    </div>
+    <div ng-show="loading">
+        <div class="well loading-well">
+            <div class="row-fluid">
+                <div class="span12">
+                    <h3 class="text-center">Hold on...</h3>
+                    <h5 class="text-center">We are loading your spaces!</h5>
+                    <div spin="defaultSpinnerConfig" spin-if="loading"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div ng-hide="loading">
+        <div class="well well-small">
+            <div class="row-fluid">
+                <div class="span11" ng-hide="loading">
+                    APP SPACES:
+                    <span ng-repeat="s in spaces">
+                        <span ng-show="space.selected == s.name">
+                            <div class="btn-group">
+                                <button class="btn btn-inverse uppercase">{{s.name}}</button>
+                                <a href="#/space-settings/{{organizationId}}/{{s.id}}" class="btn btn-inverse"><i class="icon-wrench icon-white"></i></a>
+                            </div>
+                        </span>
+                        <span ng-show="space.selected != s.name">
+                            <button class="btn uppercase" ng-click="selectSpace(s.name)">{{s.name}}</button>
+                        </span>
+                    </span>
+                </div>
+                <div class="span1">
+                    <a href="#/create-space/{{organizationId}}" class="btn btn-success">ADD</a>
+                </div>
+            </div>
+        </div>
+        <div class="well well-small">
+            <div class="row-fluid">
+                <div ng-repeat="s in spaces">
+                    <div class="span8" ng-show="space.selected == s.name">
+                        <div class="well well-small light">
+                            <h5 class="uppercase">Apps in {{s.name}} <span class="badge">{{s.applications.length}}</span>
+                            </h5>
+                            <table class="table table-condensed">
+                                <thead>
+                                <tr>
+                                    <th>STATUS</th>
+                                    <th>APP</th>
+                                    <th>INSTANCES</th>
+                                    <th>MEMORY</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="app in s.applications">
+                                    <td><span class="badge badge-success" ng-show="app.state == 'STARTED'">STARTED</span>
+                                        <span class="badge badge-important" ng-hide="app.state == 'STARTED'">STOPPED</span>
+                                    </td>
+                                    <td>
+                                        {{app.name}} <a href="#/app-settings/{{organizationId}}/{{app.id}}"><i class="icon-info-sign"></i></a>
+                                        <div ng-repeat="url in app.urls">
+                                            <a href="http://{{url}}">{{url}}</a>
+                                        </div>
+                                    </td>
+                                    <td>{{app.instances}}</td>
+                                    <td>{{app.memory}} MB</td>
+                                    <td><button class="btn btn-mini btn-danger" ng-show="app.state == 'STARTED'" ng-click="stopApplication(app.id)"><i class="icon-stop"></i> STOP</button>
+                                        <button class="btn btn-mini btn-success" ng-hide="app.state == 'STARTED'" ng-click="startApplication(app.id)"><i class="icon-play"></i> START</button></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="well well-small light">
+                            <div class="row-fluid">
+                                <div class="span11">
+                                    <h5 class="uppercase">Services in {{s.name}} <span class="badge">{{s.serviceInstances.length}}</span>
+                                    </h5>
+                                </div>
+                                <div class="span1">
+                                    <!--button class="btn btn-success">ADD</button-->
+                                </div>
+                            </div>
+                            <table class="table table-condensed">
+                                <thead>
+                                <tr>
+                                    <th>NAME</th>
+                                    <th>SERVICE</th>
+                                    <th>PLAN LEVEL</th>
+                                    <th>BOUND APPS</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="service in s.serviceInstances">
+                                    <td>{{service.name}}</td>
+                                    <td>{{service.servicePlan.service.provider}} {{service.servicePlan.service.name}} {{service.servicePlan.service.version}}</td>
+                                    <td><a href="#" tooltip="{{service.servicePlan.description}}">{{service.servicePlan.name}}</a>
+                                    <td>{{service.boundApplications}}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="span4" ng-show="space.selected == s.name">
+                        <div class="well  well-small light">
+                            <div class="row-fluid">
+                                <div class="span10">
+                                    <h5 class="uppercase">Users in {{s.name}}</h5>
+                                </div>
+                                <div class="span2">
+                                    <!--button class="btn btn-inverse">EDIT</button-->
+                                </div>
+                            </div>
+                            <ul>
+                                <li ng-repeat="user in s.users">{{user.username}}</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

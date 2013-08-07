@@ -1,0 +1,132 @@
+<div class="container">
+    <div ng-show="error" class="alert alert-error">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Error!</strong> {{error}}
+    </div>
+    <div ng-show="loading">
+        <div class="well loading-well">
+            <div class="row-fluid">
+                <div class="span12">
+                    <h3 class="text-center">Keep your pants on...</h3>
+                    <h5 class="text-center">We are loading your users!</h5>
+
+                    <div spin="defaultSpinnerConfig" spin-if="loading"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div ng-hide="loading">
+        <div class="row-fluid">
+            <div class="span9">
+                <div class="well well-small">
+                    <div class="row-fluid">
+                        <div class="span8">
+                            <h5>USERS AND ROLES</h5>
+                        </div>
+                        <div class="span4 text-right">
+                            <button class="btn btn-success" ng-click="addNewUser(organization)" ng-hide="blockInput">ADD USER TO ORGANIZATION</button>
+                        </div>
+                    </div>
+
+                    <table class="table table-condensed">
+                        <thead>
+                        <tr>
+                            <th width="30%">
+                                <div class="btn-group">
+                                    <a class="btn dropdown-toggle" data-toggle="dropdown"
+                                       style="text-transform: uppercase;">{{selectedGroup}}<b class="caret"></b></a>
+                                    <ul class="dropdown-menu">
+                                        <li>ORGANIZATION ROLES</li>
+                                        <li><a ng-click="selectOrganizationUsers(organization.name)"
+                                               style="text-transform: uppercase;">{{organization.name}}</a></li>
+                                        <li class="divider"></li>
+                                        <li>SPACE ROLES</li>
+                                        <li ng-repeat="space in organization.spaces track by $id($index)"><a
+                                                ng-click="selectSpaceUsers(space.name, organization)"
+                                                style="text-transform: uppercase;">{{space.name}}</a></li>
+                                    </ul>
+                                </div>
+                            </th>
+                            <th width="20%"><span ng-show="showOrganizationUsers">ORG. MANAGER</span><span
+                                    ng-hide="showOrganizationUsers">SPACE MANAGER</span></th>
+                            <th width="20%"><span ng-show="showOrganizationUsers">BILLING MANAGER</span><span
+                                    ng-hide="showOrganizationUsers">DEVELOPER</span></th>
+                            <th width="20%"><span ng-show="showOrganizationUsers">ORG. AUDITOR</span><span
+                                    ng-hide="showOrganizationUsers">SPACE AUDITOR</span></th>
+                            <th width="10%"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="user in organization.users" ng-show="showOrganizationUsers">
+                            <td>{{user.userName}}</td>
+                            <td><input type="checkbox" ng-checked="user.isManager" ng-model="user.isManager"
+                                       ng-disabled="blockInput" ng-click="setOrgManager(organization, user)"/></td>
+                            <td><input type="checkbox" ng-checked="user.isBillingManager" ng-model="user.isBillingManager" ng-disabled="blockInput"
+                                       ng-click="setOrgBillingManager(organization, user)"/></td>
+                            <td><input type="checkbox" ng-checked="user.isAuditor" ng-model="user.isAuditor" ng-disabled="blockInput"
+                                       ng-click="setOrgAuditor(organization, user)"/></td>
+                            <td><button class="btn btn-danger" ng-click="openConfirmation(user)" ng-hide="blockInput || loggedInUser.id === user.id"><i class="icon-trash"></i></button></td>
+                        </tr>
+                        <tr ng-repeat="user in selectedSpace.users" ng-hide="showOrganizationUsers">
+                            <td>{{user.userName}}</td>
+                            <td><input type="checkbox" ng-checked="user.isManager" ng-model="user.isManager" ng-disabled="blockInput"
+                                       ng-click="setSpaceManager(selectedSpace, user)"/></td>
+                            <td><input type="checkbox" ng-checked="user.isDeveloper" ng-model="user.isDeveloper" ng-disabled="blockInput"
+                                       ng-click="setSpaceDeveloper(selectedSpace, user)"/></td>
+                            <td><input type="checkbox" ng-checked="user.isAuditor" ng-model="user.isAuditor" ng-disabled="blockInput"
+                                       ng-click="setSpaceAuditor(selectedSpace, user)"/></td>
+                            <td></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="span3">
+                <div class="well well-small">
+                    <h5>ORGANIZATION ROLES</h5>
+
+                    <h5>Organization Manager</h5>
+
+                    <p>Can invite/manage users, select/change the plan, establish spending limits</p>
+
+                    <h5>Billing Manager</h5>
+
+                    <p>Can edit/change the billing account info, payment info</p>
+
+                    <h5>Organization Auditor</h5>
+
+                    <p>View only access to all org and space info, settings, reports</p>
+
+                    <hr/>
+
+                    <h5>APP SPACE ROLES</h5>
+
+                    <h5>Space Manager</h5>
+
+                    <p>Can invite/manage users, enable features for a given space</p>
+
+                    <h5>Space Developer</h5>
+
+                    <p>Can create, delete, manage applications and services, full access to all usage reports and
+                        logs</p>
+
+                    <h5>Space Auditor</h5>
+
+                    <p>View only access to all space information, settings, reports, logs</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div modal="confirmationRequested" close="closeConfirmation()" options="confirmationOpts">
+        <div class="modal-header">
+            <h3>Please confirm your request!</h3>
+        </div>
+        <div class="modal-body">
+            <p><span class="muted">Are you sure you want remove </span><strong>{{selectedUser.userName}}</strong><span class="muted"> from </span><strong>{{organization.name}}</strong><span class="muted">?</span></p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn" ng-click="closeConfirmation()">CANCEL</button>
+            <button class="btn btn-danger" ng-click="removeUser(organization, selectedUser)">REMOVE USER FROM ORGANIZATION</button>
+        </div>
+    </div>
+</div>

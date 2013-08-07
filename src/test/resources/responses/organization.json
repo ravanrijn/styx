@@ -1,0 +1,587 @@
+{
+    "metadata": {
+        "guid": "c188e4c7-1641-4124-9c1f-8f17ced7bd62",
+        "url": "/v2/organizations/c188e4c7-1641-4124-9c1f-8f17ced7bd62",
+        "created_at": "2013-07-19 13:36:36 +0200",
+        "updated_at": "2013-07-19 16:12:58 +0200"
+    },
+    "entity": {
+        "name": "cf.com",
+        "billing_enabled": false,
+        "quota_definition_guid": "5c68203d-992e-4337-8cd4-65f912655122",
+        "status": "active",
+        "quota_definition_url": "/v2/quota_definitions/5c68203d-992e-4337-8cd4-65f912655122",
+        "quota_definition": {
+            "metadata": {
+                "guid": "5c68203d-992e-4337-8cd4-65f912655122",
+                "url": "/v2/quota_definitions/5c68203d-992e-4337-8cd4-65f912655122",
+                "created_at": "2013-07-19 13:00:48 +0200",
+                "updated_at": "2013-07-21 12:15:46 +0200"
+            },
+            "entity": {
+                "name": "free",
+                "non_basic_services_allowed": false,
+                "total_services": 2,
+                "memory_limit": 1024,
+                "trial_db_allowed": false
+            }
+        },
+        "spaces_url": "/v2/organizations/c188e4c7-1641-4124-9c1f-8f17ced7bd62/spaces",
+        "spaces": [
+            {
+                "metadata": {
+                    "guid": "a4341e52-a6e4-47b5-b528-578ec95df851",
+                    "url": "/v2/spaces/a4341e52-a6e4-47b5-b528-578ec95df851",
+                    "created_at": "2013-07-19 13:36:37 +0200",
+                    "updated_at": "2013-07-19 16:17:12 +0200"
+                },
+                "entity": {
+                    "name": "development",
+                    "organization_guid": "c188e4c7-1641-4124-9c1f-8f17ced7bd62",
+                    "organization_url": "/v2/organizations/c188e4c7-1641-4124-9c1f-8f17ced7bd62",
+                    "developers_url": "/v2/spaces/a4341e52-a6e4-47b5-b528-578ec95df851/developers",
+                    "developers": [
+
+                    ],
+                    "managers_url": "/v2/spaces/a4341e52-a6e4-47b5-b528-578ec95df851/managers",
+                    "managers": [
+                        {
+                            "metadata": {
+                                "guid": "f939a538-c0f1-48ef-90bc-8fd2c9ce477e",
+                                "url": "/v2/users/f939a538-c0f1-48ef-90bc-8fd2c9ce477e",
+                                "created_at": "2013-07-19 13:47:54 +0200",
+                                "updated_at": "2013-07-19 13:47:54 +0200"
+                            },
+                            "entity": {
+                                "admin": false,
+                                "active": false,
+                                "default_space_guid": null,
+                                "spaces_url": "/v2/users/f939a538-c0f1-48ef-90bc-8fd2c9ce477e/spaces",
+                                "organizations_url": "/v2/users/f939a538-c0f1-48ef-90bc-8fd2c9ce477e/organizations",
+                                "managed_organizations_url": "/v2/users/f939a538-c0f1-48ef-90bc-8fd2c9ce477e/managed_organizations",
+                                "billing_managed_organizations_url": "/v2/users/f939a538-c0f1-48ef-90bc-8fd2c9ce477e/billing_managed_organizations",
+                                "audited_organizations_url": "/v2/users/f939a538-c0f1-48ef-90bc-8fd2c9ce477e/audited_organizations",
+                                "managed_spaces_url": "/v2/users/f939a538-c0f1-48ef-90bc-8fd2c9ce477e/managed_spaces",
+                                "audited_spaces_url": "/v2/users/f939a538-c0f1-48ef-90bc-8fd2c9ce477e/audited_spaces"
+                            }
+                        }
+                    ],
+                    "auditors_url": "/v2/spaces/a4341e52-a6e4-47b5-b528-578ec95df851/auditors",
+                    "auditors": [
+
+                    ],
+                    "apps_url": "/v2/spaces/a4341e52-a6e4-47b5-b528-578ec95df851/apps",
+                    "apps": [
+                        {
+                            "metadata": {
+                                "guid": "bc931cab-f695-40e5-93f8-5e82215e9ea8",
+                                "url": "/v2/apps/bc931cab-f695-40e5-93f8-5e82215e9ea8",
+                                "created_at": "2013-07-19 13:39:30 +0200",
+                                "updated_at": "2013-07-22 09:00:16 +0200"
+                            },
+                            "entity": {
+                                "name": "styx",
+                                "production": false,
+                                "space_guid": "a4341e52-a6e4-47b5-b528-578ec95df851",
+                                "stack_guid": "ba122549-8c97-480d-9ad9-02ec61c822a4",
+                                "buildpack": "git://github.com/cloudfoundry/cloudfoundry-buildpack-java.git",
+                                "detected_buildpack": null,
+                                "environment_json": {
+
+                                },
+                                "memory": 1024,
+                                "instances": 1,
+                                "disk_quota": 1024,
+                                "state": "STARTED",
+                                "version": "8a842980-925e-4d4f-bee2-4750597ea431",
+                                "command": null,
+                                "console": true,
+                                "debug": null,
+                                "staging_task_id": "a995f3846bc35e6c0271aa58fdc47049",
+                                "space_url": "/v2/spaces/a4341e52-a6e4-47b5-b528-578ec95df851",
+                                "stack_url": "/v2/stacks/ba122549-8c97-480d-9ad9-02ec61c822a4",
+                                "service_bindings_url": "/v2/apps/bc931cab-f695-40e5-93f8-5e82215e9ea8/service_bindings",
+                                "routes_url": "/v2/apps/bc931cab-f695-40e5-93f8-5e82215e9ea8/routes",
+                                "events_url": "/v2/apps/bc931cab-f695-40e5-93f8-5e82215e9ea8/events"
+                            }
+                        }
+                    ],
+                    "domains_url": "/v2/spaces/a4341e52-a6e4-47b5-b528-578ec95df851/domains",
+                    "domains": [
+                        {
+                            "metadata": {
+                                "guid": "0ef96555-ccf6-42b4-ae11-d2dd9bcf095f",
+                                "url": "/v2/domains/0ef96555-ccf6-42b4-ae11-d2dd9bcf095f",
+                                "created_at": "2013-07-19 13:00:48 +0200",
+                                "updated_at": null
+                            },
+                            "entity": {
+                                "name": "cf.com",
+                                "owning_organization_guid": null,
+                                "wildcard": true,
+                                "spaces_url": "/v2/domains/0ef96555-ccf6-42b4-ae11-d2dd9bcf095f/spaces"
+                            }
+                        }
+                    ],
+                    "service_instances_url": "/v2/spaces/a4341e52-a6e4-47b5-b528-578ec95df851/service_instances",
+                    "service_instances": [
+                        {
+                            "metadata": {
+                                "guid": "4bb5ef8f-d37f-481a-992f-9b30c780187c",
+                                "url": "/v2/service_instances/4bb5ef8f-d37f-481a-992f-9b30c780187c",
+                                "created_at": "2013-07-19 15:41:46 +0200",
+                                "updated_at": null
+                            },
+                            "entity": {
+                                "name": "mysql",
+                                "credentials": {
+                                    "name": "d64c1e89a179f4ce88b6e2f9786a01d6e",
+                                    "hostname": "172.21.28.144",
+                                    "host": "172.21.28.144",
+                                    "port": 3307,
+                                    "user": "ul4SQr9gV0bcU",
+                                    "username": "ul4SQr9gV0bcU",
+                                    "password": "pU0CC1nDa5Ece",
+                                    "node_id": "mysql_node_default_0"
+                                },
+                                "service_plan_guid": "df1bec3f-3a08-4114-97d9-70646fdb3c57",
+                                "space_guid": "a4341e52-a6e4-47b5-b528-578ec95df851",
+                                "gateway_data": {
+                                    "plan": "default",
+                                    "version": "5.5"
+                                },
+                                "dashboard_url": null,
+                                "space_url": "/v2/spaces/a4341e52-a6e4-47b5-b528-578ec95df851",
+                                "service_plan_url": "/v2/service_plans/df1bec3f-3a08-4114-97d9-70646fdb3c57",
+                                "service_bindings_url": "/v2/service_instances/4bb5ef8f-d37f-481a-992f-9b30c780187c/service_bindings"
+                            }
+                        }
+                    ],
+                    "app_events_url": "/v2/spaces/a4341e52-a6e4-47b5-b528-578ec95df851/app_events",
+                    "app_events": [
+                        {
+                            "metadata": {
+                                "guid": "3b3dccf2-7de9-4ce2-9c52-35ce44f7e1b5",
+                                "url": "/v2/app_events/3b3dccf2-7de9-4ce2-9c52-35ce44f7e1b5",
+                                "created_at": "2013-07-19 13:53:19 +0200",
+                                "updated_at": null
+                            },
+                            "entity": {
+                                "app_guid": "bc931cab-f695-40e5-93f8-5e82215e9ea8",
+                                "instance_guid": "2a3000a91189a9b85500425e993ffdbb",
+                                "instance_index": 0,
+                                "exit_status": 255,
+                                "exit_description": "app instance exited",
+                                "timestamp": "2013-07-19 13:53:19 +0200",
+                                "app_url": "/v2/apps/bc931cab-f695-40e5-93f8-5e82215e9ea8"
+                            }
+                        }
+                    ]
+                }
+            }
+        ],
+        "domains_url": "/v2/organizations/c188e4c7-1641-4124-9c1f-8f17ced7bd62/domains",
+        "domains": [
+            {
+                "metadata": {
+                    "guid": "0ef96555-ccf6-42b4-ae11-d2dd9bcf095f",
+                    "url": "/v2/domains/0ef96555-ccf6-42b4-ae11-d2dd9bcf095f",
+                    "created_at": "2013-07-19 13:00:48 +0200",
+                    "updated_at": null
+                },
+                "entity": {
+                    "name": "cf.com",
+                    "owning_organization_guid": null,
+                    "wildcard": true,
+                    "spaces_url": "/v2/domains/0ef96555-ccf6-42b4-ae11-d2dd9bcf095f/spaces",
+                    "spaces": [
+                        {
+                            "metadata": {
+                                "guid": "71063545-a267-4ed9-93fc-efd0643ef43c",
+                                "url": "/v2/spaces/71063545-a267-4ed9-93fc-efd0643ef43c",
+                                "created_at": "2013-07-19 13:24:46 +0200",
+                                "updated_at": null
+                            },
+                            "entity": {
+                                "name": "development",
+                                "organization_guid": "69178c12-8f01-4a59-8232-55fdc09d758b",
+                                "organization_url": "/v2/organizations/69178c12-8f01-4a59-8232-55fdc09d758b",
+                                "developers_url": "/v2/spaces/71063545-a267-4ed9-93fc-efd0643ef43c/developers",
+                                "managers_url": "/v2/spaces/71063545-a267-4ed9-93fc-efd0643ef43c/managers",
+                                "auditors_url": "/v2/spaces/71063545-a267-4ed9-93fc-efd0643ef43c/auditors",
+                                "apps_url": "/v2/spaces/71063545-a267-4ed9-93fc-efd0643ef43c/apps",
+                                "domains_url": "/v2/spaces/71063545-a267-4ed9-93fc-efd0643ef43c/domains",
+                                "service_instances_url": "/v2/spaces/71063545-a267-4ed9-93fc-efd0643ef43c/service_instances",
+                                "app_events_url": "/v2/spaces/71063545-a267-4ed9-93fc-efd0643ef43c/app_events"
+                            }
+                        },
+                        {
+                            "metadata": {
+                                "guid": "a4341e52-a6e4-47b5-b528-578ec95df851",
+                                "url": "/v2/spaces/a4341e52-a6e4-47b5-b528-578ec95df851",
+                                "created_at": "2013-07-19 13:36:37 +0200",
+                                "updated_at": "2013-07-19 16:17:12 +0200"
+                            },
+                            "entity": {
+                                "name": "development",
+                                "organization_guid": "c188e4c7-1641-4124-9c1f-8f17ced7bd62",
+                                "organization_url": "/v2/organizations/c188e4c7-1641-4124-9c1f-8f17ced7bd62",
+                                "developers_url": "/v2/spaces/a4341e52-a6e4-47b5-b528-578ec95df851/developers",
+                                "managers_url": "/v2/spaces/a4341e52-a6e4-47b5-b528-578ec95df851/managers",
+                                "auditors_url": "/v2/spaces/a4341e52-a6e4-47b5-b528-578ec95df851/auditors",
+                                "apps_url": "/v2/spaces/a4341e52-a6e4-47b5-b528-578ec95df851/apps",
+                                "domains_url": "/v2/spaces/a4341e52-a6e4-47b5-b528-578ec95df851/domains",
+                                "service_instances_url": "/v2/spaces/a4341e52-a6e4-47b5-b528-578ec95df851/service_instances",
+                                "app_events_url": "/v2/spaces/a4341e52-a6e4-47b5-b528-578ec95df851/app_events"
+                            }
+                        }
+                    ]
+                }
+            }
+        ],
+        "users_url": "/v2/organizations/c188e4c7-1641-4124-9c1f-8f17ced7bd62/users",
+        "users": [
+            {
+                "metadata": {
+                    "guid": "64902aa2-9df5-4c27-827c-a6a69a568e2e",
+                    "url": "/v2/users/64902aa2-9df5-4c27-827c-a6a69a568e2e",
+                    "created_at": "2013-07-19 13:01:54 +0200",
+                    "updated_at": null
+                },
+                "entity": {
+                    "admin": false,
+                    "active": true,
+                    "default_space_guid": null,
+                    "spaces_url": "/v2/users/64902aa2-9df5-4c27-827c-a6a69a568e2e/spaces",
+                    "spaces": [
+
+                    ],
+                    "organizations_url": "/v2/users/64902aa2-9df5-4c27-827c-a6a69a568e2e/organizations",
+                    "managed_organizations_url": "/v2/users/64902aa2-9df5-4c27-827c-a6a69a568e2e/managed_organizations",
+                    "billing_managed_organizations_url": "/v2/users/64902aa2-9df5-4c27-827c-a6a69a568e2e/billing_managed_organizations",
+                    "audited_organizations_url": "/v2/users/64902aa2-9df5-4c27-827c-a6a69a568e2e/audited_organizations",
+                    "managed_spaces_url": "/v2/users/64902aa2-9df5-4c27-827c-a6a69a568e2e/managed_spaces",
+                    "managed_spaces": [
+
+                    ],
+                    "audited_spaces_url": "/v2/users/64902aa2-9df5-4c27-827c-a6a69a568e2e/audited_spaces",
+                    "audited_spaces": [
+
+                    ]
+                }
+            },
+            {
+                "metadata": {
+                    "guid": "62f37ce0-c3aa-48e2-9045-15e047376eb5",
+                    "url": "/v2/users/62f37ce0-c3aa-48e2-9045-15e047376eb5",
+                    "created_at": "2013-07-19 13:04:49 +0200",
+                    "updated_at": null
+                },
+                "entity": {
+                    "admin": true,
+                    "active": true,
+                    "default_space_guid": null,
+                    "spaces_url": "/v2/users/62f37ce0-c3aa-48e2-9045-15e047376eb5/spaces",
+                    "spaces": [
+                        {
+                            "metadata": {
+                                "guid": "71063545-a267-4ed9-93fc-efd0643ef43c",
+                                "url": "/v2/spaces/71063545-a267-4ed9-93fc-efd0643ef43c",
+                                "created_at": "2013-07-19 13:24:46 +0200",
+                                "updated_at": null
+                            },
+                            "entity": {
+                                "name": "development",
+                                "organization_guid": "69178c12-8f01-4a59-8232-55fdc09d758b",
+                                "organization_url": "/v2/organizations/69178c12-8f01-4a59-8232-55fdc09d758b",
+                                "developers_url": "/v2/spaces/71063545-a267-4ed9-93fc-efd0643ef43c/developers",
+                                "managers_url": "/v2/spaces/71063545-a267-4ed9-93fc-efd0643ef43c/managers",
+                                "auditors_url": "/v2/spaces/71063545-a267-4ed9-93fc-efd0643ef43c/auditors",
+                                "apps_url": "/v2/spaces/71063545-a267-4ed9-93fc-efd0643ef43c/apps",
+                                "domains_url": "/v2/spaces/71063545-a267-4ed9-93fc-efd0643ef43c/domains",
+                                "service_instances_url": "/v2/spaces/71063545-a267-4ed9-93fc-efd0643ef43c/service_instances",
+                                "app_events_url": "/v2/spaces/71063545-a267-4ed9-93fc-efd0643ef43c/app_events"
+                            }
+                        }
+                    ],
+                    "organizations_url": "/v2/users/62f37ce0-c3aa-48e2-9045-15e047376eb5/organizations",
+                    "managed_organizations_url": "/v2/users/62f37ce0-c3aa-48e2-9045-15e047376eb5/managed_organizations",
+                    "billing_managed_organizations_url": "/v2/users/62f37ce0-c3aa-48e2-9045-15e047376eb5/billing_managed_organizations",
+                    "audited_organizations_url": "/v2/users/62f37ce0-c3aa-48e2-9045-15e047376eb5/audited_organizations",
+                    "managed_spaces_url": "/v2/users/62f37ce0-c3aa-48e2-9045-15e047376eb5/managed_spaces",
+                    "managed_spaces": [
+                        {
+                            "metadata": {
+                                "guid": "71063545-a267-4ed9-93fc-efd0643ef43c",
+                                "url": "/v2/spaces/71063545-a267-4ed9-93fc-efd0643ef43c",
+                                "created_at": "2013-07-19 13:24:46 +0200",
+                                "updated_at": null
+                            },
+                            "entity": {
+                                "name": "development",
+                                "organization_guid": "69178c12-8f01-4a59-8232-55fdc09d758b",
+                                "organization_url": "/v2/organizations/69178c12-8f01-4a59-8232-55fdc09d758b",
+                                "developers_url": "/v2/spaces/71063545-a267-4ed9-93fc-efd0643ef43c/developers",
+                                "managers_url": "/v2/spaces/71063545-a267-4ed9-93fc-efd0643ef43c/managers",
+                                "auditors_url": "/v2/spaces/71063545-a267-4ed9-93fc-efd0643ef43c/auditors",
+                                "apps_url": "/v2/spaces/71063545-a267-4ed9-93fc-efd0643ef43c/apps",
+                                "domains_url": "/v2/spaces/71063545-a267-4ed9-93fc-efd0643ef43c/domains",
+                                "service_instances_url": "/v2/spaces/71063545-a267-4ed9-93fc-efd0643ef43c/service_instances",
+                                "app_events_url": "/v2/spaces/71063545-a267-4ed9-93fc-efd0643ef43c/app_events"
+                            }
+                        }
+                    ],
+                    "audited_spaces_url": "/v2/users/62f37ce0-c3aa-48e2-9045-15e047376eb5/audited_spaces",
+                    "audited_spaces": [
+
+                    ]
+                }
+            },
+            {
+                "metadata": {
+                    "guid": "f939a538-c0f1-48ef-90bc-8fd2c9ce477e",
+                    "url": "/v2/users/f939a538-c0f1-48ef-90bc-8fd2c9ce477e",
+                    "created_at": "2013-07-19 13:47:54 +0200",
+                    "updated_at": "2013-07-19 13:47:54 +0200"
+                },
+                "entity": {
+                    "admin": false,
+                    "active": false,
+                    "default_space_guid": null,
+                    "spaces_url": "/v2/users/f939a538-c0f1-48ef-90bc-8fd2c9ce477e/spaces",
+                    "spaces": [
+
+                    ],
+                    "organizations_url": "/v2/users/f939a538-c0f1-48ef-90bc-8fd2c9ce477e/organizations",
+                    "managed_organizations_url": "/v2/users/f939a538-c0f1-48ef-90bc-8fd2c9ce477e/managed_organizations",
+                    "billing_managed_organizations_url": "/v2/users/f939a538-c0f1-48ef-90bc-8fd2c9ce477e/billing_managed_organizations",
+                    "audited_organizations_url": "/v2/users/f939a538-c0f1-48ef-90bc-8fd2c9ce477e/audited_organizations",
+                    "managed_spaces_url": "/v2/users/f939a538-c0f1-48ef-90bc-8fd2c9ce477e/managed_spaces",
+                    "managed_spaces": [
+                        {
+                            "metadata": {
+                                "guid": "a4341e52-a6e4-47b5-b528-578ec95df851",
+                                "url": "/v2/spaces/a4341e52-a6e4-47b5-b528-578ec95df851",
+                                "created_at": "2013-07-19 13:36:37 +0200",
+                                "updated_at": "2013-07-19 16:17:12 +0200"
+                            },
+                            "entity": {
+                                "name": "development",
+                                "organization_guid": "c188e4c7-1641-4124-9c1f-8f17ced7bd62",
+                                "organization_url": "/v2/organizations/c188e4c7-1641-4124-9c1f-8f17ced7bd62",
+                                "developers_url": "/v2/spaces/a4341e52-a6e4-47b5-b528-578ec95df851/developers",
+                                "managers_url": "/v2/spaces/a4341e52-a6e4-47b5-b528-578ec95df851/managers",
+                                "auditors_url": "/v2/spaces/a4341e52-a6e4-47b5-b528-578ec95df851/auditors",
+                                "apps_url": "/v2/spaces/a4341e52-a6e4-47b5-b528-578ec95df851/apps",
+                                "domains_url": "/v2/spaces/a4341e52-a6e4-47b5-b528-578ec95df851/domains",
+                                "service_instances_url": "/v2/spaces/a4341e52-a6e4-47b5-b528-578ec95df851/service_instances",
+                                "app_events_url": "/v2/spaces/a4341e52-a6e4-47b5-b528-578ec95df851/app_events"
+                            }
+                        }
+                    ],
+                    "audited_spaces_url": "/v2/users/f939a538-c0f1-48ef-90bc-8fd2c9ce477e/audited_spaces",
+                    "audited_spaces": [
+
+                    ]
+                }
+            }
+        ],
+        "managers_url": "/v2/organizations/c188e4c7-1641-4124-9c1f-8f17ced7bd62/managers",
+        "managers": [
+            {
+                "metadata": {
+                    "guid": "62f37ce0-c3aa-48e2-9045-15e047376eb5",
+                    "url": "/v2/users/62f37ce0-c3aa-48e2-9045-15e047376eb5",
+                    "created_at": "2013-07-19 13:04:49 +0200",
+                    "updated_at": null
+                },
+                "entity": {
+                    "admin": true,
+                    "active": true,
+                    "default_space_guid": null,
+                    "spaces_url": "/v2/users/62f37ce0-c3aa-48e2-9045-15e047376eb5/spaces",
+                    "spaces": [
+                        {
+                            "metadata": {
+                                "guid": "71063545-a267-4ed9-93fc-efd0643ef43c",
+                                "url": "/v2/spaces/71063545-a267-4ed9-93fc-efd0643ef43c",
+                                "created_at": "2013-07-19 13:24:46 +0200",
+                                "updated_at": null
+                            },
+                            "entity": {
+                                "name": "development",
+                                "organization_guid": "69178c12-8f01-4a59-8232-55fdc09d758b",
+                                "organization_url": "/v2/organizations/69178c12-8f01-4a59-8232-55fdc09d758b",
+                                "developers_url": "/v2/spaces/71063545-a267-4ed9-93fc-efd0643ef43c/developers",
+                                "managers_url": "/v2/spaces/71063545-a267-4ed9-93fc-efd0643ef43c/managers",
+                                "auditors_url": "/v2/spaces/71063545-a267-4ed9-93fc-efd0643ef43c/auditors",
+                                "apps_url": "/v2/spaces/71063545-a267-4ed9-93fc-efd0643ef43c/apps",
+                                "domains_url": "/v2/spaces/71063545-a267-4ed9-93fc-efd0643ef43c/domains",
+                                "service_instances_url": "/v2/spaces/71063545-a267-4ed9-93fc-efd0643ef43c/service_instances",
+                                "app_events_url": "/v2/spaces/71063545-a267-4ed9-93fc-efd0643ef43c/app_events"
+                            }
+                        }
+                    ],
+                    "organizations_url": "/v2/users/62f37ce0-c3aa-48e2-9045-15e047376eb5/organizations",
+                    "managed_organizations_url": "/v2/users/62f37ce0-c3aa-48e2-9045-15e047376eb5/managed_organizations",
+                    "billing_managed_organizations_url": "/v2/users/62f37ce0-c3aa-48e2-9045-15e047376eb5/billing_managed_organizations",
+                    "audited_organizations_url": "/v2/users/62f37ce0-c3aa-48e2-9045-15e047376eb5/audited_organizations",
+                    "managed_spaces_url": "/v2/users/62f37ce0-c3aa-48e2-9045-15e047376eb5/managed_spaces",
+                    "managed_spaces": [
+                        {
+                            "metadata": {
+                                "guid": "71063545-a267-4ed9-93fc-efd0643ef43c",
+                                "url": "/v2/spaces/71063545-a267-4ed9-93fc-efd0643ef43c",
+                                "created_at": "2013-07-19 13:24:46 +0200",
+                                "updated_at": null
+                            },
+                            "entity": {
+                                "name": "development",
+                                "organization_guid": "69178c12-8f01-4a59-8232-55fdc09d758b",
+                                "organization_url": "/v2/organizations/69178c12-8f01-4a59-8232-55fdc09d758b",
+                                "developers_url": "/v2/spaces/71063545-a267-4ed9-93fc-efd0643ef43c/developers",
+                                "managers_url": "/v2/spaces/71063545-a267-4ed9-93fc-efd0643ef43c/managers",
+                                "auditors_url": "/v2/spaces/71063545-a267-4ed9-93fc-efd0643ef43c/auditors",
+                                "apps_url": "/v2/spaces/71063545-a267-4ed9-93fc-efd0643ef43c/apps",
+                                "domains_url": "/v2/spaces/71063545-a267-4ed9-93fc-efd0643ef43c/domains",
+                                "service_instances_url": "/v2/spaces/71063545-a267-4ed9-93fc-efd0643ef43c/service_instances",
+                                "app_events_url": "/v2/spaces/71063545-a267-4ed9-93fc-efd0643ef43c/app_events"
+                            }
+                        }
+                    ],
+                    "audited_spaces_url": "/v2/users/62f37ce0-c3aa-48e2-9045-15e047376eb5/audited_spaces",
+                    "audited_spaces": [
+
+                    ]
+                }
+            }
+        ],
+        "billing_managers_url": "/v2/organizations/c188e4c7-1641-4124-9c1f-8f17ced7bd62/billing_managers",
+        "billing_managers": [
+            {
+                "metadata": {
+                    "guid": "62f37ce0-c3aa-48e2-9045-15e047376eb5",
+                    "url": "/v2/users/62f37ce0-c3aa-48e2-9045-15e047376eb5",
+                    "created_at": "2013-07-19 13:04:49 +0200",
+                    "updated_at": null
+                },
+                "entity": {
+                    "admin": true,
+                    "active": true,
+                    "default_space_guid": null,
+                    "spaces_url": "/v2/users/62f37ce0-c3aa-48e2-9045-15e047376eb5/spaces",
+                    "spaces": [
+                        {
+                            "metadata": {
+                                "guid": "71063545-a267-4ed9-93fc-efd0643ef43c",
+                                "url": "/v2/spaces/71063545-a267-4ed9-93fc-efd0643ef43c",
+                                "created_at": "2013-07-19 13:24:46 +0200",
+                                "updated_at": null
+                            },
+                            "entity": {
+                                "name": "development",
+                                "organization_guid": "69178c12-8f01-4a59-8232-55fdc09d758b",
+                                "organization_url": "/v2/organizations/69178c12-8f01-4a59-8232-55fdc09d758b",
+                                "developers_url": "/v2/spaces/71063545-a267-4ed9-93fc-efd0643ef43c/developers",
+                                "managers_url": "/v2/spaces/71063545-a267-4ed9-93fc-efd0643ef43c/managers",
+                                "auditors_url": "/v2/spaces/71063545-a267-4ed9-93fc-efd0643ef43c/auditors",
+                                "apps_url": "/v2/spaces/71063545-a267-4ed9-93fc-efd0643ef43c/apps",
+                                "domains_url": "/v2/spaces/71063545-a267-4ed9-93fc-efd0643ef43c/domains",
+                                "service_instances_url": "/v2/spaces/71063545-a267-4ed9-93fc-efd0643ef43c/service_instances",
+                                "app_events_url": "/v2/spaces/71063545-a267-4ed9-93fc-efd0643ef43c/app_events"
+                            }
+                        }
+                    ],
+                    "organizations_url": "/v2/users/62f37ce0-c3aa-48e2-9045-15e047376eb5/organizations",
+                    "managed_organizations_url": "/v2/users/62f37ce0-c3aa-48e2-9045-15e047376eb5/managed_organizations",
+                    "billing_managed_organizations_url": "/v2/users/62f37ce0-c3aa-48e2-9045-15e047376eb5/billing_managed_organizations",
+                    "audited_organizations_url": "/v2/users/62f37ce0-c3aa-48e2-9045-15e047376eb5/audited_organizations",
+                    "managed_spaces_url": "/v2/users/62f37ce0-c3aa-48e2-9045-15e047376eb5/managed_spaces",
+                    "managed_spaces": [
+                        {
+                            "metadata": {
+                                "guid": "71063545-a267-4ed9-93fc-efd0643ef43c",
+                                "url": "/v2/spaces/71063545-a267-4ed9-93fc-efd0643ef43c",
+                                "created_at": "2013-07-19 13:24:46 +0200",
+                                "updated_at": null
+                            },
+                            "entity": {
+                                "name": "development",
+                                "organization_guid": "69178c12-8f01-4a59-8232-55fdc09d758b",
+                                "organization_url": "/v2/organizations/69178c12-8f01-4a59-8232-55fdc09d758b",
+                                "developers_url": "/v2/spaces/71063545-a267-4ed9-93fc-efd0643ef43c/developers",
+                                "managers_url": "/v2/spaces/71063545-a267-4ed9-93fc-efd0643ef43c/managers",
+                                "auditors_url": "/v2/spaces/71063545-a267-4ed9-93fc-efd0643ef43c/auditors",
+                                "apps_url": "/v2/spaces/71063545-a267-4ed9-93fc-efd0643ef43c/apps",
+                                "domains_url": "/v2/spaces/71063545-a267-4ed9-93fc-efd0643ef43c/domains",
+                                "service_instances_url": "/v2/spaces/71063545-a267-4ed9-93fc-efd0643ef43c/service_instances",
+                                "app_events_url": "/v2/spaces/71063545-a267-4ed9-93fc-efd0643ef43c/app_events"
+                            }
+                        }
+                    ],
+                    "audited_spaces_url": "/v2/users/62f37ce0-c3aa-48e2-9045-15e047376eb5/audited_spaces",
+                    "audited_spaces": [
+
+                    ]
+                }
+            }
+        ],
+        "auditors_url": "/v2/organizations/c188e4c7-1641-4124-9c1f-8f17ced7bd62/auditors",
+        "auditors": [
+
+        ],
+        "app_events_url": "/v2/organizations/c188e4c7-1641-4124-9c1f-8f17ced7bd62/app_events",
+        "app_events": [
+            {
+                "metadata": {
+                    "guid": "3b3dccf2-7de9-4ce2-9c52-35ce44f7e1b5",
+                    "url": "/v2/app_events/3b3dccf2-7de9-4ce2-9c52-35ce44f7e1b5",
+                    "created_at": "2013-07-19 13:53:19 +0200",
+                    "updated_at": null
+                },
+                "entity": {
+                    "app_guid": "bc931cab-f695-40e5-93f8-5e82215e9ea8",
+                    "instance_guid": "2a3000a91189a9b85500425e993ffdbb",
+                    "instance_index": 0,
+                    "exit_status": 255,
+                    "exit_description": "app instance exited",
+                    "timestamp": "2013-07-19 13:53:19 +0200",
+                    "app_url": "/v2/apps/bc931cab-f695-40e5-93f8-5e82215e9ea8",
+                    "app": {
+                        "metadata": {
+                            "guid": "bc931cab-f695-40e5-93f8-5e82215e9ea8",
+                            "url": "/v2/apps/bc931cab-f695-40e5-93f8-5e82215e9ea8",
+                            "created_at": "2013-07-19 13:39:30 +0200",
+                            "updated_at": "2013-07-22 09:00:16 +0200"
+                        },
+                        "entity": {
+                            "name": "styx",
+                            "production": false,
+                            "space_guid": "a4341e52-a6e4-47b5-b528-578ec95df851",
+                            "stack_guid": "ba122549-8c97-480d-9ad9-02ec61c822a4",
+                            "buildpack": "git://github.com/cloudfoundry/cloudfoundry-buildpack-java.git",
+                            "detected_buildpack": null,
+                            "environment_json": {
+
+                            },
+                            "memory": 1024,
+                            "instances": 1,
+                            "disk_quota": 1024,
+                            "state": "STARTED",
+                            "version": "8a842980-925e-4d4f-bee2-4750597ea431",
+                            "command": null,
+                            "console": true,
+                            "debug": null,
+                            "staging_task_id": "a995f3846bc35e6c0271aa58fdc47049",
+                            "space_url": "/v2/spaces/a4341e52-a6e4-47b5-b528-578ec95df851",
+                            "stack_url": "/v2/stacks/ba122549-8c97-480d-9ad9-02ec61c822a4",
+                            "service_bindings_url": "/v2/apps/bc931cab-f695-40e5-93f8-5e82215e9ea8/service_bindings",
+                            "routes_url": "/v2/apps/bc931cab-f695-40e5-93f8-5e82215e9ea8/routes",
+                            "events_url": "/v2/apps/bc931cab-f695-40e5-93f8-5e82215e9ea8/events"
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}

@@ -1,0 +1,56 @@
+<div class="container">
+    <div ng-show="error" class="alert alert-error">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Error!</strong> {{error}}
+    </div>
+    <div ng-show="loading">
+        <div class="well loading-well">
+            <div class="row-fluid">
+                <div class="span12">
+                    <h3 class="text-center">Stop rushing dude...</h3>
+                    <h5 class="text-center">We are loading <strong>ALL</strong> users!</h5>
+
+                    <div spin="defaultSpinnerConfig" spin-if="loading"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div ng-hide="loading">
+        <div class="row">
+            <div class="span12">
+                <div class="well">
+                    <h1><span class="muted">Add users to </span><span style="text-transform: uppercase;">{{organization.name}}.</span>
+                    </h1>
+
+                    <form class="form-search">
+                        <input type="text" ng-model="selectedUser" placeholder="Find by username." autocomplete="off"
+                               typeahead="user as user.userName for user in users | filter:$viewValue">
+                        <button class="btn btn-success" ng-click="addUser(organization, selectedUser)">ADD</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="span12">
+                <div class="well">
+                    <table class="table table-condensed">
+                        <thead>
+                        <tr>
+                            <th width="90%">USERNAME</th>
+                            <th width="10%"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="user in users">
+                            <td>{{user.userName}}</td>
+                            <td>
+                                <button class="btn btn-success" ng-click="addUser(organization, user)">ADD</button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

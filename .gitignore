@@ -1,4 +1,12 @@
+# Binary Files #
 *.class
+
+# IntelliJ Files #
+*.iml
+/.idea
+
+# Maven Files #
+/target
 
 # Package Files #
 *.jar

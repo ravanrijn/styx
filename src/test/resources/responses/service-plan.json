@@ -1,0 +1,18 @@
+{
+    "metadata": {
+        "guid": "b3706b5e-3aa1-4b0e-bed1-9931b595787b",
+        "url": "/v2/service_plans/b3706b5e-3aa1-4b0e-bed1-9931b595787b",
+        "created_at": "2013-07-19 13:02:05 +0200",
+        "updated_at": null
+    },
+    "entity": {
+        "name": "default",
+        "free": true,
+        "description": "Shared server, shared VM, 1MB memory, 10MB storage, 10 connections",
+        "service_guid": "c2538b46-89a0-47d1-9f60-15698993a650",
+        "extra": null,
+        "unique_id": "core_postgresql_default",
+        "service_url": "/v2/services/c2538b46-89a0-47d1-9f60-15698993a650",
+        "service_instances_url": "/v2/service_plans/b3706b5e-3aa1-4b0e-bed1-9931b595787b/service_instances"
+    }
+}
