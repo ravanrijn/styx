@@ -48,17 +48,19 @@ public abstract class BaseRepository {
 
     protected Organization appendUsername(String token, Organization organization) throws IOException {
         Set<String> userIds = getUserIds(organization);
-        Map<String, String> userNames = getUserNames(token, userIds);
-        for (Map.Entry<String, String> userName : userNames.entrySet()) {
-            for (OrganizationUser orgUser : organization.getUsers()) {
-                if (orgUser.getId().equals(userName.getKey())) {
-                    orgUser.setUsername(userName.getValue());
+        if (!userIds.isEmpty()) {
+            Map<String, String> userNames = getUserNames(token, userIds);
+            for (Map.Entry<String, String> userName : userNames.entrySet()) {
+                for (OrganizationUser orgUser : organization.getUsers()) {
+                    if (orgUser.getId().equals(userName.getKey())) {
+                        orgUser.setUsername(userName.getValue());
+                    }
                 }
-            }
-            for (Space space : organization.getSpaces()) {
-                for (SpaceUser spaceUser : space.getUsers()) {
-                    if (spaceUser.getId().equals(userName.getKey())) {
-                        spaceUser.setUsername(userName.getValue());
+                for (Space space : organization.getSpaces()) {
+                    for (SpaceUser spaceUser : space.getUsers()) {
+                        if (spaceUser.getId().equals(userName.getKey())) {
+                            spaceUser.setUsername(userName.getValue());
+                        }
                     }
                 }
             }
@@ -68,12 +70,14 @@ public abstract class BaseRepository {
 
     protected List<Space> appendUsername(String token, List<Space> spaces) throws IOException {
         Set<String> userIds = getUserIds(spaces);
-        Map<String, String> userNames = getUserNames(token, userIds);
-        for (Map.Entry<String, String> userName : userNames.entrySet()) {
-            for (Space space : spaces) {
-                for (SpaceUser spaceUser : space.getUsers()) {
-                    if (spaceUser.getId().equals(userName.getKey())) {
-                        spaceUser.setUsername(userName.getValue());
+        if (!userIds.isEmpty()) {
+            Map<String, String> userNames = getUserNames(token, userIds);
+            for (Map.Entry<String, String> userName : userNames.entrySet()) {
+                for (Space space : spaces) {
+                    for (SpaceUser spaceUser : space.getUsers()) {
+                        if (spaceUser.getId().equals(userName.getKey())) {
+                            spaceUser.setUsername(userName.getValue());
+                        }
                     }
                 }
             }

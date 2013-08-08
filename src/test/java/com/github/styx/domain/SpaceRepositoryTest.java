@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.List;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
@@ -46,7 +47,7 @@ public class SpaceRepositoryTest {
     }
 
     @Test
-    public void shouldFailWhenSpaceIsNotDeleted() throws IOException {
+    public void testDeleteByIdShouldFailWhenSpaceIsNotDeleted() throws IOException {
         String spaceResponse = IOUtils.toString(new ClassPathResource("/responses/space.json").getInputStream());
 
         when(restTemplate.exchange(eq("/api/v2/spaces/123?inline-relations-depth=1"), eq(HttpMethod.GET), isA(HttpEntity.class), eq(String.class))).thenReturn(new ResponseEntity(spaceResponse, HttpStatus.OK));
@@ -58,7 +59,7 @@ public class SpaceRepositoryTest {
     }
 
     @Test
-    public void shouldFailWhenSpaceIsNotReturned() throws IOException {
+    public void testGetByIdShouldFailWhenSpaceIsNotReturned() throws IOException {
         String spaceResponse = IOUtils.toString(new ClassPathResource("/responses/space.json").getInputStream());
         String usersResponse = IOUtils.toString(new ClassPathResource("/responses/users.json").getInputStream());
 
@@ -72,7 +73,7 @@ public class SpaceRepositoryTest {
     }
 
     @Test
-    public void shouldFailWhenSpacesAreNotReturned() throws IOException {
+    public void testGetByOrganizationIdShouldFailWhenSpacesAreNotReturned() throws IOException {
         String spacesResponse = IOUtils.toString(new ClassPathResource("/responses/spaces.json").getInputStream());
         String usersResponse = IOUtils.toString(new ClassPathResource("/responses/users.json").getInputStream());
 
@@ -83,6 +84,21 @@ public class SpaceRepositoryTest {
         LOGGER.info("Found spaces: {}", spaces);
 
         assertEquals("Unexpected number of spaces", 1, spaces.size());
+    }
+
+    @Test
+    public void testGetByOrganizationIdShouldFailWhenSpacesWithoutUsersAreNotReturned() throws IOException {
+        String spacesResponse = IOUtils.toString(new ClassPathResource("/responses/spaces-no-users.json").getInputStream());
+
+        when(restTemplate.exchange(eq("/api/v2/organizations/123/spaces?inline-relations-depth=3"), eq(HttpMethod.GET), isA(HttpEntity.class), eq(String.class))).thenReturn(new ResponseEntity(spacesResponse, HttpStatus.OK));
+
+        List<Space> spaces = spaceRepository.getByOrganizationId("bearer: 123", "123");
+        LOGGER.info("Found spaces: {}", spaces);
+
+        assertEquals("Unexpected number of spaces", 1, spaces.size());
+
+        Space space = spaces.get(0);
+        assertTrue("Expected users to be empty", space.getUsers().isEmpty());
     }
 
 }
