@@ -82,11 +82,6 @@ public class StyxWebConfig extends WebMvcConfigurerAdapter {
         return env.getProperty("base.api.url");
     }
 
-    @Bean(name = "loginBaseUri")
-    public String getLoginBaseUri() {
-        return env.getProperty("base.login.url");
-    }
-
     @Bean
     public AsyncTaskExecutor getAsyncTaskExecutor(){
         return new ConcurrentTaskExecutor();

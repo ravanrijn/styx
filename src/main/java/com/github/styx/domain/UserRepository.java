@@ -18,12 +18,12 @@ import static org.mvel2.MVEL.evalToString;
 @Repository
 public class UserRepository extends BaseRepository {
 
-    private final String loginBaseUri;
+    private final String uaaBaseUri;
 
     @Autowired
-    protected UserRepository(RestTemplate restTemplate, AsyncTaskExecutor asyncTaskExecutor, ObjectMapper objectMapper, String apiBaseUri, String uaaBaseUri, String loginBaseUri) {
+    protected UserRepository(RestTemplate restTemplate, AsyncTaskExecutor asyncTaskExecutor, ObjectMapper objectMapper, String apiBaseUri, String uaaBaseUri) {
         super(restTemplate, asyncTaskExecutor, objectMapper, apiBaseUri, uaaBaseUri);
-        this.loginBaseUri = concatSlashIfNeeded(loginBaseUri);
+        this.uaaBaseUri = concatSlashIfNeeded(uaaBaseUri);
     }
 
     public UserDetails login(String username, String password) {
@@ -37,7 +37,7 @@ public class UserRepository extends BaseRepository {
         model.add("username", username);
         model.add("password", password);
 
-        ResponseEntity<String> loginResponse = getRestTemplate().exchange(loginBaseUri.concat("oauth/token"), HttpMethod.POST, new HttpEntity(model, httpHeaders), String.class);
+        ResponseEntity<String> loginResponse = getRestTemplate().exchange(uaaBaseUri.concat("oauth/token"), HttpMethod.POST, new HttpEntity(model, httpHeaders), String.class);
         if (loginResponse.getStatusCode().equals(HttpStatus.OK)) {
             try {
                 UserDetails userDetails = UserDetails.fromCloudFoundryModel(getMapper().readValue(loginResponse.getBody(), new TypeReference<Map<String, Object>>() {}));

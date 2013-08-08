@@ -33,7 +33,7 @@ public class UserRepositoryTest {
     @Before
     public void setUp() throws Exception {
         restTemplate = mock(RestTemplate.class);
-        userRepository = new UserRepository(restTemplate, new ConcurrentTaskExecutor(), new ObjectMapper(), "/api/", "/uaa/", "/login/");
+        userRepository = new UserRepository(restTemplate, new ConcurrentTaskExecutor(), new ObjectMapper(), "/api/", "/uaa/");
     }
 
     @Test
@@ -41,7 +41,7 @@ public class UserRepositoryTest {
         String tokenResponse = IOUtils.toString(new ClassPathResource("/responses/token.json").getInputStream());
         String userinfoResponse = IOUtils.toString(new ClassPathResource("/responses/userinfo.json").getInputStream());
 
-        when(restTemplate.exchange(eq("/login/oauth/token"), eq(HttpMethod.POST), isA(HttpEntity.class), eq(String.class))).thenReturn(new ResponseEntity<String>(tokenResponse, HttpStatus.OK));
+        when(restTemplate.exchange(eq("/uaa/oauth/token"), eq(HttpMethod.POST), isA(HttpEntity.class), eq(String.class))).thenReturn(new ResponseEntity<String>(tokenResponse, HttpStatus.OK));
         when(restTemplate.exchange(eq("/uaa/userinfo"), eq(HttpMethod.GET), isA(HttpEntity.class), eq(String.class))).thenReturn(new ResponseEntity<String>(userinfoResponse, HttpStatus.OK));
 
         UserDetails userDetails = userRepository.login("username", "password");
