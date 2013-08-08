@@ -37,7 +37,7 @@ public class UserRepositoryTest {
     @Before
     public void setUp() throws Exception {
         restTemplate = mock(RestTemplate.class);
-        userRepository = new UserRepository(restTemplate, new ConcurrentTaskExecutor(), new ObjectMapper(), "/api/", "/uaa/");
+        userRepository = new UserRepository(restTemplate, new ConcurrentTaskExecutor(), new ObjectMapper(), "/api/", "/uaa/", "styx", "styxsecret");
     }
 
     @Test

@@ -1,6 +1,7 @@
 package com.github.styx.domain;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.task.AsyncTaskExecutor;
@@ -19,17 +20,25 @@ public class UserRepository extends BaseRepository {
 
     private final String uaaBaseUri;
 
+    private final String clientId;
+
+    private final String clientSecret;
+
     @Autowired
-    protected UserRepository(RestTemplate restTemplate, AsyncTaskExecutor asyncTaskExecutor, ObjectMapper objectMapper, String apiBaseUri, String uaaBaseUri) {
+    protected UserRepository(RestTemplate restTemplate, AsyncTaskExecutor asyncTaskExecutor, ObjectMapper objectMapper, String apiBaseUri, String uaaBaseUri, String clientId, String clientSecret) {
         super(restTemplate, asyncTaskExecutor, objectMapper, apiBaseUri, uaaBaseUri);
         this.uaaBaseUri = concatSlashIfNeeded(uaaBaseUri);
+        this.clientId = clientId;
+        this.clientSecret = clientSecret;
     }
 
     public UserDetails login(String username, String password) {
+        String authorization = "Basic ".concat(Base64.encodeBase64String(clientId.concat(":").concat(clientSecret).getBytes()));
+
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
         httpHeaders.add("Accept", "application/json;charset=utf-8");
-        httpHeaders.add("Authorization", "Basic Y2Y6");
+        httpHeaders.add("Authorization", authorization);
 
         MultiValueMap<String, String> model = new LinkedMultiValueMap();
         model.add("grant_type", "password");
