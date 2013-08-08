@@ -1,11 +1,12 @@
 package com.github.styx.domain;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -15,6 +16,7 @@ import org.springframework.scheduling.concurrent.ConcurrentTaskExecutor;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -25,6 +27,8 @@ import static org.mockito.Mockito.when;
 
 @RunWith(JUnit4.class)
 public class UserRepositoryTest {
+
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     private UserRepository userRepository;
 
@@ -38,11 +42,11 @@ public class UserRepositoryTest {
 
     @Test
     public void testLoginShouldFailWhenUserCannotLogIn() throws IOException {
-        String tokenResponse = IOUtils.toString(new ClassPathResource("/responses/token.json").getInputStream());
-        String userinfoResponse = IOUtils.toString(new ClassPathResource("/responses/userinfo.json").getInputStream());
+        Map<String, Object> tokenResponse = objectMapper.readValue(new ClassPathResource("/responses/token.json").getInputStream(), new TypeReference<Map<String, Object>>() {});
+        Map<String, Object> userinfoResponse = objectMapper.readValue(new ClassPathResource("/responses/userinfo.json").getInputStream(), new TypeReference<Map<String, Object>>() {});
 
-        when(restTemplate.exchange(eq("/uaa/oauth/token"), eq(HttpMethod.POST), isA(HttpEntity.class), eq(String.class))).thenReturn(new ResponseEntity<String>(tokenResponse, HttpStatus.OK));
-        when(restTemplate.exchange(eq("/uaa/userinfo"), eq(HttpMethod.GET), isA(HttpEntity.class), eq(String.class))).thenReturn(new ResponseEntity<String>(userinfoResponse, HttpStatus.OK));
+        when(restTemplate.exchange(eq("/uaa/oauth/token"), eq(HttpMethod.POST), isA(HttpEntity.class), isA(ParameterizedTypeReference.class))).thenReturn(new ResponseEntity(tokenResponse, HttpStatus.OK));
+        when(restTemplate.exchange(eq("/uaa/userinfo"), eq(HttpMethod.GET), isA(HttpEntity.class), isA(ParameterizedTypeReference.class))).thenReturn(new ResponseEntity(userinfoResponse, HttpStatus.OK));
 
         UserDetails userDetails = userRepository.login("username", "password");
         assertNotNull(userDetails);

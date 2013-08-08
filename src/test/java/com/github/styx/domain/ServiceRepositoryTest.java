@@ -1,13 +1,14 @@
 package com.github.styx.domain;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -18,6 +19,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
@@ -29,6 +31,8 @@ import static org.springframework.test.util.AssertionErrors.assertEquals;
 public class ServiceRepositoryTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationRepositoryTest.class);
+
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     private ServiceRepository serviceRepository;
 
@@ -42,9 +46,9 @@ public class ServiceRepositoryTest {
 
     @Test
     public void testGetAllShouldFailWhenServicesAreNotReturned() throws IOException {
-        String servicesResponse = IOUtils.toString(new ClassPathResource("/responses/services.json").getInputStream());
+        Map<String, Object> servicesResponse = objectMapper.readValue(new ClassPathResource("/responses/services.json").getInputStream(), new TypeReference<Map<String, Object>>() {});
 
-        when(restTemplate.exchange(eq("/api/v2/services?inline-relations-depth=1"), eq(HttpMethod.GET), isA(HttpEntity.class), eq(String.class))).thenReturn(new ResponseEntity<String>(servicesResponse, HttpStatus.OK));
+        when(restTemplate.exchange(eq("/api/v2/services?inline-relations-depth=1"), eq(HttpMethod.GET), isA(HttpEntity.class), isA(ParameterizedTypeReference.class))).thenReturn(new ResponseEntity(servicesResponse, HttpStatus.OK));
 
         List<Service> services = serviceRepository.getAll("bearer 123");
         LOGGER.info("Found services: {}", services);

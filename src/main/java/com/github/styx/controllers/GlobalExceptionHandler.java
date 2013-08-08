@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler({Exception.class})
-    public ResponseEntity<String> handleException(Exception ex) {
+    public ResponseEntity<?> handleException(Exception ex) {
         RepositoryException repositoryException = findRepositoryException(ex);
         if (repositoryException != null) {
             return repositoryException.getResponse();

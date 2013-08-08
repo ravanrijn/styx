@@ -1,13 +1,12 @@
 package com.github.styx.domain;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.http.*;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
@@ -46,7 +45,7 @@ public abstract class BaseRepository {
         return restTemplate;
     }
 
-    protected Organization appendUsername(String token, Organization organization) throws IOException {
+    protected Organization appendUsername(String token, Organization organization) {
         Set<String> userIds = getUserIds(organization);
         if (!userIds.isEmpty()) {
             Map<String, String> userNames = getUserNames(token, userIds);
@@ -68,7 +67,7 @@ public abstract class BaseRepository {
         return organization;
     }
 
-    protected List<Space> appendUsername(String token, List<Space> spaces) throws IOException {
+    protected List<Space> appendUsername(String token, List<Space> spaces) {
         Set<String> userIds = getUserIds(spaces);
         if (!userIds.isEmpty()) {
             Map<String, String> userNames = getUserNames(token, userIds);
@@ -85,16 +84,16 @@ public abstract class BaseRepository {
         return spaces;
     }
 
-    protected String uaaGet(String token, String path) {
-        ResponseEntity<String> responseEntity = exchange(token, uaaBaseUri, HttpMethod.GET, path);
+    protected Map<String, Object> uaaGet(String token, String path) {
+        ResponseEntity<Map<String, Object>> responseEntity = exchange(token, uaaBaseUri, HttpMethod.GET, path, new ParameterizedTypeReference<Map<String, Object>>() {});
         if (!responseEntity.getStatusCode().equals(HttpStatus.OK)) {
             throw new RepositoryException("Cannot perform uaa get for path [" + path + "]", responseEntity);
         }
         return responseEntity.getBody();
     }
 
-    protected String apiGet(String token, String path) {
-        ResponseEntity<String> responseEntity = exchange(token, apiBaseUri, HttpMethod.GET, path);
+    protected Map<String, Object> apiGet(String token, String path) {
+        ResponseEntity<Map<String, Object>> responseEntity = exchange(token, apiBaseUri, HttpMethod.GET, path, new ParameterizedTypeReference<Map<String, Object>>() {});
         if (!responseEntity.getStatusCode().equals(HttpStatus.OK)) {
             throw new RepositoryException("Cannot perform api get for path [" + path + "]", responseEntity);
         }
@@ -102,38 +101,38 @@ public abstract class BaseRepository {
     }
 
     protected String apiDelete(String token, String path) {
-        ResponseEntity<String> responseEntity = exchange(token, apiBaseUri, HttpMethod.DELETE, path);
+        ResponseEntity<String> responseEntity = exchange(token, apiBaseUri, HttpMethod.DELETE, path, new ParameterizedTypeReference<String>() {});
         if (!responseEntity.getStatusCode().equals(HttpStatus.NO_CONTENT)) {
             throw new RepositoryException("Cannot perform api delete for path [" + path + "]", responseEntity);
         }
         return responseEntity.getBody();
     }
 
-    protected Future<ResponseEntity<String>> asyncApiGet(final String token, final String path) {
-        return asyncTaskExecutor.submit(new Callable<ResponseEntity<String>>() {
+    protected Future<ResponseEntity<Map<String, Object>>> asyncApiGet(final String token, final String path) {
+        return asyncTaskExecutor.submit(new Callable<ResponseEntity<Map<String, Object>>>() {
             @Override
-            public ResponseEntity<String> call() throws Exception {
-                return exchange(token, apiBaseUri, HttpMethod.GET, path);
+            public ResponseEntity<Map<String, Object>> call() throws Exception {
+                return exchange(token, apiBaseUri, HttpMethod.GET, path, new ParameterizedTypeReference<Map<String, Object>>() {});
             }
         });
     }
 
-    private ResponseEntity<String> exchange(String token, String baseUri, HttpMethod method, String path) {
+    protected <T> ResponseEntity<T> exchange(String token, String baseUri, HttpMethod method, String path, ParameterizedTypeReference<T> typeReference) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("Accept", "application/json");
         httpHeaders.add("Authorization", token);
         try {
-            return restTemplate.exchange(baseUri.concat(path), method, new HttpEntity(httpHeaders), String.class);
+            return restTemplate.exchange(baseUri.concat(path), method, new HttpEntity(httpHeaders), typeReference);
         } catch (HttpClientErrorException e) {
-            return new ResponseEntity(e.getResponseBodyAsString(), e.getResponseHeaders(), e.getStatusCode());
+            throw new RepositoryException("Unable to perform exchange for path [" + path + "]", e);
         }
     }
 
-    private Map<String, String> getUserNames(String token, Set<String> userIds) throws IOException {
-        String userDetailsResponse = uaaGet(token, getUserDetailsPath(userIds));
+    private Map<String, String> getUserNames(String token, Set<String> userIds) {
+        Map<String, Object> userDetailsResponse = uaaGet(token, getUserDetailsPath(userIds));
 
         Map<String, String> userNames = new HashMap<>();
-        for (Object resource : eval("resources", objectMapper.readValue(userDetailsResponse, new TypeReference<Map<String, Object>>() {}), List.class)) {
+        for (Object resource : eval("resources", userDetailsResponse, List.class)) {
             userNames.put(evalToString("id", resource), evalToString("userName", resource));
         }
         return userNames;

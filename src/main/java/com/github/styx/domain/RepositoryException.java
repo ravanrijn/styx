@@ -4,7 +4,7 @@ import org.springframework.http.ResponseEntity;
 
 public class RepositoryException extends RuntimeException {
 
-    private final ResponseEntity<String> response;
+    private final ResponseEntity<?> response;
 
     public RepositoryException(String message) {
         super(message);
@@ -16,12 +16,12 @@ public class RepositoryException extends RuntimeException {
         response = null;
     }
 
-    public RepositoryException(String message, ResponseEntity<String> response) {
+    public RepositoryException(String message, ResponseEntity<?> response) {
         super(message);
         this.response = response;
     }
 
-    public ResponseEntity<String> getResponse() {
+    public ResponseEntity<?> getResponse() {
         return response;
     }
 

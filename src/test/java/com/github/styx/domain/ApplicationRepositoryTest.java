@@ -1,13 +1,14 @@
 package com.github.styx.domain;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -17,6 +18,7 @@ import org.springframework.scheduling.concurrent.ConcurrentTaskExecutor;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
+import java.util.Map;
 
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
@@ -28,6 +30,8 @@ import static org.springframework.test.util.AssertionErrors.assertEquals;
 public class ApplicationRepositoryTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationRepositoryTest.class);
+
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     private ApplicationRepository applicationRepository;
 
@@ -41,19 +45,19 @@ public class ApplicationRepositoryTest {
 
     @Test
     public void testDeleteByIdShouldFailWhenApplicationIsNotDeleted() {
-        when(restTemplate.exchange(eq("/api/v2/applications/123"), eq(HttpMethod.DELETE), isA(HttpEntity.class), eq(String.class))).thenReturn(new ResponseEntity(HttpStatus.NO_CONTENT));
+        when(restTemplate.exchange(eq("/api/v2/applications/123"), eq(HttpMethod.DELETE), isA(HttpEntity.class), isA(ParameterizedTypeReference.class))).thenReturn(new ResponseEntity(HttpStatus.NO_CONTENT));
         applicationRepository.deleteById("bearer: 123", "123");
     }
 
     @Test
     public void testGetByIdShouldFailWhenApplicationIsNotReturned() throws IOException {
-        String applicationResponse = IOUtils.toString(new ClassPathResource("/responses/application.json").getInputStream());
-        String instancesResponse = IOUtils.toString(new ClassPathResource("/responses/instances.json").getInputStream());
-        String servicesResponse = IOUtils.toString(new ClassPathResource("/responses/service-instances.json").getInputStream());
+        Map<String, Object> applicationResponse = objectMapper.readValue(new ClassPathResource("/responses/application.json").getInputStream(), new TypeReference<Map<String, Object>>() {});
+        Map<String, Object> instancesResponse = objectMapper.readValue(new ClassPathResource("/responses/instances.json").getInputStream(), new TypeReference<Map<String, Object>>() {});
+        Map<String, Object> servicesResponse = objectMapper.readValue(new ClassPathResource("/responses/service-instances.json").getInputStream(), new TypeReference<Map<String, Object>>() {});
 
-        when(restTemplate.exchange(eq("/api/v2/apps/123?inline-relations-depth=2"), eq(HttpMethod.GET), isA(HttpEntity.class), eq(String.class))).thenReturn(new ResponseEntity<String>(applicationResponse, HttpStatus.OK));
-        when(restTemplate.exchange(eq("/api/v2/apps/123/instances"), eq(HttpMethod.GET), isA(HttpEntity.class), eq(String.class))).thenReturn(new ResponseEntity<String>(instancesResponse, HttpStatus.OK));
-        when(restTemplate.exchange(eq("/api/v2/apps/123/service_bindings?inline-relations-depth=3"), eq(HttpMethod.GET), isA(HttpEntity.class), eq(String.class))).thenReturn(new ResponseEntity<String>(servicesResponse, HttpStatus.OK));
+        when(restTemplate.exchange(eq("/api/v2/apps/123?inline-relations-depth=2"), eq(HttpMethod.GET), isA(HttpEntity.class), isA(ParameterizedTypeReference.class))).thenReturn(new ResponseEntity(applicationResponse, HttpStatus.OK));
+        when(restTemplate.exchange(eq("/api/v2/apps/123/instances"), eq(HttpMethod.GET), isA(HttpEntity.class), isA(ParameterizedTypeReference.class))).thenReturn(new ResponseEntity(instancesResponse, HttpStatus.OK));
+        when(restTemplate.exchange(eq("/api/v2/apps/123/service_bindings?inline-relations-depth=3"), eq(HttpMethod.GET), isA(HttpEntity.class), isA(ParameterizedTypeReference.class))).thenReturn(new ResponseEntity(servicesResponse, HttpStatus.OK));
 
         Application application = applicationRepository.getById("bearer 123", "123");
         LOGGER.info("Found application: {}", application);
