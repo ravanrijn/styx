@@ -129,6 +129,16 @@ styxServices.factory('cloudfoundry', function ($http, cache, $q) {
 
     }
 
+    cloudfoundry.register = function(userForm) {
+        var promise = $http({
+            method: 'POST',
+            url: 'api/users',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8', 'Accept': 'application/json;charset=utf-8'},
+            data: $.param({'username': userForm.email, 'password': userForm.password})
+        });
+        return retrieveResource(promise);
+    }
+
     cloudfoundry.updateOrganization = function (organizationId, body) {
         /**
          * Todo dit kan slimmer, haal org op uit cache en update deze, maar deleger dit via een functie naar de caller. Echter

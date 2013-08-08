@@ -132,6 +132,17 @@ styx.config(function($stateProvider) {
             }
         }
     });
+    $stateProvider.state('register', {
+        url: '/register',
+        views: {
+            'navigation': navigation,
+            'footer': footer,
+            'body': {
+                templateUrl: 'partials/${project.version}/register.html',
+                controller: 'RegisterController'
+            }
+        }
+    });
 });
 
 styx.run(function($rootScope, $location, cloudfoundry){
@@ -161,7 +172,7 @@ styx.run(function($rootScope, $location, cloudfoundry){
     };
     $rootScope.$on("$stateChangeStart", function(event, toState, toParams, fromState, fromParams) {
         if(!cloudfoundry.isAuthenticated()){
-            if(toState.name != '/login'){
+            if(toState.url != '/login' && toState.url != '/register'){
                 $location.path('/login');
             }
         }

@@ -23,6 +23,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(JUnit4.class)
@@ -54,6 +55,18 @@ public class UserRepositoryTest {
         assertEquals("Unexpected user name", "cloudfoundry", userDetails.getUsername());
         assertEquals("Unexpected token type", "bearer", userDetails.getTokenType());
         assertEquals("Unexpected access token", "1234", userDetails.getAccessToken());
+    }
+
+    @Test
+    public void testRegisterShouldFailWhenRegistrationFails() throws IOException {
+        Map<String, Object> tokenResponse = objectMapper.readValue(new ClassPathResource("/responses/token.json").getInputStream(), new TypeReference<Map<String, Object>>() {});
+        Map<String, Object> uaaCreateUserResponse = objectMapper.readValue(new ClassPathResource("/responses/uaa-create-user.json").getInputStream(), new TypeReference<Map<String, Object>>() {});
+
+        when(restTemplate.exchange(eq("/uaa/oauth/token"), eq(HttpMethod.POST), isA(HttpEntity.class), isA(ParameterizedTypeReference.class))).thenReturn(new ResponseEntity(tokenResponse, HttpStatus.OK));
+        when(restTemplate.exchange(eq("/uaa/Users"), eq(HttpMethod.POST), isA(HttpEntity.class), isA(ParameterizedTypeReference.class))).thenReturn(new ResponseEntity(uaaCreateUserResponse, HttpStatus.CREATED));
+        when(restTemplate.exchange(eq("/api/v2/users"), eq(HttpMethod.POST), isA(HttpEntity.class), isA(ParameterizedTypeReference.class))).thenReturn(new ResponseEntity(HttpStatus.CREATED));
+
+        userRepository.registerUser("username", "password");
     }
 
 }

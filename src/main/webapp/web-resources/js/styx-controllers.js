@@ -24,6 +24,18 @@ styxControllers.controller('LoginController', function ($scope, cloudfoundry, $l
     }
 });
 
+styxControllers.controller('RegisterController', function($scope, cloudfoundry, $location) {
+    $scope.register = function(userForm) {
+        var registrationPromise = cloudfoundry.register(userForm);
+        registrationPromise.success(function (data, status, headers) {
+            $location.path("/login");
+        });
+        registrationPromise.error(function (data, status, headers) {
+            $scope.error = 'Registration failed. Reason: ' + data.message;
+        });
+    }
+});
+
 styxControllers.controller('AppSettingsController', function ($scope, $stateParams, $location, cloudfoundry) {
     $scope.loading = true;
     $scope.organizationId = $stateParams.organizationId;

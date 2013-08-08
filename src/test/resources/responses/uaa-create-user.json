@@ -1,0 +1,58 @@
+{"id": "20d79a8b-a34b-4acf-8685-2b4e8478c853",
+    "meta": {
+        "version": 0,
+        "created": "2013-08-07T14:38:42.563Z",
+        "lastModified": "2013-08-07T14:38:42.563Z"
+    },
+    "userName": "wassup@klm.com",
+    "name": {
+        "familyName": "wassup@klm.com",
+        "givenName": "wassup@klm.com"
+    },
+    "emails": [
+        {
+            "value": "wassup@klm.com"
+        }
+    ],
+    "groups": [
+        {
+            "value": "57957408-124a-4e18-a035-815148f109f7",
+            "display": "scim.userids",
+            "type": "DIRECT"
+        },
+        {
+            "value": "3e22def0-10aa-4441-b9d6-52a3a335d1fe",
+            "display": "scim.me",
+            "type": "DIRECT"
+        },
+        {
+            "value": "cdd9612b-db41-4b08-8ed7-26c15b8cae94",
+            "display": "cloud_controller.write",
+            "type": "DIRECT"
+        },
+        {
+            "value": "e95f5398-1b67-46c8-9026-ea30b8cdff89",
+            "display": "uaa.user",
+            "type": "DIRECT"
+        },
+        {
+            "value": "780c9520-7e78-454f-be4e-83292e0ef84f",
+            "display": "approvals.me",
+            "type": "DIRECT"
+        },
+        {
+            "value": "79b1bd61-6a17-4ed7-ba6a-f52669745865",
+            "display": "cloud_controller.read",
+            "type": "DIRECT"
+        },
+        {
+            "value": "b6131268-c83f-42c5-a872-814ba034edd7",
+            "display": "password.write",
+            "type": "DIRECT"
+        },
+        {
+            "value": "244a9ed2-2415-48f6-b346-612ce931ac16",
+            "display": "openid",
+            "type": "DIRECT"
+        }
+    ], "approvals": [], "active": true, "schemas": ["urn:scim:schemas:core:1.0"]}

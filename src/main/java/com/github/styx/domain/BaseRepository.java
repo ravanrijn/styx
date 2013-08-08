@@ -124,7 +124,7 @@ public abstract class BaseRepository {
         try {
             return restTemplate.exchange(baseUri.concat(path), method, new HttpEntity(httpHeaders), typeReference);
         } catch (HttpClientErrorException e) {
-            throw new RepositoryException("Unable to perform exchange for path [" + path + "]", e);
+            throw new RepositoryException("Unable to perform exchange for path [" + path + "]", new ResponseEntity(e.getResponseBodyAsString(), e.getStatusCode()));
         }
     }
 
