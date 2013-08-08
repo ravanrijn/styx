@@ -81,8 +81,12 @@ public abstract class BaseRepository {
         return spaces;
     }
 
-    protected ResponseEntity<String> uaaGet(String token, String path) {
-        return exchange(token, uaaBaseUri, HttpMethod.GET, path);
+    protected String uaaGet(String token, String path) {
+        ResponseEntity<String> responseEntity = exchange(token, uaaBaseUri, HttpMethod.GET, path);
+        if (!responseEntity.getStatusCode().equals(HttpStatus.OK)) {
+            throw new RepositoryException("Cannot perform uaa get for path [" + path + "]", responseEntity);
+        }
+        return responseEntity.getBody();
     }
 
     protected String apiGet(String token, String path) {
@@ -93,8 +97,12 @@ public abstract class BaseRepository {
         return responseEntity.getBody();
     }
 
-    protected ResponseEntity<String> apiDelete(String token, String path) {
-        return exchange(token, apiBaseUri, HttpMethod.DELETE, path);
+    protected String apiDelete(String token, String path) {
+        ResponseEntity<String> responseEntity = exchange(token, apiBaseUri, HttpMethod.DELETE, path);
+        if (!responseEntity.getStatusCode().equals(HttpStatus.NO_CONTENT)) {
+            throw new RepositoryException("Cannot perform api delete for path [" + path + "]", responseEntity);
+        }
+        return responseEntity.getBody();
     }
 
     protected Future<ResponseEntity<String>> asyncApiGet(final String token, final String path) {
@@ -118,13 +126,11 @@ public abstract class BaseRepository {
     }
 
     private Map<String, String> getUserNames(String token, Set<String> userIds) throws IOException {
-        ResponseEntity<String> userDetailsResponseEntity = uaaGet(token, getUserDetailsPath(userIds));
+        String userDetailsResponse = uaaGet(token, getUserDetailsPath(userIds));
 
         Map<String, String> userNames = new HashMap<>();
-        if (userDetailsResponseEntity.getStatusCode().equals(HttpStatus.OK)) {
-            for (Object resource : eval("resources", objectMapper.readValue(userDetailsResponseEntity.getBody(), new TypeReference<Map<String, Object>>() {}), List.class)) {
-                userNames.put(evalToString("id", resource), evalToString("userName", resource));
-            }
+        for (Object resource : eval("resources", objectMapper.readValue(userDetailsResponse, new TypeReference<Map<String, Object>>() {}), List.class)) {
+            userNames.put(evalToString("id", resource), evalToString("userName", resource));
         }
         return userNames;
     }

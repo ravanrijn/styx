@@ -42,13 +42,11 @@ public class UserRepository extends BaseRepository {
             try {
                 UserDetails userDetails = UserDetails.fromCloudFoundryModel(getMapper().readValue(loginResponse.getBody(), new TypeReference<Map<String, Object>>() {}));
 
-                ResponseEntity<String> userInfoResponse = uaaGet(userDetails.getTokenType() + " " + userDetails.getAccessToken(), "userinfo");
-                if (userInfoResponse.getStatusCode().equals(HttpStatus.OK)) {
-                    Map<String, Object> userInfo = getMapper().readValue(userInfoResponse.getBody(), new TypeReference<Map<String, Object>>() {});
-                    userDetails.setId(evalToString("user_id", userInfo));
-                    userDetails.setUsername(evalToString("user_name", userInfo));
-                    return userDetails;
-                }
+                String userInfoResponse = uaaGet(userDetails.getTokenType() + " " + userDetails.getAccessToken(), "userinfo");
+                Map<String, Object> userInfo = getMapper().readValue(userInfoResponse, new TypeReference<Map<String, Object>>() {});
+                userDetails.setId(evalToString("user_id", userInfo));
+                userDetails.setUsername(evalToString("user_name", userInfo));
+                return userDetails;
             } catch (IOException e) {
                 throw new RepositoryException("Unable to parse JSON from response", e);
             }

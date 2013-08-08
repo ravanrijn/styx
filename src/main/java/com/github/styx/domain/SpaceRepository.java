@@ -39,11 +39,7 @@ public class SpaceRepository extends BaseRepository {
         } catch (IOException e) {
             throw new RepositoryException("Unable to parse JSON from response", e);
         }
-
-        ResponseEntity<String> deleteResponseEntity = apiDelete(token, "v2/spaces/".concat(id));
-        if (!deleteResponseEntity.getStatusCode().equals(HttpStatus.NO_CONTENT)) {
-            throw new RepositoryException("Unable to delete space", deleteResponseEntity);
-        }
+        apiDelete(token, "v2/spaces/".concat(id));
     }
 
     public Space getById(String token, String id) {

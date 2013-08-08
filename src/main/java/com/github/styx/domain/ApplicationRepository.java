@@ -26,10 +26,7 @@ public class ApplicationRepository extends BaseRepository {
     }
 
     public void deleteById(String token, String id) {
-        ResponseEntity<String> deleteResponseEntity = apiDelete(token, "v2/applications/".concat(id));
-        if (!deleteResponseEntity.getStatusCode().equals(HttpStatus.NO_CONTENT)) {
-            throw new RepositoryException("Unable to delete application", deleteResponseEntity);
-        }
+        apiDelete(token, "v2/applications/".concat(id));
     }
 
     public Application getById(String token, String id) {

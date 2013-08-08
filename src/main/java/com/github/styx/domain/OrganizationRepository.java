@@ -40,11 +40,7 @@ public class OrganizationRepository extends BaseRepository {
         } catch (IOException e) {
             throw new RepositoryException("Unable to parse JSON from response", e);
         }
-
-        ResponseEntity<String> deleteResponseEntity = apiDelete(token, "v2/organizations/".concat(id));
-        if (!deleteResponseEntity.getStatusCode().equals(HttpStatus.NO_CONTENT)) {
-            throw new RepositoryException("Unable to delete space", deleteResponseEntity);
-        }
+        apiDelete(token, "v2/organizations/".concat(id));
     }
 
     public Organization getById(final String token, final String id, final int depth) {
