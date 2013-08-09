@@ -1,13 +1,13 @@
 <configuration scan="true">
 
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %X{req.requestURI} %logger %ex{short} - %msg%n</pattern>
-        </encoder>
+        <layout class="com.github.styx.logging.MaskedPatternLayout">
+            <Pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %X{req.requestURI} %logger %ex{short} - %msg%n</Pattern>
+        </layout>
     </appender>
 
-    <root level="info">
-        <appender-ref ref="console" />
+    <root level="debug">
+        <appender-ref ref="console"/>
     </root>
 
 </configuration>
