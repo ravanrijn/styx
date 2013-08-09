@@ -1,4 +1,7 @@
 <div class="container">
+    <div ng-show="success" class="alert alert-success">
+        {{success}}
+    </div>
     <div ng-show="error" class="alert alert-error">
         {{error}}
     </div>
@@ -6,12 +9,13 @@
         <div class="row">
             <div class="span4 offset4">
                 <div class="well well-large text-center">
-                    <h2 class="form-signin-heading">Please register...</h2>
+                    <h2 class="form-signin-heading">Create a Cloud Foundry account</h2>
 
                     <form name="registerForm" class="form-signin" novalidate>
                         <input name="registerForm.email" id="username" type="text" class="input-block-level" placeholder="Email" ng-model="registerForm.email" required>
                         <input name="registerForm.password" id="password" type="password" class="input-block-level" placeholder="Password" ng-model="registerForm.password" required>
-                        <button class="btn btn-large btn-primary" ng-click="register(registerForm)" ng-disabled="authenticate">Register</button>
+                        <button class="btn btn-primary" ng-click="register(registerForm)" ng-disabled="authenticate">Create account</button>
+                        <a href="#/login">Back to login >></a>
                     </form>
                 </div>
             </div>

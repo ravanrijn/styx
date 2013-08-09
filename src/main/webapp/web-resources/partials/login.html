@@ -18,13 +18,13 @@
         <div class="row">
             <div class="span4 offset4">
                 <div class="well well-large text-center">
-                    <h2 class="form-signin-heading">Please sign in...</h2>
+                    <h2 class="form-signin-heading">Log in to Cloud Foundry</h2>
 
                     <form name="loginForm" class="form-signin" novalidate>
                         <input name="userForm.email" id="username" type="text" class="input-block-level" placeholder="Email" ng-model="userForm.email" required>
                         <input name="userForm.password" id="password" type="password" class="input-block-level" placeholder="Password" ng-model="userForm.password" required>
-                        <button class="btn btn-large btn-primary" ng-click="login(userForm)" ng-disabled="authenticate">Sign in</button>
-                        <!--a href="#/register" class="btn btn-large">Register</i></a-->
+                        <button class="btn btn-primary" ng-click="login(userForm)" ng-disabled="authenticate">Sign in</button>
+                        <a href="#/register">Create an account >></a>
                     </form>
 
                     <div spin="loginSpinnerConfig" spin-if="authenticate"></div>
