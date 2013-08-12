@@ -62,7 +62,7 @@ public class OrganizationRepositoryTest {
     public void testGetByIdShouldFailWhenOrganizationIsNotReturned() throws IOException {
         Map<String, Object> organizationResponse = objectMapper.readValue(new ClassPathResource("/responses/organization.json").getInputStream(), new TypeReference<Map<String, Object>>() {
         });
-        Map<String, Object> usersResponse = objectMapper.readValue(new ClassPathResource("/responses/users.json").getInputStream(), new TypeReference<Map<String, Object>>() {
+        Map<String, Object> usersResponse = objectMapper.readValue(new ClassPathResource("/responses/uaa-users.json").getInputStream(), new TypeReference<Map<String, Object>>() {
         });
 
         when(restTemplate.exchange(eq("/api/v2/organizations/123?inline-relations-depth=2"), eq(HttpMethod.GET), isA(HttpEntity.class), isA(ParameterizedTypeReference.class))).thenReturn(new ResponseEntity(organizationResponse, HttpStatus.OK));
@@ -80,7 +80,7 @@ public class OrganizationRepositoryTest {
     @Test
     public void testGetAllShouldFailWhenOrganizationsAreNotReturned() throws IOException {
         Map<String, Object> organizationsResponse = objectMapper.readValue(new ClassPathResource("/responses/organizations.json").getInputStream(), new TypeReference<Map<String, Object>>() {});
-        Map<String, Object> usersResponse = objectMapper.readValue(new ClassPathResource("/responses/users.json").getInputStream(), new TypeReference<Map<String, Object>>() {});
+        Map<String, Object> usersResponse = objectMapper.readValue(new ClassPathResource("/responses/uaa-users.json").getInputStream(), new TypeReference<Map<String, Object>>() {});
 
         when(restTemplate.exchange(eq("/api/v2/organizations?inline-relations-depth=2"), eq(HttpMethod.GET), isA(HttpEntity.class), isA(ParameterizedTypeReference.class))).thenReturn(new ResponseEntity(organizationsResponse, HttpStatus.OK));
         when(restTemplate.exchange(eq("/uaa/ids/Users?filter=id eq 'db309bb0-644e-49be-950f-c4b6f6a969e2' or id eq '9ab79c43-e2ce-4468-a838-300d4ba95d5c' or id eq '8ce8063c-2834-476c-b09e-3dc9760f7c99'"), eq(HttpMethod.GET), isA(HttpEntity.class), isA(ParameterizedTypeReference.class))).thenReturn(new ResponseEntity(usersResponse, HttpStatus.OK));

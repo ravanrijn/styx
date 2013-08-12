@@ -132,7 +132,7 @@ public abstract class BaseRepository {
         }
     }
 
-    private Map<String, String> getUserNames(String token, Set<String> userIds) {
+    protected Map<String, String> getUserNames(String token, Set<String> userIds) {
         Map<String, String> userNames = new HashMap<>();
         try {
             Map<String, Object> userDetailsResponse = uaaGet(token, getUserDetailsPath(userIds));

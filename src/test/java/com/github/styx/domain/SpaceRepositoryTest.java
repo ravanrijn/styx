@@ -63,7 +63,7 @@ public class SpaceRepositoryTest {
     @Test
     public void testGetByIdShouldFailWhenSpaceIsNotReturned() throws IOException {
         Map<String, Object> spaceResponse = objectMapper.readValue(new ClassPathResource("/responses/space.json").getInputStream(), new TypeReference<Map<String, Object>>() {});
-        Map<String, Object> usersResponse = objectMapper.readValue(new ClassPathResource("/responses/users.json").getInputStream(), new TypeReference<Map<String, Object>>() {});
+        Map<String, Object> usersResponse = objectMapper.readValue(new ClassPathResource("/responses/uaa-users.json").getInputStream(), new TypeReference<Map<String, Object>>() {});
 
         when(restTemplate.exchange(eq("/api/v2/spaces/123?inline-relations-depth=2"), eq(HttpMethod.GET), isA(HttpEntity.class), isA(ParameterizedTypeReference.class))).thenReturn(new ResponseEntity(spaceResponse, HttpStatus.OK));
         when(restTemplate.exchange(eq("/uaa/ids/Users?filter=id eq 'f939a538-c0f1-48ef-90bc-8fd2c9ce477e'"), eq(HttpMethod.GET), isA(HttpEntity.class), isA(ParameterizedTypeReference.class))).thenReturn(new ResponseEntity(usersResponse, HttpStatus.OK));
@@ -78,7 +78,7 @@ public class SpaceRepositoryTest {
     public void testGetByOrganizationIdShouldFailWhenSpacesAreNotReturned() throws IOException {
         Map<String, Object> spacesResponse = objectMapper.readValue(new ClassPathResource("/responses/spaces.json").getInputStream(), new TypeReference<Map<String, Object>>() {
         });
-        Map<String, Object> usersResponse = objectMapper.readValue(new ClassPathResource("/responses/users.json").getInputStream(), new TypeReference<Map<String, Object>>() {
+        Map<String, Object> usersResponse = objectMapper.readValue(new ClassPathResource("/responses/uaa-users.json").getInputStream(), new TypeReference<Map<String, Object>>() {
         });
 
         when(restTemplate.exchange(eq("/api/v2/organizations/123/spaces?inline-relations-depth=3"), eq(HttpMethod.GET), isA(HttpEntity.class), isA(ParameterizedTypeReference.class))).thenReturn(new ResponseEntity(spacesResponse, HttpStatus.OK));

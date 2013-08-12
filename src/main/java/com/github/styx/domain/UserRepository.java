@@ -12,7 +12,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Map;
+import java.util.*;
 
 import static org.mvel2.MVEL.eval;
 import static org.mvel2.MVEL.evalToString;
@@ -35,6 +35,23 @@ public class UserRepository extends BaseRepository {
         this.uaaBaseUri = concatSlashIfNeeded(uaaBaseUri);
         this.clientId = clientId;
         this.clientSecret = clientSecret;
+    }
+
+    public List<User> getAllUsers(String token) {
+        Map<String, Object> usersResponse = apiGet(token, "v2/users");
+
+        Set<String> userIds = new HashSet<>();
+        for (Object userResource : eval("resources", usersResponse, List.class)) {
+            userIds.add(evalToString("metadata.guid", userResource));
+        }
+
+        List<User> users = new ArrayList<>();
+
+        Map<String, String> userNames = getUserNames(token, userIds);
+        for (Map.Entry<String, String> entry : userNames.entrySet()) {
+            users.add(OrganizationUser.Builder.newBuilder(entry.getKey()).setUserName(entry.getValue()).build());
+        }
+        return users;
     }
 
     public UserDetails login(String username, String password) {
