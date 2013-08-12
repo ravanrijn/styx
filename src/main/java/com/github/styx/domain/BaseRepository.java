@@ -1,6 +1,8 @@
 package com.github.styx.domain;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.http.*;
@@ -15,6 +17,8 @@ import static org.mvel2.MVEL.eval;
 import static org.mvel2.MVEL.evalToString;
 
 public abstract class BaseRepository {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(BaseRepository.class);
 
     private final RestTemplate restTemplate;
     private final AsyncTaskExecutor asyncTaskExecutor;
@@ -129,11 +133,14 @@ public abstract class BaseRepository {
     }
 
     private Map<String, String> getUserNames(String token, Set<String> userIds) {
-        Map<String, Object> userDetailsResponse = uaaGet(token, getUserDetailsPath(userIds));
-
         Map<String, String> userNames = new HashMap<>();
-        for (Object resource : eval("resources", userDetailsResponse, List.class)) {
-            userNames.put(evalToString("id", resource), evalToString("userName", resource));
+        try {
+            Map<String, Object> userDetailsResponse = uaaGet(token, getUserDetailsPath(userIds));
+            for (Object resource : eval("resources", userDetailsResponse, List.class)) {
+                userNames.put(evalToString("id", resource), evalToString("userName", resource));
+            }
+        } catch (RepositoryException re) {
+            LOGGER.info("Problem retrieving user names from UAA");
         }
         return userNames;
     }
