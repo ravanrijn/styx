@@ -1,0 +1,9 @@
+---
+applications:
+- name: styx
+  memory: 1G
+  instances: 1
+  url: console.${target-base}
+  path: target/styx-1.0.1-SNAPSHOT.war
+  buildpack: git://github.com/cloudfoundry/cloudfoundry-buildpack-java.git
+
