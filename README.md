@@ -2,6 +2,10 @@
 
 Styx is a web console for Cloud Foundry V2.
 
+# Requirements
+
+* Styx requires the Java7 JDK installed locally (in order to build the project with Maven)
+
 # Installation
 
 1. Register Styx as client in the UAA (optional, you can also run Styx as client cf).
