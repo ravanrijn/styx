@@ -62,12 +62,12 @@ public class UserRepositoryTest {
         when(restTemplate.exchange(eq("/uaa/oauth/token"), eq(HttpMethod.POST), isA(HttpEntity.class), isA(ParameterizedTypeReference.class))).thenReturn(new ResponseEntity(tokenResponse, HttpStatus.OK));
         when(restTemplate.exchange(eq("/uaa/userinfo"), eq(HttpMethod.GET), isA(HttpEntity.class), isA(ParameterizedTypeReference.class))).thenReturn(new ResponseEntity(userinfoResponse, HttpStatus.OK));
 
-        UserDetails userDetails = userRepository.login("username", "password");
-        assertNotNull(userDetails);
-        assertEquals("Unexpected user id", "d312cc7e-8350-4aac-a0d7-d1fbcc8e7e27", userDetails.getId());
-        assertEquals("Unexpected user name", "cloudfoundry", userDetails.getUsername());
-        assertEquals("Unexpected token type", "bearer", userDetails.getTokenType());
-        assertEquals("Unexpected access token", "1234", userDetails.getAccessToken());
+        AccessToken accessToken = userRepository.login("username", "password");
+        assertNotNull(accessToken);
+        assertEquals("Unexpected user id", "d312cc7e-8350-4aac-a0d7-d1fbcc8e7e27", accessToken.getId());
+        assertEquals("Unexpected user name", "cloudfoundry", accessToken.getUsername());
+        assertEquals("Unexpected token type", "bearer", accessToken.getTokenType());
+        assertEquals("Unexpected access token", "1234", accessToken.getAccessToken());
     }
 
     @Test

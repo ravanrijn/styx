@@ -5,7 +5,7 @@ import org.apache.commons.lang.builder.ToStringStyle;
 
 import static org.mvel2.MVEL.evalToString;
 
-public class UserDetails {
+public class AccessToken {
 
     private final String accessToken;
 
@@ -15,7 +15,7 @@ public class UserDetails {
 
     private String username;
 
-    public UserDetails(String accessToken, String tokenType) {
+    public AccessToken(String accessToken, String tokenType) {
         this.accessToken = accessToken;
         this.tokenType = tokenType;
     }
@@ -44,8 +44,8 @@ public class UserDetails {
         this.username = username;
     }
 
-    public static UserDetails fromCloudFoundryModel(Object response) {
-        return new UserDetails(evalToString("access_token", response), evalToString("token_type", response));
+    public static AccessToken fromCloudFoundryModel(Object response) {
+        return new AccessToken(evalToString("access_token", response), evalToString("token_type", response));
     }
 
     @Override

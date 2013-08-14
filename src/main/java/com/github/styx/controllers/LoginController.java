@@ -1,6 +1,6 @@
 package com.github.styx.controllers;
 
-import com.github.styx.domain.UserDetails;
+import com.github.styx.domain.AccessToken;
 import com.github.styx.domain.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,7 +22,7 @@ public class LoginController {
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ResponseBody
-    public UserDetails login(@RequestParam("username") String username, @RequestParam("password")  String password) {
+    public AccessToken login(@RequestParam("username") String username, @RequestParam("password")  String password) {
         return userRepository.login(username, password);
     }
 
