@@ -279,7 +279,7 @@ styxServices.factory('chucknorris', function ($http, $q, cache) {
         if (!facts && facts !== null) {
             deferred.resolve(chucknorris.randomFact(facts));
         } else {
-            $http.get("js/${project.version}/chucknorris.json").then(function(response) {
+            $http.get("js/chucknorris.json").then(function(response) {
                 cache.storeFacts(response.data.value);
                 deferred.resolve(chucknorris.randomFact(response.data.value));
             });

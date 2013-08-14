@@ -4,11 +4,11 @@ var styx = angular.module('styx', ['angular-spin', 'ui.bootstrap', 'ui.state', '
 
 styx.config(function($stateProvider) {
     var navigation = {
-        templateUrl: 'partials/${project.version}/navigation.html',
+        templateUrl: 'partials/navigation.html',
         controller: 'NavigationController'
     }
     var footer = {
-        templateUrl: 'partials/${project.version}/footer.html',
+        templateUrl: 'partials/footer.html',
         controller: 'FooterController'
     }
     $stateProvider.state('app-log', {
@@ -17,7 +17,7 @@ styx.config(function($stateProvider) {
             'navigation': navigation,
             'footer': footer,
             'body': {
-                templateUrl: 'partials/${project.version}/app-log.html',
+                templateUrl: 'partials/app-log.html',
                 controller: 'AppLogController'
             }
         }
@@ -28,7 +28,7 @@ styx.config(function($stateProvider) {
             'navigation': navigation,
             'footer': footer,
             'body': {
-                templateUrl: 'partials/${project.version}/app-settings.html',
+                templateUrl: 'partials/app-settings.html',
                 controller: 'AppSettingsController'
             }
         }
@@ -39,7 +39,7 @@ styx.config(function($stateProvider) {
             'navigation': navigation,
             'footer': footer,
             'body': {
-                templateUrl: 'partials/${project.version}/app-spaces.html',
+                templateUrl: 'partials/app-spaces.html',
                 controller: 'AppSpacesController'
             }
         }
@@ -50,7 +50,7 @@ styx.config(function($stateProvider) {
             'navigation': navigation,
             'footer': footer,
             'body': {
-                templateUrl: 'partials/${project.version}/create-org.html',
+                templateUrl: 'partials/create-org.html',
                 controller: 'CreateOrganizationController'
             }
         }
@@ -61,7 +61,7 @@ styx.config(function($stateProvider) {
             'navigation': navigation,
             'footer': footer,
             'body': {
-                templateUrl: 'partials/${project.version}/create-space.html',
+                templateUrl: 'partials/create-space.html',
                 controller: 'CreateSpaceController'
             }
         }
@@ -72,7 +72,7 @@ styx.config(function($stateProvider) {
             'navigation': navigation,
             'footer': footer,
             'body': {
-                templateUrl: 'partials/${project.version}/marketplace.html',
+                templateUrl: 'partials/marketplace.html',
                 controller: 'MarketplaceController'
             }
         }
@@ -83,7 +83,7 @@ styx.config(function($stateProvider) {
             'navigation': navigation,
             'footer': footer,
             'body': {
-                templateUrl: 'partials/${project.version}/org-settings.html',
+                templateUrl: 'partials/org-settings.html',
                 controller: 'OrganizationSettingsController'
             }
         }
@@ -94,7 +94,7 @@ styx.config(function($stateProvider) {
             'navigation': navigation,
             'footer': footer,
             'body': {
-                templateUrl: 'partials/${project.version}/space-settings.html',
+                templateUrl: 'partials/space-settings.html',
                 controller: 'SpaceSettingsController'
             }
         }
@@ -105,7 +105,7 @@ styx.config(function($stateProvider) {
             'navigation': navigation,
             'footer': footer,
             'body': {
-                templateUrl: 'partials/${project.version}/org-users.html',
+                templateUrl: 'partials/org-users.html',
                 controller: 'OrgUsersController'
             }
         }
@@ -116,7 +116,7 @@ styx.config(function($stateProvider) {
             'navigation': navigation,
             'footer': footer,
             'body': {
-                templateUrl: 'partials/${project.version}/users.html',
+                templateUrl: 'partials/users.html',
                 controller: 'UsersController'
             }
         }
@@ -127,7 +127,7 @@ styx.config(function($stateProvider) {
             'navigation': navigation,
             'footer': footer,
             'body': {
-                templateUrl: 'partials/${project.version}/user-info.html',
+                templateUrl: 'partials/user-info.html',
                 controller: 'UserInfoController'
             }
         }
@@ -138,7 +138,7 @@ styx.config(function($stateProvider) {
             'navigation': navigation,
             'footer': footer,
             'body': {
-                templateUrl: 'partials/${project.version}/login.html',
+                templateUrl: 'partials/login.html',
                 controller: 'LoginController'
             }
         }
@@ -149,7 +149,7 @@ styx.config(function($stateProvider) {
             'navigation': navigation,
             'footer': footer,
             'body': {
-                templateUrl: 'partials/${project.version}/register.html',
+                templateUrl: 'partials/register.html',
                 controller: 'RegisterController'
             }
         }
