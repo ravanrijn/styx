@@ -10,6 +10,7 @@ styxControllers.controller('LoginController', function ($scope, cloudfoundry, $l
         authenticationPromise.success(function (data, status, headers) {
             var organizationPromise = cloudfoundry.getOrganizations();
             organizationPromise.success(function (data, status, headers) {
+                console.log(data);
                 if (data.length > 0) {
                     $location.path('/app-spaces/' + data[0].id);
                 } else {

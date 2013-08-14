@@ -94,23 +94,7 @@ styxServices.factory('cloudfoundry', function ($http, cache, $q) {
     }
 
     cloudfoundry.authenticate = function (userForm) {
-        if (cache.getUser()) {
-            var deferred = $q.defer();
-            deferred.resolve(cache.getUser());
-            var promise = deferred.promise;
-            promise.success = function (fn) {
-                promise.then(function (user) {
-                    fn(user, 200, {});
-                });
-                return promise;
-            }
-            promise.error = function (fn) {
-                promise.then(null, function (response) {
-                    fn({}, 500, {});
-                });
-            }
-            return promise;
-        }
+        cache.clear();
         var promise = $http({
             method: 'POST',
             url: 'api/login',
@@ -121,9 +105,7 @@ styxServices.factory('cloudfoundry', function ($http, cache, $q) {
                 'username': userForm.email,
                 'password': userForm.password})
         });
-
         return retrieveResource(promise, function (authenticationDetails) {
-            console.log(authenticationDetails);
             cache.storeUser(authenticationDetails);
         });
 
