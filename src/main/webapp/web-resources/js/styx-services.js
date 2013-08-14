@@ -270,6 +270,10 @@ styxServices.factory('cloudfoundry', function ($http, cache, $q) {
         return retrieveResource(resourcePromise('api/services', 'GET'));
     }
 
+    cloudfoundry.getUserInfo = function() {
+        return retrieveResource(resourcePromise('api/userinfo', 'GET'));
+    }
+
     cloudfoundry.logout = function () {
         cache.clear();
     }

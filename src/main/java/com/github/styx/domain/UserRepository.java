@@ -54,6 +54,17 @@ public class UserRepository extends BaseRepository {
         return users;
     }
 
+    public UserInfo getUserInfo(String token) {
+        Map<String, Object> userInfoResponse = uaaGet(token, "userinfo");
+        String userId = evalToString("user_id", userInfoResponse);
+
+        Map<String, Object> uaaUserResponse = uaaGet(token, "Users/".concat(userId));
+
+        Map<String, Object> apiUserResponse = apiGet(token, "v2/users/".concat(userId).concat("?inline-relations-depth=1"));
+
+        return UserInfo.fromCloudFoundryModel(uaaUserResponse, apiUserResponse);
+    }
+
     public AccessToken login(String username, String password) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");

@@ -466,6 +466,16 @@ styxControllers.controller('UsersController', function ($scope, $stateParams, us
     }
 });
 
+styxControllers.controller('UserInfoController', function ($scope, cloudfoundry) {
+    var userInfoPromise = cloudfoundry.getUserInfo();
+    userInfoPromise.success(function (data, status, headers) {
+        $scope.userInfo = data;
+    });
+    userInfoPromise.error(function (data, status, headers) {
+        $scope.error = 'Failed to get user info. Reason: ' + data.code + ' - ' + data.description;
+    });
+});
+
 styxControllers.controller('MainController', function ($scope, cloudfoundry, $location, $route) {
     if (!cloudfoundry.isAuthenticated()) {
         if ($location.path() != '/login') {

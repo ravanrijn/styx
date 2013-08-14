@@ -121,6 +121,17 @@ styx.config(function($stateProvider) {
             }
         }
     });
+    $stateProvider.state('userinfo', {
+        url: '/userinfo/:organizationId',
+        views: {
+            'navigation': navigation,
+            'footer': footer,
+            'body': {
+                templateUrl: 'partials/${project.version}/user-info.html',
+                controller: 'UserInfoController'
+            }
+        }
+    });
     $stateProvider.state('login', {
         url: '/login',
         views: {

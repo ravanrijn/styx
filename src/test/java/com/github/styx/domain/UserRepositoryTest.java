@@ -55,6 +55,20 @@ public class UserRepositoryTest {
     }
 
     @Test
+    public void testGetUserInfo() throws IOException {
+        Map<String, Object> userinfoResponse = objectMapper.readValue(new ClassPathResource("/responses/userinfo.json").getInputStream(), new TypeReference<Map<String, Object>>() {});
+        Map<String, Object> uaaUserResponse = objectMapper.readValue(new ClassPathResource("/responses/uaa-user.json").getInputStream(), new TypeReference<Map<String, Object>>() {});
+        Map<String, Object> apiUserResponse = objectMapper.readValue(new ClassPathResource("/responses/api-user.json").getInputStream(), new TypeReference<Map<String, Object>>() {});
+
+        when(restTemplate.exchange(eq("/uaa/userinfo"), eq(HttpMethod.GET), isA(HttpEntity.class), isA(ParameterizedTypeReference.class))).thenReturn(new ResponseEntity(userinfoResponse, HttpStatus.OK));
+        when(restTemplate.exchange(eq("/uaa/Users/d312cc7e-8350-4aac-a0d7-d1fbcc8e7e27"), eq(HttpMethod.GET), isA(HttpEntity.class), isA(ParameterizedTypeReference.class))).thenReturn(new ResponseEntity(uaaUserResponse, HttpStatus.OK));
+        when(restTemplate.exchange(eq("/api/v2/users/d312cc7e-8350-4aac-a0d7-d1fbcc8e7e27?inline-relations-depth=1"), eq(HttpMethod.GET), isA(HttpEntity.class), isA(ParameterizedTypeReference.class))).thenReturn(new ResponseEntity(apiUserResponse, HttpStatus.OK));
+
+        UserInfo userInfo = userRepository.getUserInfo("bearer: 123");
+        assertNotNull("User info should not be null", userInfo);
+    }
+
+    @Test
     public void testLoginShouldFailWhenUserCannotLogIn() throws IOException {
         Map<String, Object> tokenResponse = objectMapper.readValue(new ClassPathResource("/responses/token.json").getInputStream(), new TypeReference<Map<String, Object>>() {});
         Map<String, Object> userinfoResponse = objectMapper.readValue(new ClassPathResource("/responses/userinfo.json").getInputStream(), new TypeReference<Map<String, Object>>() {});

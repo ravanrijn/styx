@@ -1,0 +1,18 @@
+<div class="container">
+    <div ng-show="error" class="alert alert-error">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Error!</strong> {{error}}
+    </div>
+
+    <div class="well well-small well-light">
+        <h5>User info</h5>
+        <dl class="dl-horizontal">
+            <dt>USER NAME</dt>
+            <dd>{{ userInfo.userName }}</dd>
+            <dt>EMAIL</dt>
+            <dd><div ng-repeat="email in userInfo.emailAddresses">{{ email }}</div></dd>
+            <dt>ORGANIZATIONS</dt>
+            <dd><div ng-repeat="organization in userInfo.organizations">{{ organization }}</div></dd>
+        </dl>
+    </div>
+</div>
