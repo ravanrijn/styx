@@ -476,7 +476,7 @@ styxControllers.controller('MainController', function ($scope, cloudfoundry, $lo
     if ($location.path() === '/' || $location.path().length === 0) {
         var organizationPromise = cloudfoundry.getOrganizations();
         organizationPromise.success(function (result) {
-            $location.path('/app-spaces/' + result.resources[0].metadata.guid);
+            $location.path('/app-spaces/' + result[0].id);
         });
         organizationPromise.error(function (result) {
             cloudfoundry.logout();
