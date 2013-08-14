@@ -3,8 +3,18 @@
         <button type="button" class="close" data-dismiss="alert">&times;</button>
         <strong>Error!</strong> {{error}}
     </div>
-
-    <div class="well well-small well-light">
+    <div ng-show="loading">
+        <div class="well loading-well">
+            <div class="row-fluid">
+                <div class="span12">
+                    <h3 class="text-center">Hold on...</h3>
+                    <h5 class="text-center">We are loading your information!</h5>
+                    <div spin="loginSpinnerConfig" spin-if="loading"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div ng-hide="loading" class="well well-small well-light">
         <h5>User info</h5>
         <dl class="dl-horizontal">
             <dt>USER NAME</dt>

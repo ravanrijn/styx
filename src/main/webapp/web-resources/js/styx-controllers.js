@@ -10,7 +10,12 @@ styxControllers.controller('LoginController', function ($scope, cloudfoundry, $l
         authenticationPromise.success(function (data, status, headers) {
             var organizationPromise = cloudfoundry.getOrganizations();
             organizationPromise.success(function (data, status, headers) {
-                $location.path('/app-spaces/' + data[0].id);
+                if (data.length > 0) {
+                    $location.path('/app-spaces/' + data[0].id);
+                } else {
+                    $scope.error = 'You are not associated with any organization, please ask an organization manager to add you an organization.';
+                    $scope.authenticating = false;
+                }
             });
             organizationPromise.error(function (data, status, headers) {
                 $scope.error = 'Invalid user credentials';
@@ -467,9 +472,11 @@ styxControllers.controller('UsersController', function ($scope, $stateParams, us
 });
 
 styxControllers.controller('UserInfoController', function ($scope, cloudfoundry) {
+    $scope.loading = true;
     var userInfoPromise = cloudfoundry.getUserInfo();
     userInfoPromise.success(function (data, status, headers) {
         $scope.userInfo = data;
+        $scope.loading = false;
     });
     userInfoPromise.error(function (data, status, headers) {
         $scope.error = 'Failed to get user info. Reason: ' + data.code + ' - ' + data.description;
