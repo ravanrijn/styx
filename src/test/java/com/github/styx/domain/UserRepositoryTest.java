@@ -93,7 +93,7 @@ public class UserRepositoryTest {
         when(restTemplate.exchange(eq("/uaa/Users"), eq(HttpMethod.POST), isA(HttpEntity.class), isA(ParameterizedTypeReference.class))).thenReturn(new ResponseEntity(uaaCreateUserResponse, HttpStatus.CREATED));
         when(restTemplate.exchange(eq("/api/v2/users"), eq(HttpMethod.POST), isA(HttpEntity.class), isA(ParameterizedTypeReference.class))).thenReturn(new ResponseEntity(HttpStatus.CREATED));
 
-        userRepository.registerUser("username", "password");
+        userRepository.registerUser("username", "first", "last", "password");
     }
 
 }

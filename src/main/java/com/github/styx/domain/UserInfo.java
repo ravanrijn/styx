@@ -68,7 +68,7 @@ public class UserInfo {
         }
 
         return new UserInfo(evalToString("id", uaaResponse), evalToString("userName", uaaResponse),
-                evalToString("name.?firstName", uaaResponse), evalToString("name.?lastName", uaaResponse),
+                evalToString("name.?givenName", uaaResponse), evalToString("name.?familyName", uaaResponse),
                 emailAddresses, organizations);
     }
 

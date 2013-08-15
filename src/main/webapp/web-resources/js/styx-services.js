@@ -116,7 +116,7 @@ styxServices.factory('cloudfoundry', function ($http, cache, $q) {
             method: 'POST',
             url: 'api/users',
             headers: {'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8', 'Accept': 'application/json;charset=utf-8'},
-            data: $.param({'username': userForm.email, 'password': userForm.password})
+            data: $.param({'username': userForm.email, 'firstName': userForm.firstName, 'lastName': userForm.lastName, 'password': userForm.password})
         });
         return retrieveResource(promise);
     }

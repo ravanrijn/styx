@@ -88,9 +88,9 @@ public class UserRepository extends BaseRepository {
         throw new RepositoryException("Unable to login", loginResponse);
     }
 
-    public void registerUser(String username, String password) {
+    public void registerUser(String username, String firstName, String lastName, String password) {
         String accessToken = getAccessToken(clientId, clientSecret);
-        String userId = uaaCreateUser(accessToken, username, password);
+        String userId = uaaCreateUser(accessToken, username, firstName, lastName, password);
         apiCreateUser(accessToken, userId);
     }
 
@@ -118,7 +118,7 @@ public class UserRepository extends BaseRepository {
         }
     }
 
-    private String uaaCreateUser(String accessToken, String username, String password) {
+    private String uaaCreateUser(String accessToken, String username, String firstName, String lastName, String password) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("Content-Type", "application/json;charset=utf-8");
         httpHeaders.add("Accept", "application/json;charset=utf-8");
@@ -132,9 +132,9 @@ public class UserRepository extends BaseRepository {
                 .append("\"}],\"password\":\"")
                 .append(password)
                 .append("\",\"name\":{\"givenName\":\"")
-                .append(username)
+                .append(firstName)
                 .append("\",\"familyName\":\"")
-                .append(username)
+                .append(lastName)
                 .append("\"}}\"").toString();
 
         try {

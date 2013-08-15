@@ -34,8 +34,8 @@ public class UserController {
 
     @RequestMapping(value = "/users", method = RequestMethod.POST)
     @ResponseBody
-    public void registerUser(@RequestParam("username") String username, @RequestParam("password") String password) {
-        userRepository.registerUser(username, password);
+    public void registerUser(@RequestParam("username") String username, @RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName, @RequestParam("password") String password) {
+        userRepository.registerUser(username, firstName, lastName, password);
     }
 
 }
