@@ -57,16 +57,19 @@
                 </div>
             </div>
         </div>
-
-        <button class="btn btn-danger" data-toggle="modal" data-target="#modal">DELETE ORGANIZATION</button>
+        <button href="#modal" data-toggle="modal" class="btn btn-danger">DELETE ORGANIZATION</button>
     </div>
-    <div id="modal" class="modal hide fade">
-        <div class="modal-body">
-            <p>Are you sure you want to delete this organization? All Spaces, Applications and Services from this organization will be permanently deleted.</p>
-        </div>
-        <div class="modal-footer">
-            <button class="btn" data-dismiss="modal" aria-hidden="true">CANCEL</button>
-            <button class="btn btn-danger" data-dismiss="modal" aria-hidden="true" ng-click="deleteOrganization()">DELETE ORGANIZATION</button>
+    <div id="modal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <p>Are you sure you want to delete this organization? All Spaces, Applications and Services from this organization will be permanently deleted.</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn" data-dismiss="modal" aria-hidden="true">CANCEL</button>
+                    <button class="btn btn-danger" data-dismiss="modal" aria-hidden="true" ng-click="deleteOrganization()">DELETE ORGANIZATION</button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
