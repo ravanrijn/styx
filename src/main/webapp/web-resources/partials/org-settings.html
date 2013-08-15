@@ -5,27 +5,23 @@
     </div>
     <div ng-show="loading">
         <div class="well loading-well">
-            <div class="row-fluid">
-                <div class="span12">
-                    <h3 class="text-center">Hold on...</h3>
-                    <h5 class="text-center">We are deleting your organization!</h5>
-                    <div spin="loginSpinnerConfig" spin-if="loading"></div>
-                </div>
-            </div>
+            <h3 class="text-center">Hold on...</h3>
+            <h5 class="text-center">We are deleting your organization!</h5>
+            <div spin="loginSpinnerConfig" spin-if="loading"></div>
         </div>
     </div>
     <div ng-hide="loading" class="well well-small">
-        <div class="row-fluid">
-            <div class="span11">
+        <div class="row">
+            <div class="col-md-11">
                 <h5 class="uppercase">ORGANIZATION NAME {{organization.name}}</h5>
             </div>
-            <div class="span1">
+            <div class="col-md-1">
                 <!--button class="btn btn-inverse">EDIT</button-->
             </div>
         </div>
 
-        <div class="row-fluid">
-            <div class="span8">
+        <div class="row">
+            <div class="col-md-8">
                 <div class="well well-small light">
                     <h5>SYSTEM DOMAINS</h5>
                     <table class="table table-condensed">
@@ -43,7 +39,7 @@
                 </div>
             </div>
 
-            <div class="span4">
+            <div class="col-md-4">
                 <div class="well well-small light">
                     <h5>ORGANIZATION QUOTA</h5>
                     <dl class="dl-horizontal">

@@ -5,24 +5,20 @@
     </div>
     <div ng-show="loading">
         <div class="well loading-well">
-            <div class="row-fluid">
-                <div class="span12">
-                    <h3 class="text-center">Hold on...</h3>
-                    <h5 class="text-center">We are loading your information!</h5>
-                    <div spin="loginSpinnerConfig" spin-if="loading"></div>
-                </div>
-            </div>
+            <h3 class="text-center">Hold on...</h3>
+            <h5 class="text-center">We are loading your information!</h5>
+            <div spin="loginSpinnerConfig" spin-if="loading"></div>
         </div>
     </div>
     <div ng-hide="loading" class="well well-small well-light">
         <h5>User info</h5>
         <dl class="dl-horizontal">
             <dt>USER NAME</dt>
-            <dd>{{ userInfo.userName }}</dd>
+            <dd>{{userInfo.userName}}</dd>
             <dt>EMAIL</dt>
-            <dd><div ng-repeat="email in userInfo.emailAddresses">{{ email }}</div></dd>
+            <dd><div ng-repeat="email in userInfo.emailAddresses">{{email}}</div></dd>
             <dt>ORGANIZATIONS</dt>
-            <dd><div ng-repeat="organization in userInfo.organizations">{{ organization }}</div></dd>
+            <dd><div ng-repeat="organization in userInfo.organizations">{{organization}}</div></dd>
         </dl>
     </div>
 </div>

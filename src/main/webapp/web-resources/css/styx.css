@@ -1,6 +1,6 @@
 body {
-    padding-top: 60px;
-    padding-bottom: 40px;
+    padding-top: 70px;
+    padding-bottom: 70px;
 }
 pre {
     font-family: "Courier New";
@@ -11,21 +11,6 @@ pre {
 }
 .uppercase {
     text-transform: uppercase;
-}
-.form-signin {
-    max-width: 300px;
-    padding: 20px 30px 30px;
-    margin: 0 auto 20px;
-}
-.form-signin .form-signin-heading{
-    margin-bottom: 10px;
-}
-.form-signin input[type="text"],
-.form-signin input[type="password"] {
-    font-size: 16px;
-    height: auto;
-    margin-bottom: 15px;
-    padding: 7px 9px;
 }
 .loading-well {
     height:300px;

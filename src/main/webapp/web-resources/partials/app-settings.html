@@ -5,13 +5,9 @@
     </div>
     <div ng-show="loading">
         <div class="well loading-well">
-            <div class="row-fluid">
-                <div class="span12">
-                    <h3 class="text-center">Hold on...</h3>
-                    <h5 class="text-center">We are loading your application!</h5>
-                    <div spin="defaultSpinnerConfig" spin-if="loading"></div>
-                </div>
-            </div>
+            <h3 class="text-center">Hold on...</h3>
+            <h5 class="text-center">We are loading your application!</h5>
+            <div spin="defaultSpinnerConfig" spin-if="loading"></div>
         </div>
     </div>
     <div ng-hide="loading">
@@ -31,8 +27,8 @@
                     </thead>
                     <tbody>
                     <tr>
-                        <td><span class="badge badge-success" ng-show="application.state == 'STARTED'">{{application.health}}%</span>
-                            <span class="badge badge-important" ng-hide="application.state == 'STARTED'">{{application.health}}%</span></td>
+                        <td><span class="label label-success" ng-show="application.state == 'STARTED'">{{application.health}}%</span>
+                            <span class="label label-danger" ng-hide="application.state == 'STARTED'">{{application.health}}%</span></td>
                         <td>{{application.instances}}</td>
                         <td>{{application.memory}} MB</td>
                         <td>{{application.buildpack}}</td>
