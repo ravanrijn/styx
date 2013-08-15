@@ -58,10 +58,10 @@ public class UserRepository extends BaseRepository {
         Map<String, Object> userInfoResponse = uaaGet(token, "userinfo");
         String userId = evalToString("user_id", userInfoResponse);
 
-        Map<String, Object> uaaUserResponse = uaaGet(token, "Users/".concat(userId));
-
-        Map<String, Object> apiUserResponse = apiGet(token, "v2/users/".concat(userId).concat("?inline-relations-depth=1"));
-
+        // use Styx' token to retrieve the user details
+        String accessToken = getAccessToken(clientId, clientSecret);
+        Map<String, Object> uaaUserResponse = uaaGet(accessToken, "Users/".concat(userId));
+        Map<String, Object> apiUserResponse = apiGet(accessToken, "v2/users/".concat(userId).concat("?inline-relations-depth=1"));
         return UserInfo.fromCloudFoundryModel(uaaUserResponse, apiUserResponse);
     }
 
