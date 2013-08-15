@@ -18,66 +18,62 @@
     <div ng-hide="loading">
         <div class="row">
             <div class="col-md-9">
-                <div class="well well-small">
-                    <div class="row">
-                        <div class="col-md-8">
-                            <h5>USERS AND ROLES</h5>
-                        </div>
-                        <div class="col-md-4 text-right">
-                            <button class="btn btn-success" ng-click="addNewUser(organization)" ng-hide="blockInput">ADD USER TO ORGANIZATION</button>
-                        </div>
+                <div class="panel">
+                    <div class="panel-heading">
+                        <span class="panel-title">USERS AND ROLES</span><button class="btn btn-sm btn-success pull-right" ng-click="addNewUser(organization)" ng-hide="blockInput">ADD USER TO ORGANIZATION</button>
                     </div>
-
-                    <table class="table table-condensed">
-                        <thead>
-                        <tr>
-                            <th width="30%">
-                                <div class="btn-group">
-                                    <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" style="text-transform: uppercase;">{{selectedGroup}}<b class="caret"></b></a>
-                                    <ul class="dropdown-menu">
-                                        <li>ORGANIZATION ROLES</li>
-                                        <li><a ng-click="selectOrganizationUsers(organization.name)"
-                                               style="text-transform: uppercase;">{{organization.name}}</a></li>
-                                        <li class="divider"></li>
-                                        <li>SPACE ROLES</li>
-                                        <li ng-repeat="space in organization.spaces track by $id($index)"><a
-                                                ng-click="selectSpaceUsers(space.name, organization)"
-                                                style="text-transform: uppercase;">{{space.name}}</a></li>
-                                    </ul>
-                                </div>
-                            </th>
-                            <th width="20%"><span ng-show="showOrganizationUsers">ORG. MANAGER</span><span
-                                    ng-hide="showOrganizationUsers">SPACE MANAGER</span></th>
-                            <th width="20%"><span ng-show="showOrganizationUsers">BILLING MANAGER</span><span
-                                    ng-hide="showOrganizationUsers">DEVELOPER</span></th>
-                            <th width="20%"><span ng-show="showOrganizationUsers">ORG. AUDITOR</span><span
-                                    ng-hide="showOrganizationUsers">SPACE AUDITOR</span></th>
-                            <th width="10%"></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr ng-repeat="user in organization.users" ng-show="showOrganizationUsers">
-                            <td>{{user.userName}}</td>
-                            <td><input type="checkbox" ng-checked="user.isManager" ng-model="user.isManager"
-                                       ng-disabled="blockInput" ng-click="setOrgManager(organization, user)"/></td>
-                            <td><input type="checkbox" ng-checked="user.isBillingManager" ng-model="user.isBillingManager" ng-disabled="blockInput"
-                                       ng-click="setOrgBillingManager(organization, user)"/></td>
-                            <td><input type="checkbox" ng-checked="user.isAuditor" ng-model="user.isAuditor" ng-disabled="blockInput"
-                                       ng-click="setOrgAuditor(organization, user)"/></td>
-                            <td><button class="btn btn-danger" ng-click="openConfirmation(user)" ng-hide="blockInput || loggedInUser.id === user.id"><span class="glyphicon glyphicon-trash"></span></button></td>
-                        </tr>
-                        <tr ng-repeat="user in selectedSpace.users" ng-hide="showOrganizationUsers">
-                            <td>{{user.userName}}</td>
-                            <td><input type="checkbox" ng-checked="user.isManager" ng-model="user.isManager" ng-disabled="blockInput"
-                                       ng-click="setSpaceManager(selectedSpace, user)"/></td>
-                            <td><input type="checkbox" ng-checked="user.isDeveloper" ng-model="user.isDeveloper" ng-disabled="blockInput"
-                                       ng-click="setSpaceDeveloper(selectedSpace, user)"/></td>
-                            <td><input type="checkbox" ng-checked="user.isAuditor" ng-model="user.isAuditor" ng-disabled="blockInput"
-                                       ng-click="setSpaceAuditor(selectedSpace, user)"/></td>
-                            <td></td>
-                        </tr>
-                        </tbody>
-                    </table>
+                    <div class="panel-body">
+                        <table class="table table-condensed">
+                            <thead>
+                            <tr>
+                                <th width="30%">
+                                    <div class="btn-group">
+                                        <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" style="text-transform: uppercase;">{{selectedGroup}}<b class="caret"></b></a>
+                                        <ul class="dropdown-menu">
+                                            <li>ORGANIZATION ROLES</li>
+                                            <li><a ng-click="selectOrganizationUsers(organization.name)"
+                                                   style="text-transform: uppercase;">{{organization.name}}</a></li>
+                                            <li class="divider"></li>
+                                            <li>SPACE ROLES</li>
+                                            <li ng-repeat="space in organization.spaces track by $id($index)"><a
+                                                    ng-click="selectSpaceUsers(space.name, organization)"
+                                                    style="text-transform: uppercase;">{{space.name}}</a></li>
+                                        </ul>
+                                    </div>
+                                </th>
+                                <th width="20%"><span ng-show="showOrganizationUsers">ORG. MANAGER</span><span
+                                        ng-hide="showOrganizationUsers">SPACE MANAGER</span></th>
+                                <th width="20%"><span ng-show="showOrganizationUsers">BILLING MANAGER</span><span
+                                        ng-hide="showOrganizationUsers">DEVELOPER</span></th>
+                                <th width="20%"><span ng-show="showOrganizationUsers">ORG. AUDITOR</span><span
+                                        ng-hide="showOrganizationUsers">SPACE AUDITOR</span></th>
+                                <th width="10%"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="user in organization.users" ng-show="showOrganizationUsers">
+                                <td>{{user.userName}}</td>
+                                <td><input type="checkbox" ng-checked="user.isManager" ng-model="user.isManager"
+                                           ng-disabled="blockInput" ng-click="setOrgManager(organization, user)"/></td>
+                                <td><input type="checkbox" ng-checked="user.isBillingManager" ng-model="user.isBillingManager" ng-disabled="blockInput"
+                                           ng-click="setOrgBillingManager(organization, user)"/></td>
+                                <td><input type="checkbox" ng-checked="user.isAuditor" ng-model="user.isAuditor" ng-disabled="blockInput"
+                                           ng-click="setOrgAuditor(organization, user)"/></td>
+                                <td><button class="btn btn-danger" ng-click="openConfirmation(user)" ng-hide="blockInput || loggedInUser.id === user.id"><span class="glyphicon glyphicon-trash"></span></button></td>
+                            </tr>
+                            <tr ng-repeat="user in selectedSpace.users" ng-hide="showOrganizationUsers">
+                                <td>{{user.userName}}</td>
+                                <td><input type="checkbox" ng-checked="user.isManager" ng-model="user.isManager" ng-disabled="blockInput"
+                                           ng-click="setSpaceManager(selectedSpace, user)"/></td>
+                                <td><input type="checkbox" ng-checked="user.isDeveloper" ng-model="user.isDeveloper" ng-disabled="blockInput"
+                                           ng-click="setSpaceDeveloper(selectedSpace, user)"/></td>
+                                <td><input type="checkbox" ng-checked="user.isAuditor" ng-model="user.isAuditor" ng-disabled="blockInput"
+                                           ng-click="setSpaceAuditor(selectedSpace, user)"/></td>
+                                <td></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
             <div class="col-md-3">
