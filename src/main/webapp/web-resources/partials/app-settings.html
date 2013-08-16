@@ -11,93 +11,91 @@
         </div>
     </div>
     <div ng-hide="loading">
-        <div class="well well-small">
-            <div class="panel">
-                <div class="panel-heading">
-                    <h3 class="panel-title">{{application.name}}</h3>
-                </div>
-                <div class="panel-body">
-                    <table class="table table-condensed">
-                        <thead>
-                        <tr>
-                            <th>HEALTH</th>
-                            <th>INSTANCES</th>
-                            <th>MEMORY</th>
-                            <th>BUILDPACK</th>
-                            <th>ENV</th>
-                            <th>URLS</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td><span class="label label-success" ng-show="application.state == 'STARTED'">{{application.health}}%</span>
-                                <span class="label label-danger" ng-hide="application.state == 'STARTED'">{{application.health}}%</span></td>
-                            <td>{{application.instances}}</td>
-                            <td>{{application.memory}} MB</td>
-                            <td>{{application.buildpack}}</td>
-                            <td>{{application.environment}}</td>
-                            <td><div ng-repeat="url in application.urls">
-                                <a href="http://{{url}}">{{url}}</a>
-                            </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    <button class="btn btn-danger" data-toggle="modal" data-target="#modal">DELETE APP</button>
-                </div>
+        <div class="panel">
+            <div class="panel-heading">
+                <h3 class="panel-title">{{application.name}}</h3>
             </div>
-
-            <div class="panel">
-                <div class="panel-heading">
-                    <h3 class="panel-title">BOUND SERVICES <span class="badge">{{application.serviceInstances.length}}</span></h3>
-                </div>
-                <div class="panel-body">
-                    <table class="table table-condensed">
-                        <thead>
-                        <tr>
-                            <th>NAME</th>
-                            <th>SERVICE</th>
-                            <th>PLAN LEVEL</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr ng-repeat="service in application.serviceInstances">
-                            <td>{{service.name}}</td>
-                            <td>{{service.servicePlan.service.provider}} {{service.servicePlan.service.name}} {{service.servicePlan.service.version}}</td>
-                            <td><a href="#" tooltip="{{service.servicePlan.description}}">{{service.servicePlan.name}}</a>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
+            <div class="panel-body">
+                <table class="table table-condensed">
+                    <thead>
+                    <tr>
+                        <th>HEALTH</th>
+                        <th>INSTANCES</th>
+                        <th>MEMORY</th>
+                        <th>BUILDPACK</th>
+                        <th>ENV</th>
+                        <th>URLS</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td><span class="label label-success" ng-show="application.state == 'STARTED'">{{application.health}}%</span>
+                            <span class="label label-danger" ng-hide="application.state == 'STARTED'">{{application.health}}%</span></td>
+                        <td>{{application.instances}}</td>
+                        <td>{{application.memory}} MB</td>
+                        <td>{{application.buildpack}}</td>
+                        <td>{{application.environment}}</td>
+                        <td><div ng-repeat="url in application.urls">
+                            <a href="http://{{url}}">{{url}}</a>
+                        </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <button class="btn btn-danger" data-toggle="modal" data-target="#modal">DELETE APP</button>
             </div>
+        </div>
 
-            <div class="panel">
-                <div class="panel-heading">
-                    <h3 class="panel-title">INSTANCES <span class="badge">{{application.instances}}</span></h3>
-                </div>
-                <div class="panel-body">
-                    <table class="table table-condensed">
-                        <thead>
-                            <tr>
-                                <th>INSTANCE</th>
-                                <th>STATE</th>
-                                <th>IP</th>
-                                <th>PORT</th>
-                                <th>LOGS</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr ng-repeat="instance in application.applicationInstances">
-                                <td>{{$index}}</td>
-                                <td>{{instance.state}}</td>
-                                <td>{{instance.consoleIp}}</td>
-                                <td>{{instance.consolePort}}</td>
-                                <td><div><a href="#/app-log/{{organizationId}}/{{application.id}}/{{$index}}/stdout">stdout.log</a></div>
-                                    <div><a href="#/app-log/{{organizationId}}/{{application.id}}/{{$index}}/stderr">stderr.log</a></div></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+        <div class="panel">
+            <div class="panel-heading">
+                <h3 class="panel-title">BOUND SERVICES <span class="badge">{{application.serviceInstances.length}}</span></h3>
+            </div>
+            <div class="panel-body">
+                <table class="table table-condensed">
+                    <thead>
+                    <tr>
+                        <th>NAME</th>
+                        <th>SERVICE</th>
+                        <th>PLAN LEVEL</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="service in application.serviceInstances">
+                        <td>{{service.name}}</td>
+                        <td>{{service.servicePlan.service.provider}} {{service.servicePlan.service.name}} {{service.servicePlan.service.version}}</td>
+                        <td><a href="#" tooltip="{{service.servicePlan.description}}">{{service.servicePlan.name}}</a>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-heading">
+                <h3 class="panel-title">INSTANCES <span class="badge">{{application.instances}}</span></h3>
+            </div>
+            <div class="panel-body">
+                <table class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th>INSTANCE</th>
+                            <th>STATE</th>
+                            <th>IP</th>
+                            <th>PORT</th>
+                            <th>LOGS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="instance in application.applicationInstances">
+                            <td>{{$index}}</td>
+                            <td>{{instance.state}}</td>
+                            <td>{{instance.consoleIp}}</td>
+                            <td>{{instance.consolePort}}</td>
+                            <td><div><a href="#/app-log/{{organizationId}}/{{application.id}}/{{$index}}/stdout">stdout.log</a></div>
+                                <div><a href="#/app-log/{{organizationId}}/{{application.id}}/{{$index}}/stderr">stderr.log</a></div></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
