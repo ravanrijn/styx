@@ -19,10 +19,10 @@
                 <li><a href="#/org-settings/{{organization.id}}">ORG SETTINGS</a></li>
                 <!--li><a href="#/marketplace/{{organization.id}}">MARKETPLACE</a></li-->
             </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#/userinfo/{{ organization.id }}" class="uppercase">{{user.username}}</a></li>
+                <li><button href="#" class="btn btn-default navbar-btn" ng-click="logout()">LOG OUT</button></li>
+            </ul>
         </div>
-        <ul class="nav navbar-nav navbar-right">
-            <li><a href="#/userinfo/{{ organization.id }}" class="uppercase">{{user.username}}</a></li>
-            <li><button href="#" class="btn btn-default navbar-btn" ng-click="logout()">LOG OUT</button></li>
-        </ul>
     </div>
 </nav>
