@@ -181,11 +181,4 @@ styx.run(function($rootScope, $location, cloudfoundry){
         top: '50px' // Top position relative to parent in px
 //        left: '110px' // Left position relative to parent in px
     };
-    $rootScope.$on("$stateChangeStart", function(event, toState, toParams, fromState, fromParams) {
-        if(!cloudfoundry.isAuthenticated()){
-            if(toState.url != '/login' && toState.url != '/register'){
-                $location.path('/login');
-            }
-        }
-    });
 });

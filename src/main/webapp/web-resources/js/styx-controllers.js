@@ -486,7 +486,7 @@ styxControllers.controller('UserInfoController', function ($scope, cloudfoundry)
 
 styxControllers.controller('MainController', function ($scope, cloudfoundry, $location, $route) {
     if (!cloudfoundry.isAuthenticated()) {
-        if ($location.path() != '/login') {
+        if ($location.path() != '/login' && $location.path() != '/register') {
             $location.path('/login');
             return;
         }
