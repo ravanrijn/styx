@@ -21,6 +21,12 @@ public class OrganizationController {
         this.organizationRepository = organizationRepository;
     }
 
+    @RequestMapping(method = RequestMethod.POST, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public String createOrganization(@RequestHeader("Authorization") String token, @RequestBody String body) {
+        return organizationRepository.createOrganization(token, body);
+    }
+
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public void deleteOrganizationById(@RequestHeader("Authorization") final String token, @PathVariable("id") final String id) {

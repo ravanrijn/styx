@@ -140,7 +140,7 @@ styxServices.factory('cloudfoundry', function ($http, cache, $q) {
     cloudfoundry.createOrganization = function (organizationForm) {
         var user = cache.getUser();
         var body = {'name': organizationForm.name, 'user_guids': [user.id], 'manager_guids': [user.id]};
-        return retrieveResource(resourcePromise('cloud/api/v2/organizations', 'POST', body), function (result) {
+        return retrieveResource(resourcePromise('api/organizations', 'POST', body), function (result) {
             cache.clearOrganizations();
         });
     }
@@ -148,7 +148,7 @@ styxServices.factory('cloudfoundry', function ($http, cache, $q) {
     cloudfoundry.createSpace = function (organizationId, name) {
         var user = cache.getUser();
         var body = {'organization_guid': organizationId, 'name': name, 'manager_guids': [user.id], 'developer_guids': [user.id]};
-        return retrieveResource(resourcePromise('cloud/api/v2/spaces', 'POST', body));
+        return retrieveResource(resourcePromise('api/spaces', 'POST', body));
     }
 
     cloudfoundry.deleteOrganization = function(organizationId) {

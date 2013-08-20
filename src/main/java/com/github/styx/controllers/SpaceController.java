@@ -23,6 +23,12 @@ public class SpaceController {
         this.spaceRepository = spaceRepository;
     }
 
+    @RequestMapping(value = "/spaces", method = RequestMethod.POST, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public String createSpace(@RequestHeader("Authorization") String token, @RequestBody String body) {
+        return spaceRepository.createSpace(token, body);
+    }
+
     @RequestMapping(value = "/spaces/{id}", method = DELETE)
     @ResponseBody
     public void deleteSpaceById(@RequestHeader("Authorization") final String token, @PathVariable("id") final String id) {

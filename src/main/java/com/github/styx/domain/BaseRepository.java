@@ -112,6 +112,14 @@ public abstract class BaseRepository {
         return responseEntity.getBody();
     }
 
+    protected String apiPost(String token, String path, String body) {
+        ResponseEntity<String> responseEntity = exchange(token, apiBaseUri, HttpMethod.POST, path, body, new ParameterizedTypeReference<String>() {});
+        if (!responseEntity.getStatusCode().equals(HttpStatus.CREATED)) {
+            throw new RepositoryException("Cannot perform api put for path [" + path + "]", responseEntity);
+        }
+        return responseEntity.getBody();
+    }
+
     protected String apiPut(String token, String path, String body) {
         ResponseEntity<String> responseEntity = exchange(token, apiBaseUri, HttpMethod.PUT, path, body, new ParameterizedTypeReference<String>() {});
         if (!responseEntity.getStatusCode().equals(HttpStatus.CREATED)) {

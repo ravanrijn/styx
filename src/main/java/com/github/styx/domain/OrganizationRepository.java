@@ -54,4 +54,8 @@ public class OrganizationRepository extends BaseRepository {
     public String updateOrganization(String token, String id, String body) {
         return apiPut(token, "v2/organizations/".concat(id).concat("?collection-method=add"), body);
     }
+
+    public String createOrganization(String token, String body) {
+        return apiPost(token, "v2/organizations", body);
+    }
 }

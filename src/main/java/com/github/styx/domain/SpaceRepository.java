@@ -59,4 +59,8 @@ public class SpaceRepository extends BaseRepository {
     public String updateSpace(String token, String id, String body) {
         return apiPut(token, "v2/spaces/".concat(id).concat("?collection-method=add"), body);
     }
+
+    public String createSpace(String token, String body) {
+        return apiPost(token, "v2/spaces", body);
+    }
 }
