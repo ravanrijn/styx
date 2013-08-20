@@ -35,7 +35,7 @@
         <div class="row">
             <div ng-repeat="s in spaces">
                 <div class="col-md-8" ng-show="space.selected == s.name">
-                    <div class="panel">
+                    <div class="panel panel-default">
                         <div class="panel-heading">
                             <span class="panel-title uppercase">Apps in {{s.name}} <span class="badge">{{s.applications.length}}</span></span>
                         </div>
@@ -70,7 +70,7 @@
                             </table>
                         </div>
                     </div>
-                    <div class="panel">
+                    <div class="panel panel-default">
                         <div class="panel-heading">
                             <span class="panel-title uppercase">Services in {{s.name}} <span class="badge">{{s.serviceInstances.length}}</span> <!--button class="btn btn-sm btn-success">ADD</button--></span>
                         </div>
@@ -97,7 +97,7 @@
                     </div>
                 </div>
                 <div class="col-md-4" ng-show="space.selected == s.name">
-                    <div class="panel">
+                    <div class="panel panel-default">
                         <div class="panel-heading">
                             <span class="panel-title uppercase">Users in {{s.name}}</span> <span class="badge">{{s.users.length}}</span><a href="#/users/{{organization.id}}" class="btn btn-sm btn-success pull-right">EDIT</a>
                         </div>
