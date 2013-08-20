@@ -39,4 +39,10 @@ public class OrganizationController {
         return organizationRepository.getAll(token, 2);
     }
 
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public String updateOrganization(@RequestHeader("Authorization") String token, @PathVariable("id") String id, @RequestBody String body) {
+        return organizationRepository.updateOrganization(token, id, body);
+    }
+
 }

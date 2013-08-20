@@ -122,27 +122,19 @@ styxServices.factory('cloudfoundry', function ($http, cache, $q) {
     }
 
     cloudfoundry.updateOrganization = function (organizationId, body) {
-        /**
-         * Todo dit kan slimmer, haal org op uit cache en update deze, maar deleger dit via een functie naar de caller. Echter
-         * geef de caller niet rechtstreeks toegang tot de cache.
-         */
-        return retrieveResource(resourcePromise('cloud/api/v2/organizations/' + organizationId + '?collection-method=add', 'PUT', body), function (result) {
+        return retrieveResource(resourcePromise('api/organizations/' + organizationId, 'PUT', body), function (result) {
             cache.clearOrganizations();
         });
     }
 
     cloudfoundry.updateSpace = function (spaceId, body) {
-        /**
-         * Todo dit kan slimmer, haal org op uit cache en update deze, maar deleger dit via een functie naar de caller. Echter
-         * geef de caller niet rechtstreeks toegang tot de cache.
-         */
-        return retrieveResource(resourcePromise('cloud/api/v2/spaces/' + spaceId + '?collection-method=add', 'PUT', body), function (result) {
+        return retrieveResource(resourcePromise('api/spaces/' + spaceId, 'PUT', body), function (result) {
             cache.clearOrganizations();
         });
     }
 
     cloudfoundry.updateApplication = function(applicationId, body) {
-        return retrieveResource(resourcePromise('cloud/api/v2/apps/' + applicationId + "?inline-relations-depth=2", 'PUT', body));
+        return retrieveResource(resourcePromise('api/applications/' + applicationId, 'PUT', body));
     }
 
     cloudfoundry.createOrganization = function (organizationForm) {

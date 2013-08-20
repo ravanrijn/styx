@@ -69,7 +69,13 @@ public class ApplicationRepository extends BaseRepository {
 
     public ResponseEntity<String> getInstanceLog(String token, String id, String instance, String logName) {
         String path = "v2/apps/".concat(id).concat("/instances/").concat(instance).concat("/files/logs/").concat(logName).concat(".log");
-        return exchange(token, apiBaseUri, HttpMethod.GET, path, new ParameterizedTypeReference<String>() {});
+        return exchange(token, apiBaseUri, HttpMethod.GET, path, null, new ParameterizedTypeReference<String>() {});
     }
 
+    public Application updateApplication(String token, String id, String body) {
+        apiPut(token, "v2/apps/".concat(id).concat("?inline-relations-depth=2"), body);
+
+        Map<String, Object> applicationResponse = apiGet(token, "v2/apps/".concat(id).concat("?inline-relations-depth=2"));
+        return Application.fromCloudFoundryModel(applicationResponse);
+    }
 }
