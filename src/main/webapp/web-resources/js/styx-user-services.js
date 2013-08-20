@@ -26,38 +26,7 @@ styxUserServices.factory('userManager', function (cloudfoundry, cache, $q, $http
     }
 
     userManager.getAllUsers = function() {
-        var deferred = $q.defer();
-        cloudfoundry.getUsers().then(
-            function(users, status, headers){
-                var userNameFilter = '';
-                angular.forEach(users.data.resources, function (user, userIndex) {
-                    userNameFilter = userNameFilter + 'id eq \'' + user.metadata.guid + "'";
-                    if (userIndex < users.data.resources.length - 1) {
-                        userNameFilter = userNameFilter + ' or ';
-                    }
-                });
-                cloudfoundry.getUserNames(userNameFilter).then(
-                    function(userDetails, status, headers){
-                        var filteredUsers = [];
-                        angular.forEach(users.data.resources, function(cfUser, cfUserIndex){
-                            angular.forEach(userDetails.data.resources, function(userDetail, userDetailIndex){
-                                if(userDetail.id === cfUser.metadata.guid){
-                                    filteredUsers.push({id:userDetail.id, userName:userDetail.userName})
-                                }
-                            });
-                        });
-                        deferred.resolve(filteredUsers);
-                    },
-                    function(reason, status, headers){
-                        deferred.reject({reason:reason, status:status, headers:headers});
-                    }
-                );
-            },
-            function(reason, status, headers){
-                deferred.reject({reason:reason, status:status, headers:headers});
-            }
-        );
-        return deferred.promise;
+        return resourcePromise('api/users', 'GET');
     }
 
     userManager.setOrgUsers = function (organization) {

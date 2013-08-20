@@ -19,7 +19,7 @@
 
                     <form class="form-search">
                         <input type="text" ng-model="selectedUser" placeholder="Find by username." autocomplete="off"
-                               typeahead="user as user.userName for user in users | filter:$viewValue">
+                               typeahead="user as user.username for user in users | filter:$viewValue">
                         <button class="btn btn-success" ng-click="addUser(organization, selectedUser)">ADD</button>
                     </form>
                 </div>
@@ -37,7 +37,7 @@
                         </thead>
                         <tbody>
                         <tr ng-repeat="user in users">
-                            <td>{{user.userName}}</td>
+                            <td>{{user.username}}</td>
                             <td>
                                 <button class="btn btn-success" ng-click="addUser(organization, user)">ADD</button>
                             </td>

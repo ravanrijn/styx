@@ -309,7 +309,7 @@ styxControllers.controller('OrgUsersController', function ($scope, $stateParams,
             userManager.getUsers($stateParams.organizationId).then(
                 function (organization, status, headers) {
                     var filteredUsers = [];
-                    angular.forEach(users, function (user, userIndex) {
+                    angular.forEach(users.data, function (user, userIndex) {
                         if (!containsUser(organization.data.users, user.id)) {
                             filteredUsers.push(user);
                         }
@@ -336,7 +336,6 @@ styxControllers.controller('UsersController', function ($scope, $stateParams, us
     $scope.loading = true;
     $scope.blockInput = true;
     userManager.getUsers($stateParams.organizationId).then(function (organization) {
-        console.log(organization);
         $scope.loggedInUser = cloudfoundry.getUser();
         var mayManipulate = false;
         angular.forEach(organization.data.users, function(orgUser, orgUserIndex){
