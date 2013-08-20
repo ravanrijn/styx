@@ -89,7 +89,7 @@ public abstract class BaseRepository {
     }
 
     protected Map<String, Object> uaaGet(String token, String path) {
-        ResponseEntity<Map<String, Object>> responseEntity = exchange(token, uaaBaseUri, HttpMethod.GET, path, new ParameterizedTypeReference<Map<String, Object>>() {});
+        ResponseEntity<Map<String, Object>> responseEntity = exchange(token, uaaBaseUri, HttpMethod.GET, path, null, new ParameterizedTypeReference<Map<String, Object>>() {});
         if (!responseEntity.getStatusCode().equals(HttpStatus.OK)) {
             throw new RepositoryException("Cannot perform uaa get for path [" + path + "]", responseEntity);
         }
@@ -97,7 +97,7 @@ public abstract class BaseRepository {
     }
 
     protected Map<String, Object> apiGet(String token, String path) {
-        ResponseEntity<Map<String, Object>> responseEntity = exchange(token, apiBaseUri, HttpMethod.GET, path, new ParameterizedTypeReference<Map<String, Object>>() {});
+        ResponseEntity<Map<String, Object>> responseEntity = exchange(token, apiBaseUri, HttpMethod.GET, path, null, new ParameterizedTypeReference<Map<String, Object>>() {});
         if (!responseEntity.getStatusCode().equals(HttpStatus.OK)) {
             throw new RepositoryException("Cannot perform api get for path [" + path + "]", responseEntity);
         }
@@ -105,9 +105,25 @@ public abstract class BaseRepository {
     }
 
     protected String apiDelete(String token, String path) {
-        ResponseEntity<String> responseEntity = exchange(token, apiBaseUri, HttpMethod.DELETE, path, new ParameterizedTypeReference<String>() {});
+        ResponseEntity<String> responseEntity = exchange(token, apiBaseUri, HttpMethod.DELETE, path, null, new ParameterizedTypeReference<String>() {});
         if (!responseEntity.getStatusCode().equals(HttpStatus.NO_CONTENT)) {
             throw new RepositoryException("Cannot perform api delete for path [" + path + "]", responseEntity);
+        }
+        return responseEntity.getBody();
+    }
+
+    protected String apiPost(String token, String path, String body) {
+        ResponseEntity<String> responseEntity = exchange(token, apiBaseUri, HttpMethod.POST, path, body, new ParameterizedTypeReference<String>() {});
+        if (!responseEntity.getStatusCode().equals(HttpStatus.CREATED)) {
+            throw new RepositoryException("Cannot perform api put for path [" + path + "]", responseEntity);
+        }
+        return responseEntity.getBody();
+    }
+
+    protected String apiPut(String token, String path, String body) {
+        ResponseEntity<String> responseEntity = exchange(token, apiBaseUri, HttpMethod.PUT, path, body, new ParameterizedTypeReference<String>() {});
+        if (!responseEntity.getStatusCode().equals(HttpStatus.CREATED)) {
+            throw new RepositoryException("Cannot perform api put for path [" + path + "]", responseEntity);
         }
         return responseEntity.getBody();
     }
@@ -116,17 +132,25 @@ public abstract class BaseRepository {
         return asyncTaskExecutor.submit(new Callable<ResponseEntity<Map<String, Object>>>() {
             @Override
             public ResponseEntity<Map<String, Object>> call() throws Exception {
-                return exchange(token, apiBaseUri, HttpMethod.GET, path, new ParameterizedTypeReference<Map<String, Object>>() {});
+                return exchange(token, apiBaseUri, HttpMethod.GET, path, null, new ParameterizedTypeReference<Map<String, Object>>() {});
             }
         });
     }
 
-    protected <T> ResponseEntity<T> exchange(String token, String baseUri, HttpMethod method, String path, ParameterizedTypeReference<T> typeReference) {
+    protected <T> ResponseEntity<T> exchange(String token, String baseUri, HttpMethod method, String path, String body, ParameterizedTypeReference<T> typeReference) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("Accept", "application/json");
         httpHeaders.add("Authorization", token);
+
+        HttpEntity request;
+        if (body == null) {
+            request = new HttpEntity(httpHeaders);
+        } else {
+            request = new HttpEntity(body, httpHeaders);
+        }
+
         try {
-            return restTemplate.exchange(baseUri.concat(path), method, new HttpEntity(httpHeaders), typeReference);
+            return restTemplate.exchange(baseUri.concat(path), method, request, typeReference);
         } catch (HttpClientErrorException e) {
             throw new RepositoryException("Unable to perform exchange for path [" + path + "]", new ResponseEntity(e.getResponseBodyAsString(), e.getStatusCode()));
         }

@@ -42,4 +42,10 @@ public class ApplicationController {
         return applicationRepository.getInstanceLog(token, id, instance, logName);
     }
 
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Application updateApplication(@RequestHeader("Authorization") String token, @PathVariable("id") String id, @RequestBody String body) {
+        return applicationRepository.updateApplication(token, id, body);
+    }
+
 }

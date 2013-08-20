@@ -90,16 +90,16 @@ styxControllers.controller('AppSpacesController', function ($scope, $stateParams
     $scope.startApplication = function (applicationId) {
         var applicationPromise = cloudfoundry.updateApplication(applicationId, {'state': 'STARTED'});
         applicationPromise.success(function (data, status, headers) {
-            angular.forEach($scope.spaces.resources, function (space, spaceIndex) {
+            angular.forEach($scope.spaces, function (space, spaceIndex) {
                 if (space.selected) {
                     var index = -1;
-                    angular.forEach(space.entity.apps, function (app, appIndex) {
-                        if (app.metadata.guid == applicationId) {
+                    angular.forEach(space.applications, function (app, appIndex) {
+                        if (app.id == applicationId) {
                             index = appIndex;
                         }
                     });
                     if (index > -1) {
-                        space.entity.apps[index] = data;
+                        space.applications[index] = data;
                     }
                 }
             });
@@ -112,16 +112,16 @@ styxControllers.controller('AppSpacesController', function ($scope, $stateParams
     $scope.stopApplication = function (applicationId) {
         var applicationPromise = cloudfoundry.updateApplication(applicationId, {'state': 'STOPPED'});
         applicationPromise.success(function (data, status, headers) {
-            angular.forEach($scope.spaces.resources, function (space, spaceIndex) {
+            angular.forEach($scope.spaces, function (space, spaceIndex) {
                 if (space.selected) {
                     var index = -1;
-                    angular.forEach(space.entity.apps, function (app, appIndex) {
-                        if (app.metadata.guid == applicationId) {
+                    angular.forEach(space.applications, function (app, appIndex) {
+                        if (app.id == applicationId) {
                             index = appIndex;
                         }
                     });
                     if (index > -1) {
-                        space.entity.apps[index] = data;
+                        space.applications[index] = data;
                     }
                 }
             });

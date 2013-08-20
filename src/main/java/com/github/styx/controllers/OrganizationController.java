@@ -21,6 +21,12 @@ public class OrganizationController {
         this.organizationRepository = organizationRepository;
     }
 
+    @RequestMapping(method = RequestMethod.POST, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public String createOrganization(@RequestHeader("Authorization") String token, @RequestBody String body) {
+        return organizationRepository.createOrganization(token, body);
+    }
+
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public void deleteOrganizationById(@RequestHeader("Authorization") final String token, @PathVariable("id") final String id) {
@@ -37,6 +43,12 @@ public class OrganizationController {
     @ResponseBody
     public List<Organization> getOrganizations(@RequestHeader("Authorization") final String token) {
         return organizationRepository.getAll(token, 2);
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public String updateOrganization(@RequestHeader("Authorization") String token, @PathVariable("id") String id, @RequestBody String body) {
+        return organizationRepository.updateOrganization(token, id, body);
     }
 
 }
