@@ -186,10 +186,6 @@ styxServices.factory('cloudfoundry', function ($http, cache, $q) {
         });
     }
 
-    cloudfoundry.getUsers = function () {
-        return retrieveResource(resourcePromise('cloud/api/v2/users?inline-relations-depth=0', 'GET'));
-    }
-
     cloudfoundry.getOrganization = function (organizationId) {
         if (cache.getOrganizations() !== null) {
             var deferred = $q.defer();
