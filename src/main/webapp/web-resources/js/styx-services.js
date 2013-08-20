@@ -99,8 +99,7 @@ styxServices.factory('cloudfoundry', function ($http, cache, $q) {
             method: 'POST',
             url: 'api/login',
             headers: {'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
-                'Accept': 'application/json;charset=utf-8',
-                'Authorization': 'Basic Y2Y6'},
+                'Accept': 'application/json;charset=utf-8'},
             data: $.param({'grant_type': 'password',
                 'username': userForm.email,
                 'password': userForm.password})
