@@ -10,7 +10,6 @@ styxControllers.controller('LoginController', function ($scope, cloudfoundry, $l
         authenticationPromise.success(function (data, status, headers) {
             var organizationPromise = cloudfoundry.getOrganizations();
             organizationPromise.success(function (data, status, headers) {
-                console.log(data);
                 if (data.length > 0) {
                     $location.path('/app-spaces/' + data[0].id);
                 } else {
@@ -311,11 +310,11 @@ styxControllers.controller('OrgUsersController', function ($scope, $stateParams,
                 function (organization, status, headers) {
                     var filteredUsers = [];
                     angular.forEach(users, function (user, userIndex) {
-                        if (!containsUser(organization.users, user.id)) {
+                        if (!containsUser(organization.data.users, user.id)) {
                             filteredUsers.push(user);
                         }
                     });
-                    $scope.organization = organization;
+                    $scope.organization = organization.data;
                     $scope.users = filteredUsers;
                     $scope.loading = false;
                 },
@@ -337,16 +336,17 @@ styxControllers.controller('UsersController', function ($scope, $stateParams, us
     $scope.loading = true;
     $scope.blockInput = true;
     userManager.getUsers($stateParams.organizationId).then(function (organization) {
+        console.log(organization);
         $scope.loggedInUser = cloudfoundry.getUser();
         var mayManipulate = false;
-        angular.forEach(organization.users, function(orgUser, orgUserIndex){
-            if($scope.loggedInUser.id === orgUser.id && orgUser.isManager){
+        angular.forEach(organization.data.users, function(orgUser, orgUserIndex){
+            if($scope.loggedInUser.id === orgUser.id && orgUser.manager){
                 mayManipulate = true;
             }
         });
-        $scope.selectedGroup = organization.name;
+        $scope.selectedGroup = organization.data.name;
         $scope.showOrganizationUsers = true;
-        $scope.organization = organization;
+        $scope.organization = organization.data;
         $scope.loading = false;
         if(mayManipulate === true){
             $scope.blockInput = false;
@@ -364,10 +364,6 @@ styxControllers.controller('UsersController', function ($scope, $stateParams, us
         $scope.selectedUser = 'undefined';
         $scope.confirmationRequested = false;
     }
-    $scope.confirmationOpts = {
-        backdropFade: true,
-        dialogFade:true
-    };
     $scope.addNewUser = function (organization) {
         $location.path("/organization/" + organization.id + "/users");
     }
