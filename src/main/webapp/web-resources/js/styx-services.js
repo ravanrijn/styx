@@ -99,8 +99,7 @@ styxServices.factory('cloudfoundry', function ($http, cache, $q) {
             method: 'POST',
             url: 'api/login',
             headers: {'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
-                'Accept': 'application/json;charset=utf-8',
-                'Authorization': 'Basic Y2Y6'},
+                'Accept': 'application/json;charset=utf-8'},
             data: $.param({'grant_type': 'password',
                 'username': userForm.email,
                 'password': userForm.password})
@@ -189,10 +188,6 @@ styxServices.factory('cloudfoundry', function ($http, cache, $q) {
 
     cloudfoundry.getUsers = function () {
         return retrieveResource(resourcePromise('cloud/api/v2/users?inline-relations-depth=0', 'GET'));
-    }
-
-    cloudfoundry.getOrganizationDetails = function (organizationId, depth) {
-        return retrieveResource(resourcePromise('cloud/api/v2/organizations/' + organizationId + '?inline-relations-depth=' + depth, 'GET'));
     }
 
     cloudfoundry.getOrganization = function (organizationId) {
