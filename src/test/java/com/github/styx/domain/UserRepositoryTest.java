@@ -44,10 +44,12 @@ public class UserRepositoryTest {
 
     @Test
     public void testGetAllUsersShouldFailWhenUsersCannotBeRetrieved() throws IOException {
+        Map<String, Object> tokenResponse = objectMapper.readValue(new ClassPathResource("/responses/token.json").getInputStream(), new TypeReference<Map<String, Object>>() {});
         Map<String, Object> apiUsersResponse = objectMapper.readValue(new ClassPathResource("/responses/api-users.json").getInputStream(), new TypeReference<Map<String, Object>>() {});
         Map<String, Object> uaaUsersResponse = objectMapper.readValue(new ClassPathResource("/responses/uaa-users.json").getInputStream(), new TypeReference<Map<String, Object>>() {});
 
         when(restTemplate.exchange(eq("/api/v2/users"), eq(HttpMethod.GET), isA(HttpEntity.class), isA(ParameterizedTypeReference.class))).thenReturn(new ResponseEntity(apiUsersResponse, HttpStatus.OK));
+        when(restTemplate.exchange(eq("/uaa/oauth/token"), eq(HttpMethod.POST), isA(HttpEntity.class), isA(ParameterizedTypeReference.class))).thenReturn(new ResponseEntity(tokenResponse, HttpStatus.OK));
         when(restTemplate.exchange(eq("/uaa/ids/Users?filter=id eq '64902aa2-9df5-4c27-827c-a6a69a568e2e' or id eq 'f939a538-c0f1-48ef-90bc-8fd2c9ce477e' or id eq '62f37ce0-c3aa-48e2-9045-15e047376eb5'"), eq(HttpMethod.GET), isA(HttpEntity.class), isA(ParameterizedTypeReference.class))).thenReturn(new ResponseEntity(uaaUsersResponse, HttpStatus.OK));
 
         List<User> users = userRepository.getAllUsers("bearer: 123");
