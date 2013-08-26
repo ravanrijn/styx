@@ -72,10 +72,12 @@ public class UserRepositoryTest {
 
     @Test
     public void testLoginShouldFailWhenUserCannotLogIn() throws IOException {
+        Map<String, Object> infoResponse = objectMapper.readValue(new ClassPathResource("/responses/info.json").getInputStream(), new TypeReference<Map<String, Object>>() {});
         Map<String, Object> tokenResponse = objectMapper.readValue(new ClassPathResource("/responses/token.json").getInputStream(), new TypeReference<Map<String, Object>>() {});
         Map<String, Object> userinfoResponse = objectMapper.readValue(new ClassPathResource("/responses/userinfo.json").getInputStream(), new TypeReference<Map<String, Object>>() {});
 
-        when(restTemplate.exchange(eq("/uaa/oauth/token"), eq(HttpMethod.POST), isA(HttpEntity.class), isA(ParameterizedTypeReference.class))).thenReturn(new ResponseEntity(tokenResponse, HttpStatus.OK));
+        when(restTemplate.exchange(eq("/api/info"), eq(HttpMethod.GET), isA(HttpEntity.class), isA(ParameterizedTypeReference.class))).thenReturn(new ResponseEntity(infoResponse, HttpStatus.OK));
+        when(restTemplate.exchange(eq("http://login.cf.com/oauth/token"), eq(HttpMethod.POST), isA(HttpEntity.class), isA(ParameterizedTypeReference.class))).thenReturn(new ResponseEntity(tokenResponse, HttpStatus.OK));
         when(restTemplate.exchange(eq("/uaa/userinfo"), eq(HttpMethod.GET), isA(HttpEntity.class), isA(ParameterizedTypeReference.class))).thenReturn(new ResponseEntity(userinfoResponse, HttpStatus.OK));
 
         AccessToken accessToken = userRepository.login("username", "password");

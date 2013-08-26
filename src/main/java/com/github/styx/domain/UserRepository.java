@@ -66,6 +66,8 @@ public class UserRepository extends BaseRepository {
     }
 
     public AccessToken login(String username, String password) {
+        String authorizationEndpoint = getAuthorizationEndpoint();
+
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
         httpHeaders.add("Accept", "application/json;charset=utf-8");
@@ -76,7 +78,7 @@ public class UserRepository extends BaseRepository {
         model.add("username", username);
         model.add("password", password);
 
-        ResponseEntity<Map<String, Object>> loginResponse = getRestTemplate().exchange(uaaBaseUri.concat("oauth/token"), HttpMethod.POST, new HttpEntity(model, httpHeaders), new ParameterizedTypeReference<Map<String, Object>>() {});
+        ResponseEntity<Map<String, Object>> loginResponse = getRestTemplate().exchange(authorizationEndpoint.concat("/oauth/token"), HttpMethod.POST, new HttpEntity(model, httpHeaders), new ParameterizedTypeReference<Map<String, Object>>() {});
         if (loginResponse.getStatusCode().equals(HttpStatus.OK)) {
             AccessToken accessToken = AccessToken.fromCloudFoundryModel(loginResponse.getBody());
 
@@ -86,6 +88,17 @@ public class UserRepository extends BaseRepository {
             return accessToken;
         }
         throw new RepositoryException("Unable to login", loginResponse);
+    }
+
+    private String getAuthorizationEndpoint() {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("Accept", "application/json;charset=utf-8");
+
+        ResponseEntity<Map<String, Object>> infoResponse = getRestTemplate().exchange(apiBaseUri.concat("info"), HttpMethod.GET, new HttpEntity(httpHeaders), new ParameterizedTypeReference<Map<String, Object>>() {});
+        if (!infoResponse.getStatusCode().equals(HttpStatus.OK)) {
+            throw new RepositoryException("Unable to retrieve info", infoResponse);
+        }
+        return (String) infoResponse.getBody().get("authorization_endpoint");
     }
 
     public void registerUser(String username, String firstName, String lastName, String password) {
