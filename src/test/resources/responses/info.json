@@ -1,0 +1,1 @@
+{"name":"vcap","build":"2222","support":"http://support.cloudfoundry.com","version":2,"description":"Cloud Foundry sponsored by Pivotal","authorization_endpoint":"http://login.cf.com","token_endpoint":"http://uaa.cf.com","allow_debug":true}
