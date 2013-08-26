@@ -3,6 +3,6 @@ applications:
 - name: styx
   memory: 1G
   instances: 1
-  path: target/styx-1.0.1-SNAPSHOT.war
+  path: target/styx-0.0.1-SNAPSHOT.war
   buildpack: git://github.com/cloudfoundry/cloudfoundry-buildpack-java.git
 
