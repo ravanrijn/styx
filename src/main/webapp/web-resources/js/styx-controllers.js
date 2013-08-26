@@ -335,6 +335,17 @@ styxControllers.controller('OrgUsersController', function ($scope, $stateParams,
 styxControllers.controller('UsersController', function ($scope, $stateParams, userManager, $location, cloudfoundry) {
     $scope.loading = true;
     $scope.blockInput = true;
+
+    var containsUser = function(spaceUsers, orgUser){
+        for(var i=0;i<spaceUsers.length;i++){
+            var spaceUser = spaceUsers[i];
+            if(orgUser.id === spaceUser.id){
+                return true;
+            }
+        }
+        return false;
+    }
+
     userManager.getUsers($stateParams.organizationId).then(function (organization) {
         $scope.loggedInUser = cloudfoundry.getUser();
         var mayManipulate = false;
@@ -342,6 +353,11 @@ styxControllers.controller('UsersController', function ($scope, $stateParams, us
             if($scope.loggedInUser.id === orgUser.id && orgUser.manager){
                 mayManipulate = true;
             }
+            angular.forEach(organization.data.spaces, function(space, spaceIndex){
+                if(!containsUser(space.users, orgUser)){
+                    space.users.push({id:orgUser.id, username:orgUser.username, developer:false, manager:false, auditor:false});
+                }
+            });
         });
         $scope.selectedGroup = organization.data.name;
         $scope.showOrganizationUsers = true;
