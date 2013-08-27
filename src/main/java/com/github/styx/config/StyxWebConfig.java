@@ -49,7 +49,7 @@ public class StyxWebConfig extends WebMvcConfigurerAdapter {
         SchemeRegistry schemeRegistry = new SchemeRegistry();
         schemeRegistry.register(new Scheme("http", 80, PlainSocketFactory.getSocketFactory()));
         schemeRegistry.register(new Scheme("https", 443, SSLSocketFactory.getSocketFactory()));
-        PoolingClientConnectionManager connectionManager = new PoolingClientConnectionManager(schemeRegistry);
+        final PoolingClientConnectionManager connectionManager = new PoolingClientConnectionManager(schemeRegistry);
         connectionManager.setMaxTotal(100);
         connectionManager.setDefaultMaxPerRoute(10);
         final RestTemplate restTemplate = new RestTemplate();
@@ -67,7 +67,7 @@ public class StyxWebConfig extends WebMvcConfigurerAdapter {
 
     @Bean
     public ObjectMapper getObjectMapper() {
-        ObjectMapper objectMapper = new ObjectMapper();
+        final ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
         return objectMapper;
     }
@@ -104,7 +104,7 @@ public class StyxWebConfig extends WebMvcConfigurerAdapter {
 
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-        MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+        final MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
         converter.setObjectMapper(getObjectMapper());
     }
 }
