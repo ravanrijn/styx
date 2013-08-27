@@ -92,11 +92,6 @@ public class StyxWebConfig extends WebMvcConfigurerAdapter {
         return env.getProperty("clientSecret");
     }
 
-    @Bean
-    public AsyncTaskExecutor getAsyncTaskExecutor(){
-        return new ConcurrentTaskExecutor();
-    }
-
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/css/**").addResourceLocations("/web-resources/css/");
@@ -111,6 +106,5 @@ public class StyxWebConfig extends WebMvcConfigurerAdapter {
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
         MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
         converter.setObjectMapper(getObjectMapper());
-        //converters.add(converter);
     }
 }
