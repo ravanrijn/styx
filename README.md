@@ -29,6 +29,11 @@ scim:
 ![App Spaces](https://raw.github.com/ravanrijn/styx/master/appspaces.png)
 ![App](https://raw.github.com/ravanrijn/styx/master/app.png)
 
+# Copyright and license
+
+Styx has been built using [Bootstrap](http://getbootstrap.com/) under the
+[Apache 2.0 license](https://github.com/twbs/bootstrap/blob/master/LICENSE).
+
 
 
 
