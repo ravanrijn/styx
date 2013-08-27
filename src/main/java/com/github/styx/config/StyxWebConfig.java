@@ -87,6 +87,11 @@ public class StyxWebConfig extends WebMvcConfigurerAdapter {
         return env.getProperty("clientId");
     }
 
+    @Bean
+    public AsyncTaskExecutor getAsyncTaskExecutor(){
+        return new ConcurrentTaskExecutor();
+    }
+
     @Bean(name = "clientSecret")
     public String getClientSecret() {
         return env.getProperty("clientSecret");
