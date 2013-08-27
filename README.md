@@ -31,8 +31,10 @@ scim:
 
 # Copyright and license
 
-Styx has been built using [Bootstrap](http://getbootstrap.com/) under the
-[Apache 2.0 license](https://github.com/twbs/bootstrap/blob/master/LICENSE).
+Styx has been built using [Bootstrap](http://getbootstrap.com/) which has the
+[Apache 2.0 license](https://github.com/twbs/bootstrap/blob/master/LICENSE)
+and [AngularJS](http://angularjs.org/) which has the
+[MIT license](https://github.com/angular/angular.js/blob/master/LICENSE).
 
 
 
