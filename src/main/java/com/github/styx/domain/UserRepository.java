@@ -38,7 +38,8 @@ public class UserRepository extends BaseRepository {
     }
 
     public List<User> getAllUsers(String token) {
-        Map<String, Object> usersResponse = apiGet(token, "v2/users");
+        final String accessToken = getAccessToken(clientId, clientSecret);
+        Map<String, Object> usersResponse = apiGet(accessToken, "v2/users");
 
         Set<String> userIds = new HashSet<>();
         for (Object userResource : eval("resources", usersResponse, List.class)) {
