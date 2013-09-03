@@ -95,7 +95,9 @@ class DefaultCloudFoundryServices extends RemoteServices implements CloudFoundry
         final String orgName = evalToString(ENTITY_NAME, organization);
         final Quota quota = new Quota(evalToString("entity.quota_definition.entity.name", organization),
                 eval("entity.quota_definition.entity.total_services", organization, Integer.class),
-                eval("entity.quota_definition.entity.memory_limit", organization, Integer.class));
+                eval("entity.quota_definition.entity.memory_limit", organization, Integer.class),
+                eval("entity.quota_definition.entity.non_basic_services_allowed", organization, Boolean.class),
+                eval("entity.quota_definition.entity.trial_db_allowed", organization, Boolean.class));
         final List<User> organizationUsers = mapOrganizationUsers(token, organization);
         final List<Space> spaces = new ArrayList<>();
         for (final Object spaceResponse : eval("entity.spaces", organization, List.class)) {
