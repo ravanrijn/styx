@@ -1,17 +1,20 @@
 package com.github.styx.domain;
 
-public abstract class User {
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+import java.util.Set;
+
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
+public class User {
 
     private final String id;
-    private String username;
-    private final boolean isManager;
-    private final boolean isAuditor;
+    private final String username;
+    private final Set<Role> roles;
 
-    public User(final String id, final String username, final boolean manager, final boolean auditor) {
+    public User(String id, String username, Set<Role> roles) {
         this.id = id;
         this.username = username;
-        isManager = manager;
-        isAuditor = auditor;
+        this.roles = roles;
     }
 
     public String getId() {
@@ -22,15 +25,28 @@ public abstract class User {
         return username;
     }
 
-    protected void setUsername(String username){
-        this.username = username;
+    public Set<Role> getRoles() {
+        return roles;
     }
 
-    public boolean isManager() {
-        return isManager;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final User user = (User) o;
+        if (!id.equals(user.id)) {
+            return false;
+        }
+        return true;
     }
 
-    public boolean isAuditor() {
-        return isAuditor;
+    @Override
+    public int hashCode() {
+        return id.hashCode();
     }
+
 }

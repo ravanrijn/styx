@@ -1,36 +1,22 @@
 package com.github.styx.domain;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
-import java.util.*;
+import java.util.List;
 
-import static java.util.Collections.unmodifiableList;
-import static org.mvel2.MVEL.eval;
-import static org.mvel2.MVEL.evalToString;
-
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class Space {
 
     private final String id;
     private final String name;
-    private final List<SpaceUser> users;
+    private final List<User> users;
+    private final List<Application> applications;
 
-    private final List<Application> applications = new ArrayList<>();
-
-    private final List<ServiceInstance> serviceInstances = new ArrayList<>();
-
-    public Space(final String id, final String name, final List<SpaceUser> users) {
+    public Space(String id, String name, List<User> users, List<Application> applications) {
         this.id = id;
         this.name = name;
         this.users = users;
-    }
-
-    public void addApplication(Application application) {
-        applications.add(application);
-    }
-
-    public void addServiceInstance(ServiceInstance serviceInstance) {
-        serviceInstances.add(serviceInstance);
+        this.applications = applications;
     }
 
     public String getId() {
@@ -41,59 +27,12 @@ public class Space {
         return name;
     }
 
-    public List<Application> getApplications() {
-        return Collections.unmodifiableList(applications);
-    }
-
-    public List<ServiceInstance> getServiceInstances() {
-        return Collections.unmodifiableList(serviceInstances);
-    }
-
-    public List<SpaceUser> getUsers() {
+    public List<User> getUsers() {
         return users;
     }
 
-    public static Space fromCloudFoundryModel(Object response) {
-        final Map<String, SpaceUser.Builder> spaceUserBuilders = new HashMap<>();
-        for (Object developer : eval("entity.developers", response, List.class)) {
-            final String id = eval("metadata.guid", developer, String.class);
-            if (spaceUserBuilders.containsKey(id)) {
-                spaceUserBuilders.get(id).setDeveloperRole();
-                continue;
-            }
-            spaceUserBuilders.put(id, SpaceUser.Builder.newBuilder(id).setDeveloperRole());
-        }
-        for (Object manager : eval("entity.managers", response, List.class)) {
-            final String id = eval("metadata.guid", manager, String.class);
-            if (spaceUserBuilders.containsKey(id)) {
-                spaceUserBuilders.get(id).setManagerRole();
-                continue;
-            }
-            spaceUserBuilders.put(id, SpaceUser.Builder.newBuilder(id).setManagerRole());
-        }
-        for (Object auditor : eval("entity.auditors", response, List.class)) {
-            final String id = eval("metadata.guid", auditor, String.class);
-            if (spaceUserBuilders.containsKey(id)) {
-                spaceUserBuilders.get(id).setAuditorRole();
-                continue;
-            }
-            spaceUserBuilders.put(id, SpaceUser.Builder.newBuilder(id).setAuditorRole());
-        }
-        final List<SpaceUser> spaceUsers = new ArrayList<>();
-        for (SpaceUser.Builder builder : spaceUserBuilders.values()) {
-            spaceUsers.add(builder.build());
-        }
-        return new Space(evalToString("metadata.guid", response), evalToString("entity.name", response), unmodifiableList(spaceUsers));
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
-                .append("id", id)
-                .append("name", name)
-                .append("applications", applications)
-                .append("serviceInstances", serviceInstances)
-                .append("users", users).toString();
+    public List<Application> getApplications() {
+        return applications;
     }
 
 }

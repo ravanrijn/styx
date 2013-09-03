@@ -31,7 +31,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import java.util.List;
 
-@ComponentScan("com.github.styx")
+@ComponentScan(basePackages = "com.github.styx.console")
 @Configuration
 @EnableWebMvc
 @PropertySource("classpath:styx.properties")
@@ -99,12 +99,12 @@ public class StyxWebConfig extends WebMvcConfigurerAdapter {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/css/**").addResourceLocations("/web-resources/css/");
-        registry.addResourceHandler("/fonts/**").addResourceLocations("/web-resources/fonts/");
-        registry.addResourceHandler("/img/**").addResourceLocations("/web-resources/img/");
-        registry.addResourceHandler("/js/**").addResourceLocations("/web-resources/js/");
-        registry.addResourceHandler("/partials/**").addResourceLocations("/web-resources/partials/");
-        registry.addResourceHandler("/styx.html").addResourceLocations("/web-resources/styx.html");
+        registry.addResourceHandler("/css/**").addResourceLocations("/resources/css/");
+        registry.addResourceHandler("/fonts/**").addResourceLocations("/resources/fonts/");
+        registry.addResourceHandler("/img/**").addResourceLocations("/resources/img/");
+        registry.addResourceHandler("/js/**").addResourceLocations("/resources/js/");
+        registry.addResourceHandler("/partials/**").addResourceLocations("/resources/partials/");
+        registry.addResourceHandler("/styx.html").addResourceLocations("/resources/styx.html");
     }
 
     @Override

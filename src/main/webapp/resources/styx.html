@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en" ng-app="styx">
+
+<head>
+    <meta charset="UTF-8"/>
+    <title>Cloudfoundry dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="css/styx.css" rel="stylesheet" media="screen">
+</head>
+
+<body ng-controller="StyxController">
+
+<div>
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">CLOUD FOUNDRY</a>
+            </div>
+            <div ng-show="root">
+                <ul class="nav navbar-nav">
+                    <li class="dropdown uppercase">
+                        <a class="dropdown-toggle" data-toggle="dropdown">ORG: {{root.selectedOrganization.name}} <b
+                                class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li ng-repeat="organization in root.availableOrganizations"
+                                ng-hide="organization.id === root.selectedOrganization.id"><a
+                                    href="#/app-spaces/{{organization.id}}">{{organization.name}}</a>
+                            </li>
+                            <li><a href="#/create-org/{{organization.id}}">CREATE NEW ORGANIZATION</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#/app-spaces/{{root.selectedOrganization.id}}">APP SPACES</a></li>
+                    <li><a href="#/users/{{root.selectedOrganization.id}}">USERS</a></li>
+                    <li><a href="#/org-settings/{{root.selectedOrganization.id}}">ORG SETTINGS</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#/userinfo/{{root.selectedOrganization.id}}"
+                           class="uppercase">{{root.user.username}}</a></li>
+                    <li>
+                        <button href="#" class="btn btn-default navbar-btn" ng-click="logout()">LOG OUT</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</div>
+
+<div ng-hide="loading">
+    <div ng-view></div>
+</div>
+
+<div class="container" ng-show="loading">
+    <div class="well well-sm">
+        <div class="row text-center">
+            <h3 class="text-center">One moment please...</h3>
+            <img src="img/chuckie.jpg" alt="I am Chuck." class="img-thumbnail" >
+        </div>
+    </div>
+</div>
+
+<div>
+    <nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
+        <div class="container">
+            <ul class="nav navbar-nav" ng-show="root">
+                <li class="navbar-text">"<span>{{root.chuckQuote}}</span>"</li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+<script src="js/angular.js"></script>
+<script src="js/angular-local-storage-service.js"></script>
+<script src="js/ui-bootstrap-0.6.0-SNAPSHOT.min.js"></script>
+<script src="js/ui-bootstrap-tpls-0.6.0-SNAPSHOT.min.js"></script>
+<script src="js/jquery-2.0.3.js"></script>
+<script src="js/styx-controllers.js"></script>
+<script src="js/styx-services.js"></script>
+<script src="js/styx.js"></script>
+<script src="js/bootstrap.min.js"></script>
+</body>
+
+</html>
