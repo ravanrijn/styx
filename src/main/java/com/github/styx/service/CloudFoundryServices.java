@@ -1,6 +1,6 @@
 package com.github.styx.service;
 
-import com.github.styx.console.domain.Organization;
+import com.github.styx.domain.Organization;
 
 import java.util.List;
 

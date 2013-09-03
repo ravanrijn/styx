@@ -1,6 +1,6 @@
 package com.github.styx.controller;
 
-import com.github.styx.console.service.UaaServices;
+import com.github.styx.service.UaaServices;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

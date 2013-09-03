@@ -31,7 +31,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import java.util.List;
 
-@ComponentScan(basePackages = "com.github.styx.console")
+@ComponentScan(basePackages = "com.github.styx")
 @Configuration
 @EnableWebMvc
 @PropertySource("classpath:styx.properties")

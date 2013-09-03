@@ -1,10 +1,10 @@
 package com.github.styx.controller;
 
-import com.github.styx.console.domain.Organization;
-import com.github.styx.console.domain.User;
-import com.github.styx.console.service.ChuckNorrisQuoter;
-import com.github.styx.console.service.CloudFoundryServices;
-import com.github.styx.console.service.UaaServices;
+import com.github.styx.domain.Organization;
+import com.github.styx.domain.User;
+import com.github.styx.service.ChuckNorrisQuoter;
+import com.github.styx.service.CloudFoundryServices;
+import com.github.styx.service.UaaServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

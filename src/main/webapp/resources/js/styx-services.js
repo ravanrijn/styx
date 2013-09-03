@@ -36,11 +36,11 @@ styxServices.factory('notificationChannel', function ($rootScope, apiServices) {
 
     notificationChannel.updateRoot = function(organizationId){
         apiServices.getRoot(organizationId).then(
-            function (root, status, headers) {
-                $rootScope.$broadcast(ROOT_UPDATED, {root: root.data, status: status, headers: headers});
+            function (response, status, headers) {
+                $rootScope.$broadcast(ROOT_UPDATED, {root: response.data, status: status, headers: headers});
             },
             function (response, status, headers) {
-                $rootScope.$broadcast(ERROR, {response: response, status: status, headers: headers});
+                $rootScope.$broadcast(ERROR, {response: response.data, status: status, headers: headers});
             }
         );
     }
@@ -53,11 +53,11 @@ styxServices.factory('notificationChannel', function ($rootScope, apiServices) {
 
     notificationChannel.login = function(username, password){
         var tokenPromise = apiServices.getAuthToken(username, password);
-        tokenPromise.success(function (data, status, headers) {
-            $rootScope.$broadcast(LOGIN_SUCCESS, {root: root.data, status: status, headers: headers});
+        tokenPromise.success(function (response, status, headers) {
+            $rootScope.$broadcast(LOGIN_SUCCESS, {root: response.data, status: status, headers: headers});
         });
-        tokenPromise.error(function (data, status, headers) {
-            $rootScope.$broadcast(ERROR, {root: root.data, status: status, headers: headers});
+        tokenPromise.error(function (response, status, headers) {
+            $rootScope.$broadcast(ERROR, {root: response.data, status: status, headers: headers});
         });
     }
 

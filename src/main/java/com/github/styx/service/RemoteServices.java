@@ -1,7 +1,7 @@
 package com.github.styx.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.styx.domain.RepositoryException;
+import com.github.styx.controller.EndpointException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
@@ -28,7 +28,7 @@ abstract class RemoteServices {
     protected Map<String, Object> post(String path, HttpHeaders httpHeaders, Object body){
         final ResponseEntity<Map<String, Object>> responseEntity = exchange(path, HttpMethod.POST, body, httpHeaders, new ParameterizedTypeReference<Map<String, Object>>() {});
         if (!responseEntity.getStatusCode().equals(HttpStatus.OK)) {
-            throw new RepositoryException("Cannot perform post for path [" + path + "]", responseEntity);
+            throw new EndpointException("Cannot perform post for path [" + path + "]", responseEntity);
         }
         return responseEntity.getBody();
     }
@@ -39,7 +39,7 @@ abstract class RemoteServices {
         httpHeaders.add("Authorization", token);
         ResponseEntity<Map<String, Object>> responseEntity = exchange(path, HttpMethod.GET, null, httpHeaders, new ParameterizedTypeReference<Map<String, Object>>() {});
         if (!responseEntity.getStatusCode().equals(HttpStatus.OK)) {
-            throw new RepositoryException("Cannot perform get for path [" + path + "]", responseEntity);
+            throw new EndpointException("Cannot perform get for path [" + path + "]", responseEntity);
         }
         return responseEntity.getBody();
     }
@@ -49,7 +49,7 @@ abstract class RemoteServices {
         httpHeaders.add("Accept", "application/json;charset=utf-8");
         ResponseEntity<Map<String, Object>> responseEntity = exchange(path, HttpMethod.GET, null, httpHeaders, new ParameterizedTypeReference<Map<String, Object>>() {});
         if (!responseEntity.getStatusCode().equals(HttpStatus.OK)) {
-            throw new RepositoryException("Cannot perform get for path [" + path + "]", responseEntity);
+            throw new EndpointException("Cannot perform get for path [" + path + "]", responseEntity);
         }
         return responseEntity.getBody();
     }

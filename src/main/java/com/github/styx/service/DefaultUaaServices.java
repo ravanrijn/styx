@@ -1,7 +1,7 @@
 package com.github.styx.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.styx.console.domain.User;
+import com.github.styx.domain.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +17,7 @@ import java.util.Map;
 
 import static java.util.Collections.unmodifiableList;
 import static org.apache.commons.codec.binary.Base64.encodeBase64String;
+import static org.mvel2.MVEL.eval;
 import static org.mvel2.MVEL.evalToString;
 
 @Service
