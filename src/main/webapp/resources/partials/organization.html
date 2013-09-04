@@ -130,11 +130,13 @@
                                 <td>
                                     <div class="btn-group">
                                         <button type="button" ng-class="['btn', (app.state == 'STARTED') ? 'btn-success' : 'btn-danger', 'dropdown-toggle']" data-toggle="dropdown">
-                                            STOPPED
+                                            <span ng-show="app.state == 'STOPPED'">STOPPED</span>
+                                            <span ng-show="app.state == 'STARTED'">STARTED</span>
                                             <span class="caret"></span>
                                         </button>
                                         <ul class="dropdown-menu">
-                                            <li><a href="#">Start</a></li>
+                                            <li ng-show="app.state == 'STARTED'"><a href="#">STOP</a></li>
+                                            <li ng-show="app.state == 'STOPPED'"><a href="#">START</a></li>
                                         </ul>
                                     </div>
                                 </td>
