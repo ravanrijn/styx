@@ -98,7 +98,7 @@ class DefaultCloudFoundryServices extends RemoteServices implements CloudFoundry
                 eval("entity.quota_definition.entity.memory_limit", organization, Integer.class),
                 eval("entity.quota_definition.entity.non_basic_services_allowed", organization, Boolean.class),
                 eval("entity.quota_definition.entity.trial_db_allowed", organization, Boolean.class));
-//        final List<User> organizationUsers = mapOrganizationUsers(token, organization);
+        final List<User> organizationUsers = mapOrganizationUsers(token, organization);
         final List<Space> spaces = new ArrayList<>();
         for (final Object spaceResponse : eval("entity.spaces", organization, List.class)) {
 
@@ -112,7 +112,7 @@ class DefaultCloudFoundryServices extends RemoteServices implements CloudFoundry
         for (final Object domainResponse : eval("entity.domains", organization, List.class)) {
             domains.add(new Domain(evalToString(RESOURCE_ID, domainResponse), evalToString(ENTITY_NAME, domainResponse)));
         }
-        return new Organization(orgId, orgName, quota, domains, spaces, null);
+        return new Organization(orgId, orgName, quota, domains, spaces, organizationUsers);
     }
 
     @Override

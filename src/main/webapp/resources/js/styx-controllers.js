@@ -9,6 +9,13 @@ styxControllers.controller('StyxController', function ($scope, notificationChann
 });
 
 styxControllers.controller('OrganizationController', function ($scope, notificationChannel) {
+    $scope.editingOrganization = false;
+    $scope.editOrganization = function(){
+        $scope.editingOrganization = true;
+    };
+    $scope.updateOrganization = function(){
+        $scope.editingOrganization = false;
+    };
     notificationChannel.updateRoot();
     $scope.selectSpace = function(spaceName){
         $scope.selectedSpaceName = spaceName;

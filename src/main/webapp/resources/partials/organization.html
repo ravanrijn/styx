@@ -4,9 +4,10 @@
             <h3>
                 <span class="text-muted">Organization:</span> {{root.selectedOrganization.name}}</span>
                 <div class="pull-right">
-                    <button type="button" class="btn btn-default">Edit</button>
-                    <button type="button" class="btn btn-default">Change</button>
-                    <button type="button" class="btn btn btn-danger">Delete</button>
+                    <button type="button" class="btn btn-default" ng-disabled="editingOrganization">Change</button>
+                    <button type="button" class="btn btn-default" ng-hide="editingOrganization" ng-click="editOrganization()">Edit</button>
+                    <button type="button" class="btn btn-success" ng-show="editingOrganization" ng-click="updateOrganization()">Save</button>
+                    <button type="button" class="btn btn btn-danger" ng-disabled="editingOrganization">Delete</button>
                 </div>
             </h3>
             <hr/>
@@ -27,9 +28,13 @@
                 <th class="text-center text-muted small-text">
                     <span class="text-muted">Trial DB allowed</span>
                 </th>
+                <th class="text-center text-muted small-text" ng-hide="editingOrganization">
+                    <span class="text-muted">Users</span>
+                    <span class="badge">{{root.selectedOrganization.users.length}}</span>
+                </th>
                 </thead>
                 <tbody>
-                <tr>
+                <tr ng-hide="editingOrganization">
                     <td>
                         {{root.selectedOrganization.quota.name}}
                     </td>
@@ -44,6 +49,29 @@
                     </td>
                     <td>
                         {{root.selectedOrganization.quota.trialDbAllowed}}
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-default" ng-disabled="editingOrganization">Manage</button>
+                    </td>
+                </tr>
+                <tr ng-show="editingOrganization">
+                    <td>
+                        <input type="text" class="form-control" id="quotaName" placeholder="{{root.selectedOrganization.quota.name}}" ng-model="root.selectedOrganization.quota.quotaName">
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" id="quotaServices" placeholder="{{root.selectedOrganization.quota.services}}" ng-model="root.selectedOrganization.quota.services">
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" id="memoryLimit" placeholder="{{root.selectedOrganization.quota.memoryLimit}}" ng-model="root.selectedOrganization.quota.memoryLimit">
+                    </td>
+                    <td>
+                        <input type="checkbox" id="nonBasicServicesAllowed" ng-model="root.selectedOrganization.quota.nonBasicServicesAllowed">
+                    </td>
+                    <td>
+                        <input type="checkbox" id="trialDbAllowed" ng-model="root.selectedOrganization.quota.trialDbAllowed">
+                    </td>
+                    <td ng-hide="editingOrganization">
+                        <button type="button" class="btn btn-default" ng-disabled="editingOrganization">Manage</button>
                     </td>
                 </tr>
                 </tbody>
