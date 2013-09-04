@@ -15,6 +15,13 @@ styxControllers.controller('StyxController', function ($scope, $route, notificat
 
 styxControllers.controller('OrganizationController', function ($scope, notificationChannel) {
     $scope.availablePlans = ["paid", "free"];
+    $scope.changingOrganization = false;
+    $scope.changeOrganization = function(){
+        $scope.changingOrganization = true;
+    }
+    $scope.setOrganization = function(){
+        $scope.changingOrganization = false;
+    }
     $scope.mayEditOrganization = false;
     $scope.editingOrganization = false;
     $scope.cancelEditOrganization = function(){

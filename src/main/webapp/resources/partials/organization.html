@@ -1,13 +1,29 @@
 <div class="container">
     <div class="well well-sm">
         <div class="container">
-            <h3>
-                <span class="text-muted">Organization:</span> {{root.selectedOrganization.name}} </span><a><span class="text-muted">({{root.selectedOrganization.users.length}} users)</span></a>
+            <h3 ng-hide="changingOrganization">
+                <a ng-click="changeOrganization()"><span class="text-muted">Organization:</span>
+                    {{root.selectedOrganization.name}} </span></a>
+
                 <div class="pull-right">
-                    <button type="button" class="btn btn-default" ng-disabled="editingOrganization">Change</button>
+                    <button type="button" class="btn btn-default" ng-disabled="editingOrganization">Users <span
+                            class="badge">{{root.selectedOrganization.users.length}}</span></button>
                     <button type="button" class="btn btn btn-danger" ng-disabled="editingOrganization">Delete</button>
                 </div>
             </h3>
+            <div ng-show="changingOrganization">
+                <form class="form-inline" role="form">
+                    <div class="form-group">
+                        <h3><span class="text-muted">Organization:</span></h3>
+                    </div>
+                    <div class="form-group">
+                        <select id="organizationSelect" ng-model="root.selectedOrganization.id"
+                                ng-options="organization.id as organization.name for organization in root.availableOrganizations"
+                                class="form-control"></select>
+                    </div>
+                    <button type="button" class="btn btn-primary" ng-click="setOrganization()">Set</button>
+                </form>
+            </div>
             <table class="table small-text text-center">
                 <thead>
                 <th class="text-center text-muted small-text">
@@ -47,30 +63,43 @@
                         {{root.selectedOrganization.quota.trialDbAllowed}}
                     </td>
                     <td>
-                        <button type="button" class="btn btn-default" ng-show="mayEditOrganization" ng-click="editOrganization()">Edit</button>
+                        <button type="button" class="btn btn-default" ng-show="mayEditOrganization"
+                                ng-click="editOrganization()">Edit
+                        </button>
                     </td>
                 </tr>
                 <tr ng-show="editingOrganization">
                     <td>
-                        <select class="form-control" ng-model="root.selectedOrganization.quota.name" ng-options="plan as   plan for plan in availablePlans">
+                        <select ng-model="root.selectedOrganization.quota.name"
+                                ng-options="plan as   plan for plan in availablePlans" class="form-control">
 
                         </select>
                     </td>
                     <td>
-                        <input type="text" class="form-control" id="quotaServices" placeholder="{{root.selectedOrganization.quota.services}}" ng-model="root.selectedOrganization.quota.services">
+                        <input type="text" class="form-control" id="quotaServices"
+                               placeholder="{{root.selectedOrganization.quota.services}}"
+                               ng-model="root.selectedOrganization.quota.services"/>
                     </td>
                     <td>
-                        <input type="text" class="form-control" id="memoryLimit" placeholder="{{root.selectedOrganization.quota.memoryLimit}}" ng-model="root.selectedOrganization.quota.memoryLimit">
+                        <input type="text" class="form-control" id="memoryLimit"
+                               placeholder="{{root.selectedOrganization.quota.memoryLimit}}"
+                               ng-model="root.selectedOrganization.quota.memoryLimit"/>
                     </td>
                     <td>
-                        <input type="checkbox" id="nonBasicServicesAllowed" ng-model="root.selectedOrganization.quota.nonBasicServicesAllowed">
+                        <input type="checkbox" id="nonBasicServicesAllowed"
+                               ng-model="root.selectedOrganization.quota.nonBasicServicesAllowed"/>
                     </td>
                     <td>
-                        <input type="checkbox" id="trialDbAllowed" ng-model="root.selectedOrganization.quota.trialDbAllowed">
+                        <input type="checkbox" id="trialDbAllowed"
+                               ng-model="root.selectedOrganization.quota.trialDbAllowed"/>
                     </td>
                     <td>
-                        <button type="button" class="btn btn-success" ng-show="mayEditOrganization" ng-click="updateOrganization()">Save</button>
-                        <button type="button" class="btn btn-warning" ng-show="mayEditOrganization" ng-click="updateOrganization()">Cancel</button>
+                        <button type="button" class="btn btn-success" ng-show="mayEditOrganization"
+                                ng-click="updateOrganization()">Save
+                        </button>
+                        <button type="button" class="btn btn-warning" ng-show="mayEditOrganization"
+                                ng-click="updateOrganization()">Cancel
+                        </button>
                     </td>
                 </tr>
                 </tbody>
