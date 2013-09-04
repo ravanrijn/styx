@@ -8,8 +8,10 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
 
+import static java.lang.String.valueOf;
 import static java.util.Collections.unmodifiableList;
 import static org.mvel2.MVEL.eval;
+import static org.mvel2.MVEL.evalToBoolean;
 import static org.mvel2.MVEL.evalToString;
 
 @Service
@@ -120,8 +122,14 @@ class DefaultCloudFoundryServices extends RemoteServices implements CloudFoundry
     }
 
     @Override
+    public boolean isUserAdmin(String id){
+        final Map<String, Object> userResponse = get(uaaServices.getApplicationAccessToken(), baseApiUri.concat("v2/users/".concat(id).concat("?inline-relations-depth=".concat(valueOf(0)))));
+        return evalToBoolean("entity.admin", userResponse);
+    }
+
+    @Override
     public List<Organization> getOrganizations(String token) {
-        final Map<String, Object> organizationsResponse = get(token, baseApiUri.concat("v2/organizations?inline-relations-depth=".concat(String.valueOf(0))));
+        final Map<String, Object> organizationsResponse = get(token, baseApiUri.concat("v2/organizations?inline-relations-depth=".concat(valueOf(0))));
         final List<Organization> organizations = new ArrayList<>();
         for (Object organization : eval("resources", organizationsResponse, List.class)) {
             organizations.add(new Organization(evalToString(RESOURCE_ID, organization), evalToString(ENTITY_NAME, organization), null, null, null, null));
@@ -131,7 +139,7 @@ class DefaultCloudFoundryServices extends RemoteServices implements CloudFoundry
 
     @Override
     public Organization getOrganization(final String token, final String id) {
-        return mapOrganization(token, get(token, baseApiUri.concat("v2/organizations/").concat(id).concat("?inline-relations-depth=".concat(String.valueOf(3)))));
+        return mapOrganization(token, get(token, baseApiUri.concat("v2/organizations/").concat(id).concat("?inline-relations-depth=".concat(valueOf(3)))));
     }
 
 }

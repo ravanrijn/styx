@@ -10,4 +10,6 @@ public interface CloudFoundryServices {
 
     Organization getOrganization(String token, String id);
 
+    boolean isUserAdmin(String id);
+
 }

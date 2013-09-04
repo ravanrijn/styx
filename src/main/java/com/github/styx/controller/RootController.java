@@ -49,42 +49,33 @@ public class RootController {
         final String organizationId = organizations.get(0).getId();
         final Organization organization = cfServices.getOrganization(token, organizationId);
         final Map<String, Object> root = new LinkedHashMap<>();
-        final User uaaUser = uaaServices.getUser(token);
-        root.put("user", getCurrentUser(organization.getUsers(), uaaUser));
+        User authenticatedUser = uaaServices.getUser(token);
+        if(organization.getUsers().contains(authenticatedUser)){
+            authenticatedUser = organization.getUsers().get(organization.getUsers().indexOf(authenticatedUser));
+        }
+        if(authenticatedUser.getRoles() == null || !authenticatedUser.getRoles().contains(Role.EINDBAAS)){
+            if(cfServices.isUserAdmin(authenticatedUser.getId())){
+                if(authenticatedUser.getRoles() == null){
+                    final Set<Role> roles = new HashSet<>();
+                    authenticatedUser = new User(authenticatedUser.getId(), authenticatedUser.getUsername(), roles);
+                }
+                authenticatedUser.getRoles().add(Role.EINDBAAS);
+            }
+        }
+        root.put("user", authenticatedUser);
         root.put("availableOrganizations", organizations);
         root.put("selectedOrganization", organization);
         root.put("chuckQuote", chuckNorrisQuoter.randomQuote());
         final List<Link> links = new ArrayList<>();
         links.add(new Link("changeOrganization", "/{organizationId}"));
-        links.add(new Link("manageOrganizationUsers", "/".concat(organization.getId()).concat("/users")));
-        links.add(new Link("userInfo", "/users/".concat(uaaUser.getId()).concat("/info")));
+        if(authenticatedUser.getRoles().contains(Role.EINDBAAS)){
+            links.add(new Link("manageOrganizationUsers", "/".concat(organization.getId()).concat("/users")));
+            links.add(new Link("updateOrganization", "/".concat(organization.getId())));
+            links.add(new Link("deleteOrganization", "/".concat(organization.getId())));
+        }
+        links.add(new Link("userInfo", "/users/".concat(authenticatedUser.getId()).concat("/info")));
         root.put("links", links);
         return new ResponseEntity(root, HttpStatus.OK);
-    }
-
-    private CurrentUser getCurrentUser(List<User> users, User currentUser){
-        if(users.contains(currentUser)){
-            final User organizationUser = users.get(users.indexOf(currentUser));
-            return new CurrentUser(organizationUser, organizationUser.getRoles().contains(Role.ORGANIZATION_MANAGER));
-        }
-        return new CurrentUser(currentUser, false);
-    }
-
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    public static final class CurrentUser extends User{
-
-        private final boolean mayEditOrganization;
-
-        public CurrentUser(final User user, boolean mayEditOrganization) {
-            super(user.getId(), user.getUsername(), user.getRoles());
-            this.mayEditOrganization = mayEditOrganization;
-        }
-
-        @JsonProperty("mayEditOrganization")
-        public boolean mayEditOrganization() {
-            return mayEditOrganization;
-        }
-
     }
 
 }

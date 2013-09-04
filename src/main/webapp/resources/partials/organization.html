@@ -2,15 +2,12 @@
     <div class="well well-sm">
         <div class="container">
             <h3>
-                <span class="text-muted">Organization:</span> {{root.selectedOrganization.name}}</span>
+                <span class="text-muted">Organization:</span> {{root.selectedOrganization.name}} </span><a><span class="text-muted">({{root.selectedOrganization.users.length}} users)</span></a>
                 <div class="pull-right">
                     <button type="button" class="btn btn-default" ng-disabled="editingOrganization">Change</button>
-                    <button type="button" class="btn btn-default" ng-hide="editingOrganization" ng-click="editOrganization()">Edit</button>
-                    <button type="button" class="btn btn-success" ng-show="editingOrganization" ng-click="updateOrganization()">Save</button>
                     <button type="button" class="btn btn btn-danger" ng-disabled="editingOrganization">Delete</button>
                 </div>
             </h3>
-            <hr/>
             <table class="table small-text text-center">
                 <thead>
                 <th class="text-center text-muted small-text">
@@ -28,9 +25,8 @@
                 <th class="text-center text-muted small-text">
                     <span class="text-muted">Trial DB allowed</span>
                 </th>
-                <th class="text-center text-muted small-text" ng-hide="editingOrganization">
-                    <span class="text-muted">Users</span>
-                    <span class="badge">{{root.selectedOrganization.users.length}}</span>
+                <th class="text-center text-muted small-text">
+
                 </th>
                 </thead>
                 <tbody>
@@ -51,7 +47,7 @@
                         {{root.selectedOrganization.quota.trialDbAllowed}}
                     </td>
                     <td>
-                        <button type="button" class="btn btn-default" ng-disabled="editingOrganization">Manage</button>
+                        <button type="button" class="btn btn-default" ng-show="mayEditOrganization" ng-click="editOrganization()">Edit</button>
                     </td>
                 </tr>
                 <tr ng-show="editingOrganization">
@@ -72,8 +68,9 @@
                     <td>
                         <input type="checkbox" id="trialDbAllowed" ng-model="root.selectedOrganization.quota.trialDbAllowed">
                     </td>
-                    <td ng-hide="editingOrganization">
-                        <button type="button" class="btn btn-default" ng-disabled="editingOrganization">Manage</button>
+                    <td>
+                        <button type="button" class="btn btn-success" ng-show="mayEditOrganization" ng-click="updateOrganization()">Save</button>
+                        <button type="button" class="btn btn-warning" ng-show="mayEditOrganization" ng-click="updateOrganization()">Cancel</button>
                     </td>
                 </tr>
                 </tbody>

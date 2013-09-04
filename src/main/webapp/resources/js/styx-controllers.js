@@ -15,7 +15,11 @@ styxControllers.controller('StyxController', function ($scope, $route, notificat
 
 styxControllers.controller('OrganizationController', function ($scope, notificationChannel) {
     $scope.availablePlans = ["paid", "free"];
+    $scope.mayEditOrganization = false;
     $scope.editingOrganization = false;
+    $scope.cancelEditOrganization = function(){
+        $scope.editingOrganization = false;
+    };
     $scope.editOrganization = function(){
         $scope.editingOrganization = true;
     };
@@ -27,6 +31,7 @@ styxControllers.controller('OrganizationController', function ($scope, notificat
         $scope.selectedSpaceName = spaceName;
     }
     notificationChannel.onRootUpdated($scope, function(response){
+        $scope.mayEditOrganization = $.grep(response.root.links, function(link){ return link.rel === 'updateOrganization'; });
         if(response.root.selectedOrganization.spaces.length > 0){
             $scope.selectedSpaceName = response.root.selectedOrganization.spaces[0].name;
         }
