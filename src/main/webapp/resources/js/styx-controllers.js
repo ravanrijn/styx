@@ -9,6 +9,7 @@ styxControllers.controller('StyxController', function ($scope, notificationChann
 });
 
 styxControllers.controller('OrganizationController', function ($scope, notificationChannel) {
+    $scope.availablePlans = ["paid", "free"];
     $scope.editingOrganization = false;
     $scope.editOrganization = function(){
         $scope.editingOrganization = true;

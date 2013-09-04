@@ -43,6 +43,7 @@ class DefaultCloudFoundryServices extends RemoteServices implements CloudFoundry
         final List<User> users = new ArrayList<>();
         for (final Object userResponse : eval("entity.users", organization, List.class)) {
             final String userId = evalToString(RESOURCE_ID, userResponse);
+            final boolean admin = eval("entity.admin", userResponse, Boolean.class);
             final Set<Role> roles = new HashSet<>();
             if (orgAuditors.contains(userId)) {
                 roles.add(Role.ORGANIZATION_AUDITOR);
@@ -52,6 +53,9 @@ class DefaultCloudFoundryServices extends RemoteServices implements CloudFoundry
             }
             if (orgBillingManagers.contains(userId)) {
                 roles.add(Role.ORGANIZATION_BILLING_MANAGER);
+            }
+            if(admin){
+                roles.add(Role.EINDBAAS);
             }
             users.add(new User(userId, null, roles));
         }

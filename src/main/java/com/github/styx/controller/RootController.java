@@ -1,6 +1,9 @@
 package com.github.styx.controller;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.styx.domain.Organization;
+import com.github.styx.domain.Role;
 import com.github.styx.domain.User;
 import com.github.styx.service.ChuckNorrisQuoter;
 import com.github.styx.service.CloudFoundryServices;
@@ -12,10 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 public class RootController {
@@ -49,17 +49,42 @@ public class RootController {
         final String organizationId = organizations.get(0).getId();
         final Organization organization = cfServices.getOrganization(token, organizationId);
         final Map<String, Object> root = new LinkedHashMap<>();
-        final User currentUser = uaaServices.getUser(token);
-        root.put("user", currentUser);
+        final User uaaUser = uaaServices.getUser(token);
+        root.put("user", getCurrentUser(organization.getUsers(), uaaUser));
         root.put("availableOrganizations", organizations);
         root.put("selectedOrganization", organization);
         root.put("chuckQuote", chuckNorrisQuoter.randomQuote());
         final List<Link> links = new ArrayList<>();
         links.add(new Link("changeOrganization", "/{organizationId}"));
         links.add(new Link("manageOrganizationUsers", "/".concat(organization.getId()).concat("/users")));
-        links.add(new Link("userInfo", "/users/".concat(currentUser.getId()).concat("/info")));
+        links.add(new Link("userInfo", "/users/".concat(uaaUser.getId()).concat("/info")));
         root.put("links", links);
         return new ResponseEntity(root, HttpStatus.OK);
+    }
+
+    private CurrentUser getCurrentUser(List<User> users, User currentUser){
+        if(users.contains(currentUser)){
+            final User organizationUser = users.get(users.indexOf(currentUser));
+            return new CurrentUser(organizationUser, organizationUser.getRoles().contains(Role.ORGANIZATION_MANAGER));
+        }
+        return new CurrentUser(currentUser, false);
+    }
+
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    public static final class CurrentUser extends User{
+
+        private final boolean mayEditOrganization;
+
+        public CurrentUser(final User user, boolean mayEditOrganization) {
+            super(user.getId(), user.getUsername(), user.getRoles());
+            this.mayEditOrganization = mayEditOrganization;
+        }
+
+        @JsonProperty("mayEditOrganization")
+        public boolean mayEditOrganization() {
+            return mayEditOrganization;
+        }
+
     }
 
 }

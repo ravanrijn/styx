@@ -1,5 +1,5 @@
 <div class="container">
-    <div class="jumbotron">
+    <div class="well well-sm">
         <div class="container">
             <h3>
                 <span class="text-muted">Organization:</span> {{root.selectedOrganization.name}}</span>
@@ -14,7 +14,7 @@
             <table class="table small-text text-center">
                 <thead>
                 <th class="text-center text-muted small-text">
-                    Name
+                    Plan
                 </th>
                 <th class="text-center text-muted small-text">
                     <span class="text-muted">Total services</span>
@@ -56,7 +56,9 @@
                 </tr>
                 <tr ng-show="editingOrganization">
                     <td>
-                        <input type="text" class="form-control" id="quotaName" placeholder="{{root.selectedOrganization.quota.name}}" ng-model="root.selectedOrganization.quota.quotaName">
+                        <select class="form-control" ng-model="root.selectedOrganization.quota.name" ng-options="plan as   plan for plan in availablePlans">
+
+                        </select>
                     </td>
                     <td>
                         <input type="text" class="form-control" id="quotaServices" placeholder="{{root.selectedOrganization.quota.services}}" ng-model="root.selectedOrganization.quota.services">
