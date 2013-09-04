@@ -2,7 +2,12 @@
 
 var styxControllers = angular.module('styx.controllers', ['styx.services']);
 
-styxControllers.controller('StyxController', function ($scope, notificationChannel) {
+styxControllers.controller('StyxController', function ($scope, $route, notificationChannel, authToken) {
+    $scope.logout = function(){
+        authToken.clear();
+        $scope.root = null;
+        $route.reload();
+    }
     notificationChannel.onRootUpdated($scope, function(response){
         $scope.root = response.root;
     });
