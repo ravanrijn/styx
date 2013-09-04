@@ -6,35 +6,61 @@
     </div>
     <div class="row">
         <div class="col-md-12">
-            <h4><span class="text-muted">your // </span> organizations</h4>
-            <p>Select one of your organizations.</p>
+            <h3><span class="text-muted">your // </span> organizations
+                <span class="dropdown">
+                    <button type="button" class="btn btn-default btn-sm" data-toggle="dropdown">
+                        <span><span class="glyphicon glyphicon-cog"></span></span>
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a>Edit</a></li>
+                        <li><a>Add space</a></li>
+                        <li><a>Delete</a></li>
+                    </ul>
+                </span>
+            </h3>
+            <p>Select one of your organizations:</p>
             <div class="form-group">
                 <select ng-model="selectedOrgId"
                         ng-options="org.id as org.name for org in root.availableOrganizations"
                         ng-change="changeOrganization()" class="form-control">
                 </select>
             </div>
+            <div ng-show="root.selectedOrganization">Organization quota:
+                <span class="text-muted">memory-limit = </span>{{root.selectedOrganization.quota.memoryLimit}}MB ::
+                <span class="text-muted">services-limit = </span>{{root.selectedOrganization.quota.services}} ::
+                <span class="text-muted">plan-name =</span> {{root.selectedOrganization.quota.name}}
+            </div>
         </div>
     </div>
 
     <div class="row" ng-repeat="space in root.selectedOrganization.spaces">
-        <div class="col-md-12">
-            <h4><span class="text-muted">apps // </span> {{space.name}} <span
-                    class="badge">{{space.applications.length}}</span></h4>
-            <p>All available applications in this space are listed below.</p>
-            <hr/>
-
+        <div class="col-md-12" style="padding-top: 20px">
+            <h3><span class="text-muted">apps // </span> {{space.name}}
+                <span class="dropdown">
+                    <button type="button" class="btn btn-default btn-sm" data-toggle="dropdown">
+                        <span><span class="glyphicon glyphicon-cog"></span></span>
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a>Edit</a></li>
+                        <li><a>Manage users</a></li>
+                        <li><a>Delete</a></li>
+                    </ul>
+                </span>
+            </h3>
+            <p>All available applications in this space are listed below:</p>
             <div spin="defaultSpinnerConfig" spin-if="loading"></div>
-            <table class="table table-hover" style="width: 100%">
+            <table class="table table-hover table-condensed" style="width: 100%">
                 <thead>
                 <tr>
-                    <th>STATUS</th>
-                    <th>APP</th>
-                    <th>INSTANCES</th>
-                    <th>SERVICES</th>
-                    <th>MEMORY</th>
-                    <th>URL</th>
-                    <th></th>
+                    <th style="width: 10%">STATUS</th>
+                    <th style="width: 20%">APP</th>
+                    <th style="width: 30%">URL</th>
+                    <th style="width: 10%; text-align: right">MEMORY</th>
+                    <th style="width: 10%; text-align: right">INSTANCES</th>
+                    <th style="width: 10%; text-align: right">SERVICES</th>
+                    <th style="width: 10%; text-align: right">OPTIONS</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -57,35 +83,35 @@
                     <td>
                         <a>{{app.name}}</a>
                     </td>
-                    <td>
-                        <input type="text" class="form-control" id="appInstances"
-                               placeholder="{{app.instances}}"
-                               ng-model="app.instances" ng-show="editingApplication === app.id"/>
-                        <span ng-hide="editingApplication === app.id">{{app.instances}}</span>
+                    <td class="text-left">
+                        <div class="text-left" ng-repeat="url in app.urls"><a href="http://{{url}}">http://{{url}}</a><br/></div>
                     </td>
-                    <td style="width: 10%">
-                        {{app.serviceBindings.length}}
-                    </td>
-                    <td>
+                    <td style="text-align: right">
                         <input type="text" class="form-control" id="appMemory"
                                placeholder="{{app.memory}}"
                                ng-model="app.memory" ng-show="editingApplication === app.id"/>
                         <span ng-hide="editingApplication === app.id">{{app.memory}} MB</span>
                     </td>
-                    <td class="text-left">
-                        <div class="text-left" ng-repeat="url in app.urls"><a href="http://{{url}}">http://{{url}}</a><br/></div>
+                    <td style="text-align: right">
+                    <input type="text" class="form-control" id="appInstances"
+                    placeholder="{{app.instances}}"
+                    ng-model="app.instances" ng-show="editingApplication === app.id"/>
+                    <span ng-hide="editingApplication === app.id">{{app.instances}}</span>
+                    </td>
+                    <td style="text-align: right">
+                    {{app.serviceBindings.length}}
                     </td>
                     <td>
                         <div class="pull-right">
-                            <div class="btn-group btn-group-sm">
+                            <div class="dropdown">
                                 <button type="button"
-                                        class="btn btn-default"
+                                        class="btn btn-default btn-xs"
                                         data-toggle="dropdown">
                                     <span><span class="glyphicon glyphicon-cog"></span></span>
                                     <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <li><a>Details</a></li>
+                                    <li><a>Info</a></li>
                                     <li><a>Delete</a></li>
                                 </ul>
                             </div>
