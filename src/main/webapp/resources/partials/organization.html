@@ -6,9 +6,9 @@
                     {{root.selectedOrganization.name}} </span></a>
 
                 <div class="pull-right">
-                    <button type="button" class="btn btn-default" ng-disabled="editingOrganization">Users <span
+                    <button type="button" class="btn btn-default" ng-disabled="editingOrganization || editingApplication !== 0">Users <span
                             class="badge">{{root.selectedOrganization.users.length}}</span></button>
-                    <button type="button" class="btn btn btn-danger" ng-disabled="editingOrganization">Delete</button>
+                    <button type="button" class="btn btn btn-danger" ng-disabled="editingOrganization || editingApplication !== 0" ng-show="mayEditOrganization">Delete</button>
                 </div>
             </h3>
             <div ng-show="changingOrganization">
@@ -41,7 +41,7 @@
                 <th class="text-center text-muted small-text">
                     <span class="text-muted">Trial DB allowed</span>
                 </th>
-                <th class="text-center text-muted small-text">
+                <th class="text-center text-muted small-text" ng-show="mayEditOrganization">
 
                 </th>
                 </thead>
@@ -62,8 +62,8 @@
                     <td>
                         {{root.selectedOrganization.quota.trialDbAllowed}}
                     </td>
-                    <td>
-                        <button type="button" class="btn btn-default" ng-show="mayEditOrganization"
+                    <td ng-show="mayEditOrganization">
+                        <button type="button" class="btn btn-default" ng-disabled="editingApplication !== 0"
                                 ng-click="editOrganization()">Edit
                         </button>
                     </td>
@@ -94,10 +94,10 @@
                                ng-model="root.selectedOrganization.quota.trialDbAllowed"/>
                     </td>
                     <td>
-                        <button type="button" class="btn btn-success" ng-show="mayEditOrganization"
-                                ng-click="updateOrganization()">Save
+                        <button type="button" class="btn btn-success"
+                                ng-click="updateOrganization()">Update
                         </button>
-                        <button type="button" class="btn btn-warning" ng-show="mayEditOrganization"
+                        <button type="button" class="btn btn-warning"
                                 ng-click="updateOrganization()">Cancel
                         </button>
                     </td>
@@ -122,14 +122,16 @@
                                 <th>APP</th>
                                 <th>INSTANCES</th>
                                 <th>MEMORY</th>
-                                <th></th>
+                                <th ng-show="mayEditOrganization"></th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr ng-repeat="app in space.applications">
-                                <td>
+                                <td style="width: 20%">
                                     <div class="btn-group">
-                                        <button type="button" ng-class="['btn', (app.state == 'STARTED') ? 'btn-success' : 'btn-danger', 'dropdown-toggle']" data-toggle="dropdown">
+                                        <button type="button"
+                                                ng-class="['btn', (app.state == 'STARTED') ? 'btn-success' : 'btn-danger', 'dropdown-toggle']"
+                                                data-toggle="dropdown" ng-disabled="editingOrganization">
                                             <span ng-show="app.state == 'STOPPED'">STOPPED</span>
                                             <span ng-show="app.state == 'STARTED'">STARTED</span>
                                             <span class="caret"></span>
@@ -140,20 +142,40 @@
                                         </ul>
                                     </div>
                                 </td>
-                                <td>
+                                <td style="width: 20%">
                                     {{app.name}} <a href="#/app-settings/{{root.selectedOrganization.id}}/{{app.id}}"
                                                     style="text-decoration: none"><span
                                         class="glyphicon glyphicon-info-sign"></span></a>
-
-                                    <div ng-repeat="url in app.urls">
-                                        <a href="http://{{url}}">{{url}}</a>
+                                </td>
+                                <td style="width: 20%">
+                                    <input type="text" class="form-control" id="appInstances"
+                                           placeholder="{{app.instances}}"
+                                           ng-model="app.instances" ng-show="editingApplication === app.id"/>
+                                    <span ng-hide="editingApplication === app.id">{{app.instances}}</span>
+                                </td>
+                                <td style="width: 20%">
+                                    <input type="text" class="form-control" id="appMemory"
+                                           placeholder="{{app.memory}}"
+                                           ng-model="app.memory" ng-show="editingApplication === app.id"/>
+                                    <span ng-hide="editingApplication === app.id">{{app.memory}} MB</span>
+                                </td>
+                                <td ng-hide="editingApplication === app.id || !mayEditOrganization" style="width: 20%">
+                                    <div class="pull-right">
+                                        <button type="button" class="btn btn-default"
+                                                ng-disabled="editingOrganization || editingApplication !== 0"
+                                                ng-click="editApplication(app.id)">Edit
+                                        </button>
                                     </div>
                                 </td>
-                                <td>{{app.instances}}</td>
-                                <td>{{app.memory}} MB</td>
-                                <td>
-                                    <button type="button" class="btn btn-default" ng-show="mayEditOrganization">Edit
-                                    </button>
+                                <td ng-show="editingApplication === app.id" style="width: 20%">
+                                    <div class="pull-right">
+                                        <button type="button" class="btn btn-primary"
+                                                ng-click="updateApplication(app.id)">Update
+                                        </button>
+                                        <button type="button" class="btn btn-warning"
+                                                ng-click="cancelEditApplication()">Cancel
+                                        </button>
+                                    </div>
                                 </td>
                             </tr>
                             </tbody>

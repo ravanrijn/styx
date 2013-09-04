@@ -16,8 +16,20 @@ styxControllers.controller('StyxController', function ($scope, $route, notificat
 styxControllers.controller('OrganizationController', function ($scope, notificationChannel) {
     $scope.availablePlans = ["paid", "free"];
     $scope.changingOrganization = false;
+    $scope.editingApplication = 0;
+    $scope.editApplication = function(appId){
+        $scope.editingApplication = appId;
+    }
+    $scope.updateApplication = function(appId){
+        $scope.editingApplication = appId;
+    }
+    $scope.cancelEditApplication = function(){
+        $scope.editingApplication = 0;
+    }
     $scope.changeOrganization = function(){
-        $scope.changingOrganization = true;
+        if(!$scope.editingOrganization && editingApplication > 0){
+            $scope.changingOrganization = true;
+        }
     }
     $scope.setOrganization = function(){
         $scope.changingOrganization = false;
@@ -38,7 +50,7 @@ styxControllers.controller('OrganizationController', function ($scope, notificat
         $scope.selectedSpaceName = spaceName;
     }
     notificationChannel.onRootUpdated($scope, function(response){
-        $scope.mayEditOrganization = $.grep(response.root.links, function(link){ return link.rel === 'updateOrganization'; });
+        $scope.mayEditOrganization = $.grep(response.root.links, function(link){ return link.rel === 'updateOrganization'; }) !== [];
         if(response.root.selectedOrganization.spaces.length > 0){
             $scope.selectedSpaceName = response.root.selectedOrganization.spaces[0].name;
         }
