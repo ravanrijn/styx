@@ -1,10 +1,89 @@
 <div class="container">
-    <div class="row">
-        <h4><span class="text-muted">manage // </span>plans <span class="badge">{{admin.plans.length}}</span></h4>
-        <p>All available plans are listed below.</p>
-        <hr/>
+    <div>
+        <h3><span class="text-muted">organization // </span>manage <span class="badge">{{admin.organizations.length}}</span></h3>
+        <p>All available organizations are listed below.</p>
         <div spin="defaultSpinnerConfig" spin-if="loading"></div>
-        <table class="table table-hover">
+        <table class="table table-hover table-condensed">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Plan</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="organization in admin.organizations">
+                <td ng-hide="editingOrg === organization.id">{{organization.name}}</td>
+                <td ng-show="editingOrg === organization.id">
+                    <input type="text" class="form-control" id="org.name"
+                           placeholder="{{organization.name}}"
+                           ng-model="organization.name"/>
+                </td>
+                <td ng-hide="editingOrg === organization.id">{{organization.quotaName}}</td>
+                <td ng-show="editingOrg === organization.id">
+                    <select ng-model="organization.quotaId"
+                            ng-options="plan.id as plan.name for plan in admin.plans" class="form-control">
+                    </select>
+                </td>
+                <td ng-hide="editingOrg === organization.id">
+                    <div class="pull-right">
+                        <div class="dropdown">
+                            <button type="button" class="btn btn-default btn-xs" data-toggle="dropdown" ng-disabled="editingOrg">
+                                <span><span class="glyphicon glyphicon-cog"></span></span>
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a ng-click="routeToUsers(organization.id)">Users</a></li>
+                                <li><a ng-click="editOrg(organization.id)">Edit</a></li>
+                                <li><a ng-click="deleteOrg(organization.id, organization.name)">Delete</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </td>
+                <td ng-show="editingOrg === organization.id">
+                    <div class="pull-right">
+                        <div class="btn-group btn-group-sm">
+                            <button type="button" class="btn btn-success"
+                                    ng-click="saveOrg(organization.id, organization.name, organization.quotaId)">
+                                Update
+                            </button>
+                            <button type="button" class="btn btn-warning" ng-click="cancelEdit()">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="text" class="form-control" id="new.org.name"
+                           placeholder="Choose a name"
+                           ng-model="newOrganization.name"/>
+                </td>
+                <td>
+                    <select ng-model="newOrganization.plan"
+                            ng-options="plan.id as plan.name for plan in admin.plans" class="form-control">
+                    </select>
+                </td>
+                <td>
+                    <div class="pull-right">
+                        <div class="btn-group btn-group-sm">
+                            <button type="button" class="btn btn-success" ng-disabled="editingOrg"
+                                    ng-click="createOrg(newOrganization)">
+                                Add
+                            </button>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <h3><span class="text-muted">plans // </span>manage <span class="badge">{{admin.plans.length}}</span></h3>
+        <p>All available plans are listed below.</p>
+        <div spin="defaultSpinnerConfig" spin-if="loading"></div>
+        <table class="table table-hover table-condensed">
             <thead>
             <tr>
                 <th>Name</th>
@@ -50,10 +129,8 @@
                            ng-model="plan.trialDbAllowed"/>
                 <td ng-hide="editingPlan === plan.id">
                     <div class="pull-right">
-                        <div class="btn-group btn-group-sm">
-                            <button type="button"
-                                    class="btn btn-default"
-                                    data-toggle="dropdown" ng-disabled="editingPlan">
+                        <div class="dropdown">
+                            <button type="button" class="btn btn-default btn-xs" data-toggle="dropdown" ng-disabled="editingPlan">
                                 <span><span class="glyphicon glyphicon-cog"></span></span>
                                 <span class="caret"></span>
                             </button>
@@ -106,90 +183,6 @@
                         <div class="btn-group btn-group-sm">
                             <button type="button" class="btn btn-success" ng-disabled="editingPlan"
                                     ng-click="createPlan(newPlan)">
-                                Add
-                            </button>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-    <div class="row">
-        <h4><span class="text-muted">manage // </span>organizations <span
-                class="badge">{{admin.organizations.length}}</span></h4>
-        <p>All available organizations are listed below.</p>
-        <hr/>
-        <div spin="defaultSpinnerConfig" spin-if="loading"></div>
-        <table class="table table-hover">
-            <thead>
-            <tr>
-                <th>Name</th>
-                <th>Plan</th>
-                <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr ng-repeat="organization in admin.organizations">
-                <td ng-hide="editingOrg === organization.id">{{organization.name}}</td>
-                <td ng-show="editingOrg === organization.id">
-                    <input type="text" class="form-control" id="org.name"
-                           placeholder="{{organization.name}}"
-                           ng-model="organization.name"/>
-                </td>
-                <td ng-hide="editingOrg === organization.id">{{organization.quotaName}}</td>
-                <td ng-show="editingOrg === organization.id">
-                    <select ng-model="organization.quotaId"
-                            ng-options="plan.id as plan.name for plan in admin.plans" class="form-control">
-                    </select>
-                </td>
-                <td ng-hide="editingOrg === organization.id">
-                    <div class="pull-right">
-                        <div class="btn-group btn-group-sm">
-                            <button type="button"
-                                    class="btn btn-default"
-                                    data-toggle="dropdown" ng-disabled="editingOrg">
-                                <span><span class="glyphicon glyphicon-cog"></span></span>
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a ng-click="routeToUsers(organization.id)">Users</a></li>
-                                <li><a ng-click="editOrg(organization.id)">Edit</a></li>
-                                <li><a ng-click="deleteOrg(organization.id, organization.name)">Delete</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </td>
-                <td ng-show="editingOrg === organization.id">
-                    <div class="pull-right">
-                        <div class="btn-group btn-group-sm">
-                            <button type="button" class="btn btn-success"
-                                    ng-click="saveOrg(organization.id, organization.name, organization.quotaId)">
-                                Update
-                            </button>
-                            <button type="button" class="btn btn-warning" ng-click="cancelEdit()">
-                                Cancel
-                            </button>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <input type="text" class="form-control" id="new.org.name"
-                           placeholder="Choose a name"
-                           ng-model="newOrganization.name"/>
-                </td>
-                <td>
-                    <select ng-model="newOrganization.plan"
-                            ng-options="plan.id as plan.name for plan in admin.plans" class="form-control">
-                    </select>
-                </td>
-                <td>
-                    <div class="pull-right">
-                        <div class="btn-group btn-group-sm">
-                            <button type="button" class="btn btn-success" ng-disabled="editingOrg"
-                                    ng-click="createOrg(newOrganization)">
                                 Add
                             </button>
                         </div>
