@@ -1,31 +1,62 @@
 <div class="container">
-    <div class="well well-sm">
-        <div class="row">
-            <div class="col-md-11">
-                APP SPACES:
-                    <span ng-repeat="space in root.selectedOrganization.spaces">
-                        <span ng-show="space.selected == space.name">
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-primary uppercase">{{space.name}}</button>
-                                <a href="#/space-settings/{{root.selectedOrganization.id}}/{{space.id}}" class="btn btn-primary"><span class="glyphicon glyphicon-wrench"></span></a>
-                            </div>
-                        </span>
-                        <span>
-                            <button class="btn btn-default uppercase" ng-click="selectSpace(space.name)">{{space.name}}</button>
-                        </span>
-                    </span>
-            </div>
-            <div class="col-md-1">
-                <a href="#/create-space/{{root.selectedOrganization.id}}" class="btn btn-success">ADD</a>
-            </div>
+    <div class="jumbotron">
+        <div class="container">
+            <h3>
+                <span class="text-muted">Organization:</span> {{root.selectedOrganization.name}}</span>
+                <div class="pull-right">
+                    <button type="button" class="btn btn-default">Edit</button>
+                    <button type="button" class="btn btn-default">Change</button>
+                    <button type="button" class="btn btn btn-danger">Delete</button>
+                </div>
+            </h3>
+            <hr/>
+            <table class="table small-text text-center">
+                <thead>
+                <th class="text-center text-muted small-text">
+                    Name
+                </th>
+                <th class="text-center text-muted small-text">
+                    <span class="text-muted">Total services</span>
+                </th>
+                <th class="text-center text-muted small-text">
+                    <span class="text-muted">Memory limit</span>
+                </th>
+                <th class="text-center text-muted small-text">
+                    <span class="text-muted">Non basic services allowed</span>
+                </th>
+                <th class="text-center text-muted small-text">
+                    <span class="text-muted">Trial DB allowed</span>
+                </th>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>
+                        {{root.selectedOrganization.quota.name}}
+                    </td>
+                    <td>
+                        {{root.selectedOrganization.quota.services}}
+                    </td>
+                    <td>
+                        {{root.selectedOrganization.quota.memoryLimit}}
+                    </td>
+                    <td>
+                        {{root.selectedOrganization.quota.nonBasicServicesAllowed}}
+                    </td>
+                    <td>
+                        {{root.selectedOrganization.quota.trialDbAllowed}}
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </div>
     </div>
     <div class="row">
         <div ng-repeat="space in root.selectedOrganization.spaces">
-            <div class="col-md-8" ng-show="space.name === selectedSpaceName">
+            <div class="col-md-12">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <span class="panel-title uppercase">Apps in {{space.name}} <span class="badge">{{space.applications.length}}</span></span>
+                        <span class="panel-title"><span class="text-muted">Space:</span> {{space.name}} <span
+                                class="badge">{{space.applications.length}}</span></span>
                     </div>
                     <div class="panel-body">
                         <table class="table table-condensed">
@@ -44,42 +75,29 @@
                                     <span class="label label-danger" ng-hide="app.state == 'STARTED'">STOPPED</span>
                                 </td>
                                 <td>
-                                    {{app.name}} <a href="#/app-settings/{{root.selectedOrganization.id}}/{{app.id}}" style="text-decoration: none"><span class="glyphicon glyphicon-info-sign"></span></a>
+                                    {{app.name}} <a href="#/app-settings/{{root.selectedOrganization.id}}/{{app.id}}"
+                                                    style="text-decoration: none"><span
+                                        class="glyphicon glyphicon-info-sign"></span></a>
+
                                     <div ng-repeat="url in app.urls">
                                         <a href="http://{{url}}">{{url}}</a>
                                     </div>
                                 </td>
                                 <td>{{app.instances}}</td>
                                 <td>{{app.memory}} MB</td>
-                                <td><button class="btn btn-danger btn-xs" ng-show="app.state == 'STARTED'" ng-click="stopApplication(app.id)"><span class="glyphicon glyphicon-stop"></span> STOP</button>
-                                    <button class="btn btn-success btn-xs" ng-hide="app.state == 'STARTED'" ng-click="startApplication(app.id)"><span class="glyphicon glyphicon-play"></span> START</button></td>
+                                <td>
+                                    <button class="btn btn-danger btn-xs" ng-show="app.state == 'STARTED'"
+                                            ng-click="stopApplication(app.id)"><span
+                                            class="glyphicon glyphicon-stop"></span> STOP
+                                    </button>
+                                    <button class="btn btn-success btn-xs" ng-hide="app.state == 'STARTED'"
+                                            ng-click="startApplication(app.id)"><span
+                                            class="glyphicon glyphicon-play"></span> START
+                                    </button>
+                                </td>
                             </tr>
                             </tbody>
                         </table>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4" ng-show="space.name === selectedSpaceName">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <span class="panel-title uppercase">Users in {{space.name}}</span> <span class="badge">{{space.users.length}}</span><a href="#/users/{{organization.id}}" class="btn btn-sm btn-success pull-right">EDIT</a>
-                    </div>
-                    <div class="panel-body">
-                        <h5>Managers</h5>
-                        <ul>
-                            <li ng-repeat="user in space.users" ng-show="user.roles.indexOf('SPACE_MANAGER') !== -1">{{user.username}}</li>
-                        </ul>
-                        <hr/>
-                        <h5>Auditors</h5>
-                        <ul>
-                            <li ng-repeat="user in space.users" ng-show="user.roles.indexOf('SPACE_AUDITOR') !== -1">{{user.username}}</li>
-                        </ul>
-                        <hr/>
-                        <h5>Developers</h5>
-                        <ul>
-                            <li ng-repeat="user in space.users" ng-show="user.roles.indexOf('SPACE_DEVELOPER') !== -1">{{user.username}}</li>
-                        </ul>
-                        <hr/>
                     </div>
                 </div>
             </div>

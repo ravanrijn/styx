@@ -22,7 +22,7 @@ styxServices.factory('authToken', function ($http, localStorageService) {
 
 });
 
-styxServices.factory('notificationChannel', function ($rootScope, apiServices) {
+styxServices.factory('notificationChannel', function ($rootScope, apiServices, authToken) {
 
     var ROOT_UPDATED = "_ROOT_UPDATED_";
     var USER_MANAGEMENT_UPDATED = "_USER_MANAGEMENT_UPDATED_";
@@ -54,10 +54,13 @@ styxServices.factory('notificationChannel', function ($rootScope, apiServices) {
     notificationChannel.login = function(username, password){
         var tokenPromise = apiServices.getAuthToken(username, password);
         tokenPromise.success(function (response, status, headers) {
-            $rootScope.$broadcast(LOGIN_SUCCESS, {root: response.data, status: status, headers: headers});
+            console.log(JSON.stringify(response));
+            authToken.setToken(response.token);
+            $rootScope.$broadcast(LOGIN_SUCCESS, {root: response, status: status, headers: headers});
         });
         tokenPromise.error(function (response, status, headers) {
-            $rootScope.$broadcast(ERROR, {root: response.data, status: status, headers: headers});
+            authToken.clear();
+            $rootScope.$broadcast(ERROR, {root: response, status: status, headers: headers});
         });
     }
 

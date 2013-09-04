@@ -2,7 +2,7 @@
 
 var styxControllers = angular.module('styx.controllers', ['styx.services']);
 
-styxControllers.controller('StyxController', function ($scope, notificationChannel, authToken) {
+styxControllers.controller('StyxController', function ($scope, notificationChannel) {
     notificationChannel.onRootUpdated($scope, function(response){
         $scope.root = response.root;
     });

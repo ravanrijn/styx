@@ -18,22 +18,6 @@
                 <a class="navbar-brand" href="#">CLOUD FOUNDRY</a>
             </div>
             <div ng-show="root">
-                <ul class="nav navbar-nav">
-                    <li class="dropdown uppercase">
-                        <a class="dropdown-toggle" data-toggle="dropdown">ORG: {{root.selectedOrganization.name}} <b
-                                class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            <li ng-repeat="organization in root.availableOrganizations"
-                                ng-hide="organization.id === root.selectedOrganization.id"><a
-                                    href="#/app-spaces/{{organization.id}}">{{organization.name}}</a>
-                            </li>
-                            <li><a href="#/create-org/{{organization.id}}">CREATE NEW ORGANIZATION</a></li>
-                        </ul>
-                    </li>
-                    <li><a href="#/app-spaces/{{root.selectedOrganization.id}}">APP SPACES</a></li>
-                    <li><a href="#/users/{{root.selectedOrganization.id}}">USERS</a></li>
-                    <li><a href="#/org-settings/{{root.selectedOrganization.id}}">ORG SETTINGS</a></li>
-                </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="#/userinfo/{{root.selectedOrganization.id}}"
                            class="uppercase">{{root.user.username}}</a></li>

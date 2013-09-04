@@ -98,7 +98,7 @@ class DefaultCloudFoundryServices extends RemoteServices implements CloudFoundry
                 eval("entity.quota_definition.entity.memory_limit", organization, Integer.class),
                 eval("entity.quota_definition.entity.non_basic_services_allowed", organization, Boolean.class),
                 eval("entity.quota_definition.entity.trial_db_allowed", organization, Boolean.class));
-        final List<User> organizationUsers = mapOrganizationUsers(token, organization);
+//        final List<User> organizationUsers = mapOrganizationUsers(token, organization);
         final List<Space> spaces = new ArrayList<>();
         for (final Object spaceResponse : eval("entity.spaces", organization, List.class)) {
 
@@ -106,13 +106,13 @@ class DefaultCloudFoundryServices extends RemoteServices implements CloudFoundry
             for (Object applicationResponse : eval("entity.apps", spaceResponse, List.class)) {
                 applications.add(new Application(evalToString("metadata.guid", applicationResponse), evalToString(ENTITY_NAME, applicationResponse), evalToString("entity.memory", applicationResponse), eval("entity.instances", applicationResponse, Integer.class), ApplicationState.valueOf(evalToString("entity.state", applicationResponse))));
             }
-            spaces.add(new Space(evalToString(RESOURCE_ID, spaceResponse), evalToString(ENTITY_NAME, spaceResponse), mapSpaceUsers(spaceResponse, organizationUsers), applications));
+            spaces.add(new Space(evalToString(RESOURCE_ID, spaceResponse), evalToString(ENTITY_NAME, spaceResponse), null, /*mapSpaceUsers(spaceResponse, organizationUsers),*/ applications));
         }
         final List<Domain> domains = new ArrayList<>();
         for (final Object domainResponse : eval("entity.domains", organization, List.class)) {
             domains.add(new Domain(evalToString(RESOURCE_ID, domainResponse), evalToString(ENTITY_NAME, domainResponse)));
         }
-        return new Organization(orgId, orgName, quota, domains, spaces, organizationUsers);
+        return new Organization(orgId, orgName, quota, domains, spaces, null);
     }
 
     @Override

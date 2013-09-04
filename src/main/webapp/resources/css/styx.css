@@ -18,3 +18,8 @@ pre {
     padding: 19px 29px 29px;
     margin: 0 auto 20px;
 }
+
+.small-text {
+    font-size: 14px;
+    font-weight: normal;
+}
