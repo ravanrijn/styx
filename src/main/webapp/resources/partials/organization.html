@@ -127,8 +127,16 @@
                             </thead>
                             <tbody>
                             <tr ng-repeat="app in space.applications">
-                                <td><span class="label label-success" ng-show="app.state == 'STARTED'">STARTED</span>
-                                    <span class="label label-danger" ng-hide="app.state == 'STARTED'">STOPPED</span>
+                                <td>
+                                    <div class="btn-group">
+                                        <button type="button" ng-class="['btn', (app.state == 'STARTED') ? 'btn-success' : 'btn-danger', 'dropdown-toggle']" data-toggle="dropdown">
+                                            STOPPED
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="#">Start</a></li>
+                                        </ul>
+                                    </div>
                                 </td>
                                 <td>
                                     {{app.name}} <a href="#/app-settings/{{root.selectedOrganization.id}}/{{app.id}}"
@@ -142,13 +150,7 @@
                                 <td>{{app.instances}}</td>
                                 <td>{{app.memory}} MB</td>
                                 <td>
-                                    <button class="btn btn-danger btn-xs" ng-show="app.state == 'STARTED'"
-                                            ng-click="stopApplication(app.id)"><span
-                                            class="glyphicon glyphicon-stop"></span> STOP
-                                    </button>
-                                    <button class="btn btn-success btn-xs" ng-hide="app.state == 'STARTED'"
-                                            ng-click="startApplication(app.id)"><span
-                                            class="glyphicon glyphicon-play"></span> START
+                                    <button type="button" class="btn btn-default" ng-show="mayEditOrganization">Edit
                                     </button>
                                 </td>
                             </tr>
