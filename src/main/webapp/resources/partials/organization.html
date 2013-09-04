@@ -6,9 +6,13 @@
                     {{root.selectedOrganization.name}} </span></a>
 
                 <div class="pull-right">
-                    <button type="button" class="btn btn-default" ng-disabled="editingOrganization || editingApplication !== 0">Users <span
+                    <button type="button" class="btn btn-default"
+                            ng-disabled="editingOrganization || editingApplication !== 0">Users <span
                             class="badge">{{root.selectedOrganization.users.length}}</span></button>
-                    <button type="button" class="btn btn btn-danger" ng-disabled="editingOrganization || editingApplication !== 0" ng-show="mayEditOrganization">Delete</button>
+                    <button type="button" class="btn btn btn-danger"
+                            ng-disabled="editingOrganization || editingApplication !== 0" ng-show="mayEditOrganization">
+                        Delete
+                    </button>
                 </div>
             </h3>
             <div ng-show="changingOrganization">

@@ -27,7 +27,7 @@ styxControllers.controller('OrganizationController', function ($scope, notificat
         $scope.editingApplication = 0;
     }
     $scope.changeOrganization = function(){
-        if(!$scope.editingOrganization && editingApplication > 0){
+        if(!$scope.editingOrganization && $scope.editingApplication === 0){
             $scope.changingOrganization = true;
         }
     }
