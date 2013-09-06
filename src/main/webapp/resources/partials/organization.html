@@ -2,50 +2,51 @@
     <div class="well well-sm">
         <div class="container">
             <h3 ng-hide="changingOrganization">
-                <a ng-click="changeOrganization()"><span class="text-muted">Organization:</span>
-                    {{root.selectedOrganization.name}} </span></a>
+                <span class="text-muted">Organization:</span>
 
-                <div class="pull-right">
-                    <button type="button" class="btn btn-default"
-                            ng-disabled="editingOrganization || editingApplication !== 0">Users <span
-                            class="badge">{{root.selectedOrganization.users.length}}</span></button>
-                    <button type="button" class="btn btn btn-danger"
-                            ng-disabled="editingOrganization || editingApplication !== 0" ng-show="mayEditOrganization">
-                        Delete
+                <div class="btn-group btn-group-sm">
+                    <button type="button"
+                            ng-class="['btn', 'btn-primary', 'dropdown-toggle']"
+                            data-toggle="dropdown">
+                        <span>{{root.selectedOrganization.name}}</span>
+                        <span class="caret"></span>
                     </button>
+                    <ul class="dropdown-menu">
+                        <li ng-repeat="organization in root.availableOrganizations"><a
+                                href="#">{{organization.name}}</a></li>
+                    </ul>
+                </div>
+                <div class="pull-right">
+                    <div class="btn-group btn-group-sm">
+                        <button type="button" class="btn btn-default"
+                                ng-disabled="editingOrganization || editingApplication !== 0">Users <span
+                                class="badge">{{root.selectedOrganization.users.length}}</span></button>
+                        <button type="button" class="btn btn btn-danger"
+                                ng-disabled="editingOrganization || editingApplication !== 0"
+                                ng-show="mayEditOrganization">
+                            Delete
+                        </button>
+                    </div>
                 </div>
             </h3>
-            <div ng-show="changingOrganization">
-                <form class="form-inline" role="form">
-                    <div class="form-group">
-                        <h3><span class="text-muted">Organization:</span></h3>
-                    </div>
-                    <div class="form-group">
-                        <select id="organizationSelect" ng-model="root.selectedOrganization.id"
-                                ng-options="organization.id as organization.name for organization in root.availableOrganizations"
-                                class="form-control"></select>
-                    </div>
-                    <button type="button" class="btn btn-primary" ng-click="setOrganization()">Set</button>
-                </form>
-            </div>
-            <table class="table small-text text-center">
+            <table class="table-condensed small-text" style="width: 100%;" cellpadding="10">
                 <thead>
-                <th class="text-center text-muted small-text">
+                <th class="text-muted small-text">
                     Plan
                 </th>
-                <th class="text-center text-muted small-text">
+                <th class="text-muted small-text text-right">
                     <span class="text-muted">Total services</span>
                 </th>
-                <th class="text-center text-muted small-text">
+                <th class="text-muted small-text text-right">
                     <span class="text-muted">Memory limit</span>
                 </th>
-                <th class="text-center text-muted small-text">
+                <th class="text-muted small-text text-center">
                     <span class="text-muted">Non basic services allowed</span>
                 </th>
-                <th class="text-center text-muted small-text">
+                <th class="text-muted small-text text-center">
                     <span class="text-muted">Trial DB allowed</span>
                 </th>
-                <th class="text-center text-muted small-text" ng-show="mayEditOrganization">
+                <th class="text-muted small-text" ng-show="mayEditOrganization">
 
                 </th>
                 </thead>
@@ -54,22 +55,22 @@
                     <td>
                         {{root.selectedOrganization.quota.name}}
                     </td>
-                    <td>
+                    <td class="text-right">
                         {{root.selectedOrganization.quota.services}}
                     </td>
-                    <td>
+                    <td class="text-right">
                         {{root.selectedOrganization.quota.memoryLimit}}
                     </td>
-                    <td>
-                        {{root.selectedOrganization.quota.nonBasicServicesAllowed}}
+                    <td class="text-center">
+                        <span ng-class="['glyphicon', (root.selectedOrganization.quota.nonBasicServicesAllowed) ? 'glyphicon-ok' : 'glyphicon-remove']"></span>
                     </td>
-                    <td>
-                        {{root.selectedOrganization.quota.trialDbAllowed}}
+                    <td class="text-center">
+                        <span ng-class="['glyphicon', (root.selectedOrganization.quota.trialDbAllowed) ? 'glyphicon-ok' : 'glyphicon-remove']"></span>
                     </td>
                     <td ng-show="mayEditOrganization">
-                        <button type="button" class="btn btn-default" ng-disabled="editingApplication !== 0"
-                                ng-click="editOrganization()">Edit
-                        </button>
+                        <div class="btn-group btn-group-sm pull-right">
+                            <button type="button" class="btn btn-default" ng-disabled="editingApplication !== 0" ng-click="editOrganization()">Edit</button>
+                        </div>
                     </td>
                 </tr>
                 <tr ng-show="editingOrganization">
@@ -89,21 +90,23 @@
                                placeholder="{{root.selectedOrganization.quota.memoryLimit}}"
                                ng-model="root.selectedOrganization.quota.memoryLimit"/>
                     </td>
-                    <td>
+                    <td class="text-center">
                         <input type="checkbox" id="nonBasicServicesAllowed"
                                ng-model="root.selectedOrganization.quota.nonBasicServicesAllowed"/>
                     </td>
-                    <td>
+                    <td class="text-center">
                         <input type="checkbox" id="trialDbAllowed"
                                ng-model="root.selectedOrganization.quota.trialDbAllowed"/>
                     </td>
                     <td>
-                        <button type="button" class="btn btn-success"
-                                ng-click="updateOrganization()">Update
-                        </button>
-                        <button type="button" class="btn btn-warning"
-                                ng-click="updateOrganization()">Cancel
-                        </button>
+                        <div class="btn-group btn-group-sm pull-right">
+                            <button type="button" class="btn btn-success"
+                                    ng-click="updateOrganization()">Update
+                            </button>
+                            <button type="button" class="btn btn-warning"
+                                    ng-click="updateOrganization()">Cancel
+                            </button>
+                        </div>
                     </td>
                 </tr>
                 </tbody>
@@ -125,14 +128,15 @@
                                 <th>STATUS</th>
                                 <th>APP</th>
                                 <th>INSTANCES</th>
+                                <th>SERVICES</th>
                                 <th>MEMORY</th>
-                                <th ng-show="mayEditOrganization"></th>
+                                <th>URL</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr ng-repeat="app in space.applications">
                                 <td style="width: 20%">
-                                    <div class="btn-group">
+                                    <div class="btn-group btn-group-sm">
                                         <button type="button"
                                                 ng-class="['btn', (app.state == 'STARTED') ? 'btn-success' : 'btn-danger', 'dropdown-toggle']"
                                                 data-toggle="dropdown" ng-disabled="editingOrganization">
@@ -151,11 +155,14 @@
                                                     style="text-decoration: none"><span
                                         class="glyphicon glyphicon-info-sign"></span></a>
                                 </td>
-                                <td style="width: 20%">
+                                <td style="width: 10%">
                                     <input type="text" class="form-control" id="appInstances"
                                            placeholder="{{app.instances}}"
                                            ng-model="app.instances" ng-show="editingApplication === app.id"/>
                                     <span ng-hide="editingApplication === app.id">{{app.instances}}</span>
+                                </td>
+                                <td style="width: 10%">
+                                    {{app.serviceBindings.length}}
                                 </td>
                                 <td style="width: 20%">
                                     <input type="text" class="form-control" id="appMemory"
@@ -163,23 +170,8 @@
                                            ng-model="app.memory" ng-show="editingApplication === app.id"/>
                                     <span ng-hide="editingApplication === app.id">{{app.memory}} MB</span>
                                 </td>
-                                <td ng-hide="editingApplication === app.id || !mayEditOrganization" style="width: 20%">
-                                    <div class="pull-right">
-                                        <button type="button" class="btn btn-default"
-                                                ng-disabled="editingOrganization || editingApplication !== 0"
-                                                ng-click="editApplication(app.id)">Edit
-                                        </button>
-                                    </div>
-                                </td>
-                                <td ng-show="editingApplication === app.id" style="width: 20%">
-                                    <div class="pull-right">
-                                        <button type="button" class="btn btn-primary"
-                                                ng-click="updateApplication(app.id)">Update
-                                        </button>
-                                        <button type="button" class="btn btn-warning"
-                                                ng-click="cancelEditApplication()">Cancel
-                                        </button>
-                                    </div>
+                                <td class="text-left" style="width: 20%">
+                                    <div ng-repeat="url in app.urls"><a>http://{{url}}</a><br/></div>
                                 </td>
                             </tr>
                             </tbody>

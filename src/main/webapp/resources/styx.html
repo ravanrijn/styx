@@ -17,11 +17,20 @@
             <div class="navbar-header">
                 <a class="navbar-brand" href="#">CLOUD FOUNDRY</a>
             </div>
+            <!--<ul class="nav navbar-nav">-->
+                <!--<li>-->
+                    <!--<div class="btn-group btn-group-sm">-->
+                        <!--<button href="#" popover-placement="bottom" popover="On the Bottom!" class="btn btn-default navbar-btn">{{root.selectedOrganization.name}}</button>-->
+                    <!--</div>-->
+                <!--</li>-->
+            <!--</ul>-->
             <div ng-show="root">
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="#/userinfo/{{root.selectedOrganization.id}}">{{root.user.username}}</a></li>
                     <li>
-                        <button href="#" class="btn btn-default navbar-btn" ng-click="logout()">LOG OUT</button>
+                        <div class="btn-group btn-group-sm">
+                            <button href="#" class="btn btn-default navbar-btn" ng-click="logout()">LOG OUT</button>
+                        </div>
                     </li>
                 </ul>
             </div>
@@ -37,7 +46,7 @@
     <div class="well well-sm">
         <div class="row text-center">
             <h3 class="text-center">One moment please...</h3>
-            <img src="img/chuckie.jpg" alt="I am Chuck." class="img-thumbnail" >
+            <img src="img/chuckie.jpg" alt="I am Chuck." class="img-thumbnail">
         </div>
     </div>
 </div>

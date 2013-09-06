@@ -110,7 +110,17 @@ class DefaultCloudFoundryServices extends RemoteServices implements CloudFoundry
 
             final List<Application> applications = new ArrayList<>();
             for (Object applicationResponse : eval("entity.apps", spaceResponse, List.class)) {
-                applications.add(new Application(evalToString("metadata.guid", applicationResponse), evalToString(ENTITY_NAME, applicationResponse), evalToString("entity.memory", applicationResponse), eval("entity.instances", applicationResponse, Integer.class), ApplicationState.valueOf(evalToString("entity.state", applicationResponse))));
+                final List<String> urls = new ArrayList<>();
+                for (Object route : eval("entity.routes", applicationResponse, List.class)) {
+                    String host = evalToString("entity.host", route);
+                    String domain = evalToString("entity.domain.entity.name", route);
+                    urls.add(host.concat(".").concat(domain));
+                }
+                final List<String> serviceBindings = new ArrayList<>();
+                for(Object serviceBinding : eval("entity.service_bindings", applicationResponse, List.class)){
+                    serviceBindings.add(evalToString(RESOURCE_ID, serviceBinding));
+                }
+                applications.add(new Application(evalToString("metadata.guid", applicationResponse), evalToString(ENTITY_NAME, applicationResponse), evalToString("entity.memory", applicationResponse), urls, serviceBindings, eval("entity.instances", applicationResponse, Integer.class), ApplicationState.valueOf(evalToString("entity.state", applicationResponse))));
             }
             spaces.add(new Space(evalToString(RESOURCE_ID, spaceResponse), evalToString(ENTITY_NAME, spaceResponse), null, /*mapSpaceUsers(spaceResponse, organizationUsers),*/ applications));
         }
@@ -139,7 +149,7 @@ class DefaultCloudFoundryServices extends RemoteServices implements CloudFoundry
 
     @Override
     public Organization getOrganization(final String token, final String id) {
-        return mapOrganization(token, get(token, baseApiUri.concat("v2/organizations/").concat(id).concat("?inline-relations-depth=".concat(valueOf(3)))));
+        return mapOrganization(token, get(token, baseApiUri.concat("v2/organizations/").concat(id).concat("?inline-relations-depth=".concat(valueOf(4)))));
     }
 
 }
