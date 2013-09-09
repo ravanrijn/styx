@@ -120,7 +120,8 @@ styxControllers.controller('AdminController', function ($scope, $http, $route, n
                 $route.reload();
             });
             promise.error(function (response, status, headers) {
-                notificationChannel.changeStatus(500, "New plan " + plan.name + " could not be added.")
+                notificationChannel.changeStatus(500, "New plan " + plan.name + " could not be added.");
+                $route.reload();
             });
         }
     }
@@ -136,11 +137,12 @@ styxControllers.controller('AdminController', function ($scope, $http, $route, n
         }
         var promise = $http(config);
         promise.success(function (response, status, headers) {
-            notificationChannel.changeStatus(200, "Plan " + name + " has been successfully deleted.")
+            notificationChannel.changeStatus(200, "Plan " + name + " has been successfully deleted.");
             $route.reload();
         });
         promise.error(function (response, status, headers) {
-            notificationChannel.changeStatus(500, "Unable to delete plan " + name + ".")
+            notificationChannel.changeStatus(500, "Unable to delete plan " + name + ".");
+            $route.reload();
         });
     }
 
@@ -177,13 +179,74 @@ styxControllers.controller('AdminController', function ($scope, $http, $route, n
         $route.reload();
     }
 
-    $scope.editOrganization = function (id) {
+    $scope.editOrg = function (id) {
         $scope.editingOrg = id;
     }
 
-    $scope.saveOrganization = function (id) {
-        appendPlanNames($scope.admin);
-        $scope.editingOrg = null;
+    $scope.createOrg = function(org){
+        if(org.name.length > 0){
+            org.id = "";
+            org.quotaId = org.plan;
+            var config = {
+                method: 'POST',
+                url: "api/administration/organizations",
+                headers: {
+                    'Accept': 'application/json',
+                    'Authorization': authToken.getToken(),
+                    'Content-Type': 'application/json'},
+                data: JSON.stringify(org)
+            }
+            var promise = $http(config);
+            promise.success(function (response, status, headers) {
+                notificationChannel.changeStatus(200, "New organization " + org.name + " has been added.");
+                $route.reload();
+            });
+            promise.error(function (response, status, headers) {
+                notificationChannel.changeStatus(500, "New organization " + org.name + " could not be added.");
+                $route.reload();
+            });
+        }
+    }
+
+    $scope.deleteOrg = function(id, name){
+        var config = {
+            method: 'DELETE',
+            url: "api/administration/organizations/" + id,
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': authToken.getToken(),
+                'Content-Type': 'application/json'}
+        }
+        var promise = $http(config);
+        promise.success(function (response, status, headers) {
+            notificationChannel.changeStatus(200, "Organization " + name + " has been successfully deleted.");
+            $route.reload();
+        });
+        promise.error(function (response, status, headers) {
+            notificationChannel.changeStatus(500, "Unable to delete organization " + name + ".");
+            $route.reload();
+        });
+    }
+
+    $scope.saveOrg = function (id, name, quotaId) {
+        var config = {
+            method: 'PUT',
+            url: "api/administration/organizations/" + id,
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': authToken.getToken(),
+                'Content-Type': 'application/json'},
+            data:JSON.stringify({id:id, name:name, quotaId:quotaId})
+        }
+        var promise = $http(config);
+        promise.success(function (response, status, headers) {
+            notificationChannel.changeStatus(200, "Organization " + name + " has been successfully updated.");
+            $route.reload();
+        });
+        promise.error(function (response, status, headers) {
+            notificationChannel.changeStatus(500, "Unable to update organization " + name + ".");
+            $route.reload();
+        });
     }
 
 

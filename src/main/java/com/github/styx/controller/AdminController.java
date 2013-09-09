@@ -3,6 +3,7 @@ package com.github.styx.controller;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.styx.domain.Quota;
+import com.github.styx.domain.SimpleOrganization;
 import com.github.styx.service.CloudFoundryServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,12 +23,40 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class AdminController {
 
     private final CloudFoundryServices cfServices;
-    private final ObjectMapper objectMapper;
 
     @Autowired
-    public AdminController(final CloudFoundryServices cfServices, ObjectMapper objectMapper) {
+    public AdminController(final CloudFoundryServices cfServices) {
         this.cfServices = cfServices;
-        this.objectMapper = objectMapper;
+    }
+
+    @RequestMapping(value = "/organizations/{id}", method = RequestMethod.PUT, produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    public void updateOrganization(@RequestHeader("Authorization") String token, @RequestBody SimpleOrganization organization) {
+        final ResponseEntity updateOrganizationResponse = cfServices.updateOrganization(token, organization);
+        if(!updateOrganizationResponse.getStatusCode().equals(HttpStatus.CREATED)){
+            throw new EndpointException("Unable to update organization.", updateOrganizationResponse);
+        }
+    }
+
+    @RequestMapping(value = "/organizations/{id}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteOrganization(@RequestHeader("Authorization") String token, @PathVariable("id") String id) {
+        final ResponseEntity organizationDeletionResponse = cfServices.deleteOrganization(token, id);
+        if(!organizationDeletionResponse.getStatusCode().equals(HttpStatus.NO_CONTENT)){
+            throw new EndpointException("Unable to delete organization.", organizationDeletionResponse);
+        }
+    }
+
+    @RequestMapping(value = "/organizations", method = RequestMethod.POST, produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.CREATED)
+    public void createOrganization(@RequestHeader("Authorization") String token, @RequestBody SimpleOrganization organization) {
+        final ResponseEntity organizationCreationResponse = cfServices.createOrganization(token, organization);
+        if(!organizationCreationResponse.getStatusCode().equals(HttpStatus.CREATED)){
+            throw new EndpointException("Unable to create organization.", organizationCreationResponse);
+        }
     }
 
     @RequestMapping(value = "/plans", method = RequestMethod.POST, produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)

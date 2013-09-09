@@ -1,5 +1,6 @@
 package com.github.styx.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.styx.domain.User;
 import org.slf4j.Logger;
@@ -50,7 +51,7 @@ class DefaultUaaServices extends RemoteServices implements UaaServices {
         body.add("grant_type", "client_credentials");
         body.add("response_type", "token");
         final ResponseEntity<Map<String, Object>> tokenResponse = post(getAuthorizationEndpoint().concat("/oauth/token"), getDefaultHeaders(), body);
-        return evalToString("token_type", tokenResponse).concat(" ").concat(evalToString("access_token", tokenResponse.getBody()));
+        return evalToString("token_type", tokenResponse.getBody()).concat(" ").concat(evalToString("access_token", tokenResponse.getBody()));
     }
 
     public String getAccessToken(final String username, final String password) {
@@ -59,7 +60,11 @@ class DefaultUaaServices extends RemoteServices implements UaaServices {
         body.add("username", username);
         body.add("password", password);
         final ResponseEntity<Map<String, Object>> tokenResponse = post(getAuthorizationEndpoint().concat("/oauth/token"), getDefaultHeaders(), body);
-        return evalToString("token_type", tokenResponse).concat(" ").concat(evalToString("access_token", tokenResponse.getBody()));
+        return evalToString("token_type", tokenResponse.getBody()).concat(" ").concat(evalToString("access_token", tokenResponse.getBody()));
+    }
+
+    public static void main(String[] args) {
+
     }
 
     private HttpHeaders getDefaultHeaders() {

@@ -22,6 +22,12 @@ public interface CloudFoundryServices {
 
     Organization getOrganization(String token, String id);
 
+    ResponseEntity createOrganization(String token, SimpleOrganization organization);
+
+    ResponseEntity updateOrganization(String token, SimpleOrganization organization);
+
+    ResponseEntity deleteOrganization(String token, String id);
+
     boolean isUserAdmin(String id);
 
 }
