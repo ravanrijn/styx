@@ -20,16 +20,6 @@ styxControllers.controller('StyxController', function ($scope, $route, notificat
     $scope.routeToAdministration = function () {
         $location.path("/admin");
     }
-    $scope.editingOrganization = false;
-    $scope.cancelEditOrganization = function () {
-        $scope.editingOrganization = false;
-    };
-    $scope.editOrganization = function () {
-        $scope.editingOrganization = true;
-    };
-    $scope.updateOrganization = function () {
-        $scope.editingOrganization = false;
-    };
     $scope.isAdmin = false;
     notificationChannel.onRootUpdated($scope, function (response) {
         $scope.mayEditOrganization = $.grep(response.root.links, function (link) {
