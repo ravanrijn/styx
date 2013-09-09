@@ -1,8 +1,12 @@
 package com.github.styx.domain;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Quota {
 
     private final String id;
@@ -21,7 +25,8 @@ public class Quota {
         trialDbAllowed = false;
     }
 
-    public Quota(String id, String name, int services, int memoryLimit, boolean nonBasicServicesAllowed, boolean trialDbAllowed) {
+    @JsonCreator
+    public Quota(@JsonProperty("id") String id, @JsonProperty("name") String name, @JsonProperty("services") int services, @JsonProperty("memoryLimit") int memoryLimit, @JsonProperty("nonBasicServicesAllowed") boolean nonBasicServicesAllowed, @JsonProperty("trialDbAllowed") boolean trialDbAllowed) {
         this.id = id;
         this.name = name;
         this.services = services;

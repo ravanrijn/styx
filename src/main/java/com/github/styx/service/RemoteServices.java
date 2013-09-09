@@ -25,24 +25,32 @@ abstract class RemoteServices {
         this.objectMapper = objectMapper;
     }
 
-    protected Map<String, Object> post(String path, HttpHeaders httpHeaders, Object body){
-        final ResponseEntity<Map<String, Object>> responseEntity = exchange(path, HttpMethod.POST, body, httpHeaders, new ParameterizedTypeReference<Map<String, Object>>() {});
-        if (!responseEntity.getStatusCode().equals(HttpStatus.OK)) {
-            throw new EndpointException("Cannot perform post for path [" + path + "]", responseEntity);
+    protected ResponseEntity<Map<String, Object>> delete(String path, HttpHeaders httpHeaders, Object body){
+        final ResponseEntity<Map<String, Object>> responseEntity = exchange(path, HttpMethod.DELETE, body, httpHeaders, new ParameterizedTypeReference<Map<String, Object>>() {});
+        if (responseEntity.getStatusCode().equals(HttpStatus.OK)) {
+            return responseEntity;
         }
-        return responseEntity.getBody();
+        throw new EndpointException("Cannot perform post for path [" + path + "]", responseEntity);
     }
 
-    protected Map<String, Object> put(String token, String path, Object body){
+    protected ResponseEntity<Map<String, Object>> post(String path, HttpHeaders httpHeaders, Object body){
+        final ResponseEntity<Map<String, Object>> responseEntity = exchange(path, HttpMethod.POST, body, httpHeaders, new ParameterizedTypeReference<Map<String, Object>>() {});
+        if (responseEntity.getStatusCode().equals(HttpStatus.OK) || responseEntity.getStatusCode().equals(HttpStatus.CREATED)) {
+            return responseEntity;
+        }
+        throw new EndpointException("Cannot perform post for path [" + path + "]", responseEntity);
+    }
+
+    protected ResponseEntity<Map<String, Object>> put(String token, String path, Object body){
         final HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("Accept", "application/json;charset=utf-8");
         httpHeaders.add("Content-Type", "application/json;charset=utf-8");
         httpHeaders.add("Authorization", token);
         final ResponseEntity<Map<String, Object>> responseEntity = exchange(path, HttpMethod.PUT, body, httpHeaders, new ParameterizedTypeReference<Map<String, Object>>() {});
         if (!responseEntity.getStatusCode().equals(HttpStatus.OK)) {
-            throw new EndpointException("Cannot perform get for path [" + path + "]", responseEntity);
+            return responseEntity;
         }
-        return responseEntity.getBody();
+        throw new EndpointException("Cannot perform get for path [" + path + "]", responseEntity);
     }
 
     protected Map<String, Object> get(String token, String path) {

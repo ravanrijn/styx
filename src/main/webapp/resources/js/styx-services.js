@@ -29,6 +29,7 @@ styxServices.factory('notificationChannel', function ($rootScope, apiServices, a
     var LOADING = "_LOADING_";
     var LOADED = "_LOADED_";
     var ERROR = "_ERROR_";
+    var STATUS = "_STATUS_";
     var LOGIN_SUCCESS = "_LOGIN_";
     var LOGIN_FAILURE
 
@@ -81,7 +82,17 @@ styxServices.factory('notificationChannel', function ($rootScope, apiServices, a
 
     notificationChannel.onUserManagementUpdated = function($scope, handler){
         $scope.$on(USER_MANAGEMENT_UPDATED, function(event, args) {
-            handler(args.item);
+            handler(args);
+        });
+    }
+
+    notificationChannel.changeStatus = function(code, message){
+        $rootScope.$broadcast(STATUS, {code: code, message: message});
+    }
+
+    notificationChannel.onStatusChange = function($scope, handler){
+        $scope.$on(STATUS, function(event, args) {
+            handler(args);
         });
     }
 

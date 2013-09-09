@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -48,8 +49,8 @@ class DefaultUaaServices extends RemoteServices implements UaaServices {
         final MultiValueMap<String, String> body = new LinkedMultiValueMap();
         body.add("grant_type", "client_credentials");
         body.add("response_type", "token");
-        final Map<String, Object> tokenResponse = post(getAuthorizationEndpoint().concat("/oauth/token"), getDefaultHeaders(), body);
-        return evalToString("token_type", tokenResponse).concat(" ").concat(evalToString("access_token", tokenResponse));
+        final ResponseEntity<Map<String, Object>> tokenResponse = post(getAuthorizationEndpoint().concat("/oauth/token"), getDefaultHeaders(), body);
+        return evalToString("token_type", tokenResponse).concat(" ").concat(evalToString("access_token", tokenResponse.getBody()));
     }
 
     public String getAccessToken(final String username, final String password) {
@@ -57,8 +58,8 @@ class DefaultUaaServices extends RemoteServices implements UaaServices {
         body.add("grant_type", "password");
         body.add("username", username);
         body.add("password", password);
-        final Map<String, Object> tokenResponse = post(getAuthorizationEndpoint().concat("/oauth/token"), getDefaultHeaders(), body);
-        return evalToString("token_type", tokenResponse).concat(" ").concat(evalToString("access_token", tokenResponse));
+        final ResponseEntity<Map<String, Object>> tokenResponse = post(getAuthorizationEndpoint().concat("/oauth/token"), getDefaultHeaders(), body);
+        return evalToString("token_type", tokenResponse).concat(" ").concat(evalToString("access_token", tokenResponse.getBody()));
     }
 
     private HttpHeaders getDefaultHeaders() {

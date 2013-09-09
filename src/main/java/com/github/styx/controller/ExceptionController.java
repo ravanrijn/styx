@@ -19,6 +19,9 @@ public class ExceptionController {
     public ResponseEntity<ServiceError> handleException(Exception exception) {
         if (exception instanceof EndpointException) {
             final ResponseEntity<?> response = ((EndpointException) exception).getResponse();
+            if(response == null){
+                return new ResponseEntity<>(new ServiceError(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Unable to process request."), HttpStatus.INTERNAL_SERVER_ERROR);
+            }
             return new ResponseEntity<>(new ServiceError(response.getStatusCode().value(), (String) response.getBody()), response.getStatusCode());
         } else if (getCause(exception) instanceof EndpointException) {
             final ResponseEntity<?> response = ((EndpointException) exception).getResponse();

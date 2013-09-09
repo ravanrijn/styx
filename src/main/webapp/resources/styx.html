@@ -15,7 +15,8 @@
     <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
         <div class="container">
             <div class="navbar-header">
-                <a class="navbar-brand" href="#"><img src="img/kratos_logo.jpg" alt="You disappoint me, Spartan." class="img-circle" style="height: 20px"> CLOUD FOUNDRY</a>
+                <a class="navbar-brand" href="#"><img src="img/kratos_logo.jpg" alt="You disappoint me, Spartan."
+                                                      class="img-circle" style="height: 20px"> CLOUD FOUNDRY</a>
             </div>
             <div ng-show="root">
                 <ul class="nav navbar-nav navbar-right">
@@ -32,18 +33,29 @@
     </nav>
 </div>
 
+<div class="container" ng-hide="!status">
+    <div class="row">
+        <div ng-class="['alert', (status.code === 200) ? 'alert-success' : 'alert-danger']">
+            {{status.message}}
+            <div class="pull-right">
+                <a ng-click="clearStatus()">Clear <span class="glyphicon glyphicon-remove"></span></a>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div ng-hide="loading">
     <div ng-view></div>
 </div>
 
-<div class="container" ng-show="loading">
-    <div class="well well-sm">
-        <div class="row text-center">
-            <h3 class="text-center">One moment please...</h3>
-            <img src="img/chuckie.jpg" alt="I am Chuck." class="img-thumbnail">
-        </div>
-    </div>
-</div>
+<!--<div class="container" ng-show="loading">-->
+<!--<div class="well well-sm">-->
+<!--<div class="row text-center">-->
+<!--<h3 class="text-center">One moment please...</h3>-->
+<!--<img src="img/chuckie.jpg" alt="I am Chuck." class="img-thumbnail">-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
 
 <div>
     <nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
