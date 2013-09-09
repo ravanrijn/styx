@@ -90,6 +90,8 @@ styxControllers.controller('LoginController', function ($scope, $location, notif
 
 styxControllers.controller('AdminController', function ($scope, $http, $route, notificationChannel, authToken) {
 
+    $scope.loading = true;
+
     var appendPlanNames = function (admin) {
         angular.forEach(admin.organizations, function (organization, organizationIndex) {
             angular.forEach(admin.plans, function (plan, planIndex) {
@@ -204,6 +206,7 @@ styxControllers.controller('AdminController', function ($scope, $http, $route, n
         var admin = response;
         appendPlanNames(admin);
         $scope.admin = admin;
+        $scope.loading = false;
     });
     promise.error(function (response, status, headers) {
 
