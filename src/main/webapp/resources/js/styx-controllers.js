@@ -104,7 +104,7 @@ styxControllers.controller('AdminController', function ($scope, $http, $route, $
             plan.id = "";
             var config = {
                 method: 'POST',
-                url: "api/administration/plans",
+                url: "api/plans",
                 headers: {
                     'Accept': 'application/json',
                     'Authorization': authToken.getToken(),
@@ -127,7 +127,7 @@ styxControllers.controller('AdminController', function ($scope, $http, $route, $
         $scope.loading = true;
         var config = {
             method: 'DELETE',
-            url: "api/administration/plans/" + id,
+            url: "api/plans/" + id,
             headers: {
                 'Accept': 'application/json',
                 'Authorization': authToken.getToken(),
@@ -154,7 +154,7 @@ styxControllers.controller('AdminController', function ($scope, $http, $route, $
             if (plan.id === id) {
                 var config = {
                     method: 'PUT',
-                    url: "api/administration/plans/" + id,
+                    url: "api/plans/" + id,
                     headers: {
                         'Content-Type': 'application/json',
                         'Accept': 'application/json',
@@ -189,7 +189,7 @@ styxControllers.controller('AdminController', function ($scope, $http, $route, $
             org.quotaId = org.plan;
             var config = {
                 method: 'POST',
-                url: "api/administration/organizations",
+                url: "api/organizations",
                 headers: {
                     'Accept': 'application/json',
                     'Authorization': authToken.getToken(),
@@ -212,7 +212,7 @@ styxControllers.controller('AdminController', function ($scope, $http, $route, $
         $scope.loading = true;
         var config = {
             method: 'DELETE',
-            url: "api/administration/organizations/" + id,
+            url: "api/organizations/" + id,
             headers: {
                 'Accept': 'application/json',
                 'Authorization': authToken.getToken(),
@@ -233,7 +233,7 @@ styxControllers.controller('AdminController', function ($scope, $http, $route, $
         $scope.loading = true;
         var config = {
             method: 'PUT',
-            url: "api/administration/organizations/" + id,
+            url: "api/organizations/" + id,
             headers: {
                 'Accept': 'application/json',
                 'Authorization': authToken.getToken(),
@@ -262,7 +262,7 @@ styxControllers.controller('AdminController', function ($scope, $http, $route, $
     $scope.admin = {plans: [], organizations: []};
     var config = {
         method: 'GET',
-        url: "api/administration",
+        url: "api/admin",
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
