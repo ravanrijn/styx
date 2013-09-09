@@ -107,6 +107,7 @@ styxControllers.controller('AdminController', function ($scope, $http, $route, n
     }
 
     $scope.createPlan = function (plan) {
+        $scope.loading = true;
         if (plan.name.length > 0) {
             plan.id = "";
             var config = {
@@ -131,6 +132,7 @@ styxControllers.controller('AdminController', function ($scope, $http, $route, n
     }
 
     $scope.deletePlan = function (id, name) {
+        $scope.loading = true;
         var config = {
             method: 'DELETE',
             url: "api/administration/plans/" + id,
@@ -155,6 +157,7 @@ styxControllers.controller('AdminController', function ($scope, $http, $route, n
     }
 
     $scope.savePlan = function (id) {
+        $scope.loading = true;
         angular.forEach($scope.admin.plans, function (plan, planIndex) {
             if (plan.id === id) {
                 var config = {
@@ -189,6 +192,7 @@ styxControllers.controller('AdminController', function ($scope, $http, $route, n
 
     $scope.createOrg = function(org){
         if(org.name.length > 0){
+            $scope.loading = true;
             org.id = "";
             org.quotaId = org.plan;
             var config = {
@@ -213,6 +217,7 @@ styxControllers.controller('AdminController', function ($scope, $http, $route, n
     }
 
     $scope.deleteOrg = function(id, name){
+        $scope.loading = true;
         var config = {
             method: 'DELETE',
             url: "api/administration/organizations/" + id,
@@ -233,6 +238,7 @@ styxControllers.controller('AdminController', function ($scope, $http, $route, n
     }
 
     $scope.saveOrg = function (id, name, quotaId) {
+        $scope.loading = true;
         var config = {
             method: 'PUT',
             url: "api/administration/organizations/" + id,
