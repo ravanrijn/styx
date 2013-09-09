@@ -49,6 +49,7 @@ styxControllers.controller('UsersController', function ($scope, $location, notif
 });
 
 styxControllers.controller('OrganizationController', function ($scope, $location, $routeParams, notificationChannel) {
+    $scope.loading = true;
     $scope.routeToUsers = function (organizationId) {
         $location.path("/org/" + organizationId + "/users");
     }
@@ -74,6 +75,9 @@ styxControllers.controller('OrganizationController', function ($scope, $location
             notificationChannel.updateRoot($routeParams.organizationId);
         }
     }
+    notificationChannel.onRootUpdated($scope, function (response) {
+        $scope.loading = false;
+    });
 });
 
 styxControllers.controller('LoginController', function ($scope, $location, notificationChannel) {
