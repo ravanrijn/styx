@@ -2,6 +2,7 @@ package com.github.styx.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.styx.domain.*;
+import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -99,7 +100,8 @@ class DefaultCloudFoundryServices extends RemoteServices implements CloudFoundry
     private Organization mapOrganization(final String token, final Object organization) {
         final String orgId = evalToString(RESOURCE_ID, organization);
         final String orgName = evalToString(ENTITY_NAME, organization);
-        final Quota quota = new Quota(evalToString("entity.quota_definition.entity.name", organization),
+        final Quota quota = new Quota(evalToString("entity.quota_definition_guid", organization),
+                evalToString("entity.quota_definition.entity.name", organization),
                 eval("entity.quota_definition.entity.total_services", organization, Integer.class),
                 eval("entity.quota_definition.entity.memory_limit", organization, Integer.class),
                 eval("entity.quota_definition.entity.non_basic_services_allowed", organization, Boolean.class),
@@ -138,13 +140,35 @@ class DefaultCloudFoundryServices extends RemoteServices implements CloudFoundry
     }
 
     @Override
-    public List<Organization> getOrganizations(String token) {
+    public List<SimpleOrganization> getOrganizations(String token) {
         final Map<String, Object> organizationsResponse = get(token, baseApiUri.concat("v2/organizations?inline-relations-depth=".concat(valueOf(0))));
-        final List<Organization> organizations = new ArrayList<>();
+        final List<SimpleOrganization> organizations = new ArrayList<>();
         for (Object organization : eval("resources", organizationsResponse, List.class)) {
-            organizations.add(new Organization(evalToString(RESOURCE_ID, organization), evalToString(ENTITY_NAME, organization), null, null, null, null));
+            organizations.add(new SimpleOrganization(evalToString(RESOURCE_ID, organization), evalToString(ENTITY_NAME, organization), evalToString("entity.quota_definition_guid", organization)));
         }
         return unmodifiableList(organizations);
+    }
+
+    @Override
+    public List<Quota> getPlans(String token) {
+        final Map<String, Object> quotaDefinitionsResponse = get(token, baseApiUri.concat("v2/quota_definitions"));
+        final List<Quota> plans = new ArrayList<>();
+        for(Object quotaDefinition : eval("resources", quotaDefinitionsResponse, List.class)){
+            plans.add(new Quota(evalToString(RESOURCE_ID, quotaDefinition),
+                    evalToString(ENTITY_NAME, quotaDefinition),
+                    eval("entity.total_services", quotaDefinition, Integer.class),
+                    eval("entity.memory_limit", quotaDefinition, Integer.class),
+                    eval("entity.non_basic_services_allowed", quotaDefinition, Boolean.class),
+                    eval("entity.trial_db_allowed", quotaDefinition, Boolean.class)));
+        }
+        return plans;
+    }
+
+    @Override
+    public HttpStatus updateQuota(String token, String id, Quota quota) {
+
+        final Map<String, Object> organizationUpdateResponse = put(token, baseApiUri.concat("v2/organizations/").concat(id), null);
+        return null;
     }
 
     @Override

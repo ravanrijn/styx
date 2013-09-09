@@ -5,19 +5,33 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class Quota {
 
+    private final String id;
     private final String name;
     private final int services;
     private final int memoryLimit;
     private final boolean nonBasicServicesAllowed;
     private final boolean trialDbAllowed;
 
+    public Quota(String id) {
+        this.id = id;
+        name = null;
+        services = 0;
+        memoryLimit = 0;
+        nonBasicServicesAllowed = false;
+        trialDbAllowed = false;
+    }
 
-    public Quota(String name, int services, int memoryLimit, boolean nonBasicServicesAllowed, boolean trialDbAllowed) {
+    public Quota(String id, String name, int services, int memoryLimit, boolean nonBasicServicesAllowed, boolean trialDbAllowed) {
+        this.id = id;
         this.name = name;
         this.services = services;
         this.memoryLimit = memoryLimit;
         this.nonBasicServicesAllowed = nonBasicServicesAllowed;
         this.trialDbAllowed = trialDbAllowed;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getName() {
@@ -40,4 +54,23 @@ public class Quota {
         return trialDbAllowed;
     }
 
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) {
+            return true;
+        }
+        if (object == null || getClass() != object.getClass()) {
+            return false;
+        }
+        final Quota quota = (Quota) object;
+        if (!id.equals(quota.id)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 }

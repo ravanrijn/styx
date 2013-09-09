@@ -1,0 +1,135 @@
+<div class="container">
+    <div class="row">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Quota <span class="text-muted">Management</span></h3>
+            </div>
+            <div class="panel-body">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th class="text-right">Total Services</th>
+                        <th class="text-right">Memory Limit</th>
+                        <th class="text-center">Non Basic Services Allowed</th>
+                        <th class="text-center">Trial DB Allowed</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="plan in admin.plans">
+                        <td>{{plan.name}}</td>
+                        <td class="text-right">{{plan.services}}</td>
+                        <td class="text-right">{{plan.memoryLimit}}</td>
+                        <td class="text-center"><span ng-class="['glyphicon', (plan.nonBasicServicesAllowed) ? 'glyphicon-ok' : 'glyphicon-remove']"></span></td>
+                        <td class="text-center"><span ng-class="['glyphicon', (plan.trialDbAllowed) ? 'glyphicon-ok' : 'glyphicon-remove']"></span></td>
+                        <td>
+                            <div class="pull-right">
+                                <div class="btn-group btn-group-sm">
+                                    <button type="button" class="btn btn-default">
+                                        Edit
+                                    </button>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="text" class="form-control" id="plan.name"
+                                   placeholder="Choose a name"
+                                   ng-model="newPlan.name"/>
+                        </td>
+                        <td class="text-right">
+                            <input type="text" class="form-control text-right" id="plan.totalServices"
+                                   placeholder="Choose amount of services"
+                                   ng-model="newPlan.services"/>
+                        </td>
+                        <td class="text-right">
+                            <input type="text" class="form-control text-right" id="plan.memoryLimit"
+                                   placeholder="Choose a memory limit"
+                                   ng-model="newPlan.memoryLimit"/>
+                        </td>
+                        <td class="text-center">
+                            <input type="checkbox" id="plan.nonBasicServicesAllowed"
+                                   ng-model="newPlan.nonBasicServicesAllowed"/>
+                        </td>
+                        <td class="text-center">
+                            <input type="checkbox" id="plan.trialDbAllowed"
+                                   ng-model="newPlan.trialDbAllowed"/>
+                        </td>
+                        <td>
+                            <div class="pull-right">
+                                <div class="btn-group btn-group-sm">
+                                    <button type="button" class="btn btn-success">
+                                        Add
+                                    </button>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Organizations <span class="text-muted">Management</span></h3>
+            </div>
+            <div class="panel-body">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Plan</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="organization in admin.organizations">
+                        <td>{{organization.name}}</td>
+                        <td>{{organization.quotaName}}</td>
+                        <td>
+                            <div class="pull-right">
+                                <div class="btn-group btn-group-sm">
+                                    <button type="button" class="btn btn-default">
+                                        Edit
+                                    </button>
+                                    <button type="button" class="btn btn-default">
+                                        Generate invitation key
+                                    </button>
+                                    <button type="button" class="btn btn btn-danger">
+                                        Delete
+                                    </button>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="text" class="form-control" id="org.name"
+                                   placeholder="Choose a name"
+                                   ng-model="newOrganization.name"/>
+                        </td>
+                        <td>
+                            <select ng-model="newOrganization.plan"
+                                    ng-options="plan.id as plan.name for plan in admin.plans" class="form-control">
+                            </select>
+                        </td>
+                        <td>
+                            <div class="pull-right">
+                                <div class="btn-group btn-group-sm">
+                                    <button type="button" class="btn btn-success">
+                                        Add
+                                    </button>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

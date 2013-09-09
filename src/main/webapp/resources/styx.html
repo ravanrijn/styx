@@ -15,22 +15,16 @@
     <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
         <div class="container">
             <div class="navbar-header">
-                <a class="navbar-brand" href="#">CLOUD FOUNDRY</a>
+                <a class="navbar-brand" href="#"><img src="img/kratos_logo.jpg" alt="You disappoint me, Spartan." class="img-circle" style="height: 20px"> CLOUD FOUNDRY</a>
             </div>
-            <!--<ul class="nav navbar-nav">-->
-                <!--<li>-->
-                    <!--<div class="btn-group btn-group-sm">-->
-                        <!--<button href="#" popover-placement="bottom" popover="On the Bottom!" class="btn btn-default navbar-btn">{{root.selectedOrganization.name}}</button>-->
-                    <!--</div>-->
-                <!--</li>-->
-            <!--</ul>-->
             <div ng-show="root">
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="#/userinfo/{{root.selectedOrganization.id}}">{{root.user.username}}</a></li>
-                    <li>
-                        <div class="btn-group btn-group-sm">
-                            <button href="#" class="btn btn-default navbar-btn" ng-click="logout()">LOG OUT</button>
-                        </div>
+                    <li class="dropdown uppercase">
+                        <a class="dropdown-toggle" data-toggle="dropdown">LOGOUT <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#/admin">Administration</a></li>
+                        </ul>
                     </li>
                 </ul>
             </div>

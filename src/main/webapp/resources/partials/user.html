@@ -13,16 +13,16 @@
                     </button>
                     <ul class="dropdown-menu">
                         <li ng-repeat="organization in root.availableOrganizations"><a
-                                href="#/org/{{organization.id}}">{{organization.name}}</a></li>
+                                href="#">{{organization.name}}</a></li>
                     </ul>
                 </div>
                 <div class="pull-right">
                     <div class="btn-group btn-group-sm">
                         <button type="button" class="btn btn-default"
-                                ng-disabled="editingOrganization || editingApplication !== 0" ng-click="routeToUsers(root.selectedOrganization.id)">Users <span
-                                class="badge">{{root.selectedOrganization.users.length}}</span></button>
+                                ng-disabled="editingOrganization" ng-click="routeToSpaces(root.selectedOrganization.id)">Spaces <span
+                                class="badge">{{root.selectedOrganization.spaces.length}}</span></button>
                         <button type="button" class="btn btn btn-danger"
-                                ng-disabled="editingOrganization || editingApplication !== 0"
+                                ng-disabled="editingOrganization"
                                 ng-show="mayEditOrganization">
                             Delete
                         </button>
@@ -69,7 +69,7 @@
                     </td>
                     <td ng-show="mayEditOrganization">
                         <div class="btn-group btn-group-sm pull-right">
-                            <button type="button" class="btn btn-default" ng-disabled="editingApplication !== 0" ng-click="editOrganization()">Edit</button>
+                            <button type="button" class="btn btn-default" ng-click="editOrganization()">Edit</button>
                         </div>
                     </td>
                 </tr>
@@ -113,69 +113,17 @@
             </table>
         </div>
     </div>
+
     <div class="row" ng-repeat="space in root.selectedOrganization.spaces">
         <div>
             <div class="col-md-12">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <span class="panel-title"><span class="text-muted">Space:</span> {{space.name}} <span
-                                class="badge">{{space.applications.length}}</span></span>
+                        <span class="panel-title"><span class="text-muted">Users:</span> {{space.name}} <span
+                                class="badge">{{space.users.length}}</span></span>
                     </div>
                     <div class="panel-body">
-                        <table class="table table-condensed" style="width: 100%">
-                            <thead>
-                            <tr>
-                                <th>STATUS</th>
-                                <th>APP</th>
-                                <th>INSTANCES</th>
-                                <th>SERVICES</th>
-                                <th>MEMORY</th>
-                                <th>URL</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr ng-repeat="app in space.applications">
-                                <td>
-                                    <div class="btn-group btn-group-sm">
-                                        <button type="button"
-                                                ng-class="['btn', (app.state == 'STARTED') ? 'btn-success' : 'btn-danger', 'dropdown-toggle']"
-                                                data-toggle="dropdown" ng-disabled="editingOrganization">
-                                            <span ng-show="app.state == 'STOPPED'">STOPPED</span>
-                                            <span ng-show="app.state == 'STARTED'">STARTED</span>
-                                            <span class="caret"></span>
-                                        </button>
-                                        <ul class="dropdown-menu">
-                                            <li ng-show="app.state == 'STARTED'"><a href="#">STOP</a></li>
-                                            <li ng-show="app.state == 'STOPPED'"><a href="#">START</a></li>
-                                        </ul>
-                                    </div>
-                                </td>
-                                <td>
-                                    {{app.name}} <a href="#/app-settings/{{root.selectedOrganization.id}}/{{app.id}}"
-                                                    style="text-decoration: none"><span
-                                        class="glyphicon glyphicon-info-sign"></span></a>
-                                </td>
-                                <td>
-                                    <input type="text" class="form-control" id="appInstances"
-                                           placeholder="{{app.instances}}"
-                                           ng-model="app.instances" ng-show="editingApplication === app.id"/>
-                                    <span ng-hide="editingApplication === app.id">{{app.instances}}</span>
-                                </td>
-                                <td style="width: 10%">
-                                    {{app.serviceBindings.length}}
-                                </td>
-                                <td>
-                                    <input type="text" class="form-control" id="appMemory"
-                                           placeholder="{{app.memory}}"
-                                           ng-model="app.memory" ng-show="editingApplication === app.id"/>
-                                    <span ng-hide="editingApplication === app.id">{{app.memory}} MB</span>
-                                </td>
-                                <td class="text-left">
-                                    <div class ="text-left" ng-repeat="url in app.urls"><a>http://{{url}}</a><br/></div>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
+
                     </div>
                 </div>
             </div>
