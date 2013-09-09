@@ -21,96 +21,9 @@
                         <button type="button" class="btn btn-default"
                                 ng-disabled="editingOrganization" ng-click="routeToSpaces(root.selectedOrganization.id)">Spaces <span
                                 class="badge">{{root.selectedOrganization.spaces.length}}</span></button>
-                        <button type="button" class="btn btn btn-danger"
-                                ng-disabled="editingOrganization"
-                                ng-show="mayEditOrganization">
-                            Delete
-                        </button>
                     </div>
                 </div>
             </h3>
-            <table class="table-condensed small-text" style="width: 100%;" cellpadding="10">
-                <thead>
-                <th class="text-muted small-text">
-                    Plan
-                </th>
-                <th class="text-muted small-text text-right">
-                    <span class="text-muted">Total services</span>
-                </th>
-                <th class="text-muted small-text text-right">
-                    <span class="text-muted">Memory limit</span>
-                </th>
-                <th class="text-muted small-text text-center">
-                    <span class="text-muted">Non basic services allowed</span>
-                </th>
-                <th class="text-muted small-text text-center">
-                    <span class="text-muted">Trial DB allowed</span>
-                </th>
-                <th class="text-muted small-text" ng-show="mayEditOrganization">
-
-                </th>
-                </thead>
-                <tbody>
-                <tr ng-hide="editingOrganization">
-                    <td>
-                        {{root.selectedOrganization.quota.name}}
-                    </td>
-                    <td class="text-right">
-                        {{root.selectedOrganization.quota.services}}
-                    </td>
-                    <td class="text-right">
-                        {{root.selectedOrganization.quota.memoryLimit}}
-                    </td>
-                    <td class="text-center">
-                        <span ng-class="['glyphicon', (root.selectedOrganization.quota.nonBasicServicesAllowed) ? 'glyphicon-ok' : 'glyphicon-remove']"></span>
-                    </td>
-                    <td class="text-center">
-                        <span ng-class="['glyphicon', (root.selectedOrganization.quota.trialDbAllowed) ? 'glyphicon-ok' : 'glyphicon-remove']"></span>
-                    </td>
-                    <td ng-show="mayEditOrganization">
-                        <div class="btn-group btn-group-sm pull-right">
-                            <button type="button" class="btn btn-default" ng-click="editOrganization()">Edit</button>
-                        </div>
-                    </td>
-                </tr>
-                <tr ng-show="editingOrganization">
-                    <td>
-                        <select ng-model="root.selectedOrganization.quota.name"
-                                ng-options="plan as   plan for plan in availablePlans" class="form-control">
-
-                        </select>
-                    </td>
-                    <td>
-                        <input type="text" class="form-control" id="quotaServices"
-                               placeholder="{{root.selectedOrganization.quota.services}}"
-                               ng-model="root.selectedOrganization.quota.services"/>
-                    </td>
-                    <td>
-                        <input type="text" class="form-control" id="memoryLimit"
-                               placeholder="{{root.selectedOrganization.quota.memoryLimit}}"
-                               ng-model="root.selectedOrganization.quota.memoryLimit"/>
-                    </td>
-                    <td class="text-center">
-                        <input type="checkbox" id="nonBasicServicesAllowed"
-                               ng-model="root.selectedOrganization.quota.nonBasicServicesAllowed"/>
-                    </td>
-                    <td class="text-center">
-                        <input type="checkbox" id="trialDbAllowed"
-                               ng-model="root.selectedOrganization.quota.trialDbAllowed"/>
-                    </td>
-                    <td>
-                        <div class="btn-group btn-group-sm pull-right">
-                            <button type="button" class="btn btn-success"
-                                    ng-click="updateOrganization()">Update
-                            </button>
-                            <button type="button" class="btn btn-warning"
-                                    ng-click="updateOrganization()">Cancel
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
         </div>
     </div>
 

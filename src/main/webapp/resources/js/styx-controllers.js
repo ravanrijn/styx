@@ -49,7 +49,9 @@ styxControllers.controller('UsersController', function ($scope, $location, notif
 });
 
 styxControllers.controller('OrganizationController', function ($scope, $location, $routeParams, notificationChannel) {
-    $scope.loading = true;
+    if(!$scope.root){
+        $scope.loading = true;
+    }
     $scope.routeToUsers = function (organizationId) {
         $location.path("/org/" + organizationId + "/users");
     }
@@ -92,7 +94,7 @@ styxControllers.controller('LoginController', function ($scope, $location, notif
     });
 });
 
-styxControllers.controller('AdminController', function ($scope, $http, $route, notificationChannel, authToken) {
+styxControllers.controller('AdminController', function ($scope, $http, $route, $location, notificationChannel, authToken) {
 
     $scope.loading = true;
 
@@ -259,6 +261,9 @@ styxControllers.controller('AdminController', function ($scope, $http, $route, n
         });
     }
 
+    $scope.routeToUsers = function(id){
+        $location.path("/org/" + id + "/users")
+    }
 
     $scope.newPlan = {name: "", services: 1, memoryLimit: 1024, nonBasicServicesAllowed: false, trialDbAllowed: false};
     $scope.newOrganization = {name: "", plan: "6cfd32e0-2439-45b8-900f-8146a7e3daf5"};

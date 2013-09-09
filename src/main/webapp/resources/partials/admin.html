@@ -145,7 +145,7 @@
                                     <button type="button" class="btn btn-default" ng-click="editOrg(organization.id)" ng-disabled="editingOrg">
                                         Edit
                                     </button>
-                                    <button type="button" class="btn btn-default" ng-disabled="editingOrg">
+                                    <button type="button" class="btn btn-default" ng-disabled="editingOrg" ng-click="routeToUsers(organization.id)">
                                         Users
                                     </button>
                                     <button type="button" class="btn btn btn-danger" ng-disabled="editingOrg" ng-click="deleteOrg(organization.id, organization.name)">
