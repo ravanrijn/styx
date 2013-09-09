@@ -57,7 +57,6 @@ public class AdminController {
     public void updatePlan(@RequestHeader("Authorization") String token, @PathVariable("id") String planId, @RequestBody String body) throws IOException {
         final Quota plan = objectMapper.readValue(body, Quota.class);
         final HttpStatus httpStatus = cfServices.updateQuota(token, plan);
-        System.out.println("********* " + httpStatus.value() + " -- " + httpStatus.equals(HttpStatus.CREATED));
         if(!httpStatus.equals(HttpStatus.OK) && !httpStatus.equals(HttpStatus.CREATED)){
             throw new EndpointException("Invalid response status.");
         }
