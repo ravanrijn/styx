@@ -168,31 +168,31 @@ class DefaultCloudFoundryServices extends RemoteServices implements CloudFoundry
     }
 
     @Override
-    public HttpStatus createQuota(String token, Quota quota) {
+    public ResponseEntity createQuota(String token, Quota quota) {
         final HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("Accept", "application/json;charset=utf-8");
         httpHeaders.add("Content-Type", "application/json;charset=utf-8");
         httpHeaders.add("Authorization", token);
         final String quotaRequest = "{\"name\":\"".concat(quota.getName()).concat("\",\"non_basic_services_allowed\":").concat(Boolean.toString(quota.isNonBasicServicesAllowed())).concat(",\"total_services\":").concat(Integer.toString(quota.getServices())).concat(",\"memory_limit\":").concat(Integer.toString(quota.getMemoryLimit())).concat(",\"trial_db_allowed\":").concat(Boolean.toString(quota.isTrialDbAllowed())).concat("}");
         final ResponseEntity<Map<String, Object>> quotaDefinitionResponse = post(baseApiUri.concat("v2/quota_definitions"), httpHeaders, quotaRequest);
-        return quotaDefinitionResponse.getStatusCode();
+        return quotaDefinitionResponse;
     }
 
     @Override
-    public HttpStatus deleteQuota(String token, String id) {
+    public ResponseEntity deleteQuota(String token, String id) {
         final HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("Accept", "application/json;charset=utf-8");
         httpHeaders.add("Content-Type", "application/json;charset=utf-8");
         httpHeaders.add("Authorization", token);
         final ResponseEntity<Map<String, Object>> quoteDeletionResult = delete(baseApiUri.concat("v2/quota_definitions/").concat(id), httpHeaders, null);
-        return quoteDeletionResult.getStatusCode();
+        return quoteDeletionResult;
     }
 
     @Override
-    public HttpStatus updateQuota(String token, Quota quota) {
+    public ResponseEntity updateQuota(String token, Quota quota) {
         final String quotaRequest = "{\"name\":\"".concat(quota.getName()).concat("\",\"non_basic_services_allowed\":").concat(Boolean.toString(quota.isNonBasicServicesAllowed())).concat(",\"total_services\":").concat(Integer.toString(quota.getServices())).concat(",\"memory_limit\":").concat(Integer.toString(quota.getMemoryLimit())).concat(",\"trial_db_allowed\":").concat(Boolean.toString(quota.isTrialDbAllowed())).concat("}");
         final ResponseEntity<Map<String, Object>> organizationUpdateResponse = put(token, baseApiUri.concat("v2/quota_definitions/").concat(quota.getId()), quotaRequest);
-        return organizationUpdateResponse.getStatusCode();
+        return organizationUpdateResponse;
     }
 
     @Override

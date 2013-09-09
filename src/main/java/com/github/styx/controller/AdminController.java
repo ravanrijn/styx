@@ -6,6 +6,7 @@ import com.github.styx.domain.Quota;
 import com.github.styx.service.CloudFoundryServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,12 +33,10 @@ public class AdminController {
     @RequestMapping(value = "/plans", method = RequestMethod.POST, produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
-    public void createPlan(@RequestHeader("Authorization") String token, @RequestBody String body) throws IOException {
-        final Object request = objectMapper.readValue(body, objectMapper.getTypeFactory().constructMapType(HashMap.class, String.class, Object.class));
-        final Quota quota = new Quota("", evalToString("name", request), eval("services", request, Integer.class), eval("memoryLimit", request, Integer.class), evalToBoolean("nonBasicServicesAllowed", request), evalToBoolean("trialDbAllowed", request));
-        final HttpStatus quotaResponse = cfServices.createQuota(token, quota);
-        if (!quotaResponse.equals(HttpStatus.CREATED)) {
-            throw new EndpointException("Invalid response status.");
+    public void createPlan(@RequestHeader("Authorization") String token, @RequestBody Quota plan) throws IOException {
+        final ResponseEntity responseEntity = cfServices.createQuota(token, plan);
+        if (!responseEntity.getStatusCode().equals(HttpStatus.CREATED)) {
+            throw new EndpointException("Unable to create plan.", responseEntity);
         }
     }
 
@@ -45,20 +44,19 @@ public class AdminController {
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     public void deletePlan(@RequestHeader("Authorization") String token, @PathVariable("id") String planId) {
-        final HttpStatus httpStatus = cfServices.deleteQuota(token, planId);
-        if(!httpStatus.equals(HttpStatus.OK) && !httpStatus.equals(HttpStatus.NO_CONTENT)){
-            throw new EndpointException("Invalid response status.");
+        final ResponseEntity responseEntity = cfServices.deleteQuota(token, planId);
+        if(!responseEntity.getStatusCode().equals(HttpStatus.OK) && !responseEntity.getStatusCode().equals(HttpStatus.NO_CONTENT)){
+            throw new EndpointException("Unable to delete plan.", responseEntity);
         }
     }
 
     @RequestMapping(value = "/plans/{id}", method = RequestMethod.PUT, produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    public void updatePlan(@RequestHeader("Authorization") String token, @PathVariable("id") String planId, @RequestBody String body) throws IOException {
-        final Quota plan = objectMapper.readValue(body, Quota.class);
-        final HttpStatus httpStatus = cfServices.updateQuota(token, plan);
-        if(!httpStatus.equals(HttpStatus.OK) && !httpStatus.equals(HttpStatus.CREATED)){
-            throw new EndpointException("Invalid response status.");
+    public void updatePlan(@RequestHeader("Authorization") String token, @PathVariable("id") String planId, @RequestBody Quota plan) throws IOException {
+        final ResponseEntity responseEntity = cfServices.updateQuota(token, plan);
+        if(!responseEntity.getStatusCode().equals(HttpStatus.OK) && !responseEntity.getStatusCode().equals(HttpStatus.CREATED)){
+            throw new EndpointException("Unable to update plan.", responseEntity);
         }
     }
 

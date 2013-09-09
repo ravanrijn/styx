@@ -102,6 +102,7 @@ styxControllers.controller('AdminController', function ($scope, $http, $route, n
 
     $scope.createPlan = function (plan) {
         if (plan.name.length > 0) {
+            plan.id = "";
             var config = {
                 method: 'POST',
                 url: "api/administration/plans",
@@ -148,7 +149,6 @@ styxControllers.controller('AdminController', function ($scope, $http, $route, n
     $scope.savePlan = function (id) {
         angular.forEach($scope.admin.plans, function (plan, planIndex) {
             if (plan.id === id) {
-                console.log(JSON.stringify(plan));
                 var config = {
                     method: 'PUT',
                     url: "api/administration/plans/" + id,

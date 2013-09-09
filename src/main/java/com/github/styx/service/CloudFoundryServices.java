@@ -4,6 +4,7 @@ import com.github.styx.domain.Organization;
 import com.github.styx.domain.Quota;
 import com.github.styx.domain.SimpleOrganization;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -13,11 +14,11 @@ public interface CloudFoundryServices {
 
     List<Quota> getPlans(String token);
 
-    HttpStatus createQuota(String token, Quota quota);
+    ResponseEntity createQuota(String token, Quota quota);
 
-    HttpStatus deleteQuota(String token, String id);
+    ResponseEntity deleteQuota(String token, String id);
 
-    HttpStatus updateQuota(String token, Quota quota);
+    ResponseEntity updateQuota(String token, Quota quota);
 
     Organization getOrganization(String token, String id);
 
