@@ -5,6 +5,9 @@ var styxControllers = angular.module('styx.controllers', ['styx.services']);
 styxControllers.controller('StyxController', function ($scope, $route, notificationChannel, authToken) {
 
     $scope.isInRole = function (user, expectedRole) {
+        if(!$scope.root){
+            return false;
+        }
         var isInRole = false;
         angular.forEach(user.roles, function (role, roleIndex) {
             if (!isInRole) {
@@ -110,7 +113,9 @@ styxControllers.controller('LoginController', function ($scope, $location, notif
 });
 
 styxControllers.controller('AdminController', function ($scope, $http, $route, $location, notificationChannel, authToken) {
-
+    if(!$scope.root){
+        notificationChannel.updateRoot();
+    }
     $scope.loading = true;
 
     var appendPlanNames = function (admin) {
