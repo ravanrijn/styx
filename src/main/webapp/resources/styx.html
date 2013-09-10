@@ -19,6 +19,10 @@
                                                       class="img-circle" style="height: 20px"> CLOUD FOUNDRY</a>
             </div>
             <div ng-show="root">
+                <ul class="nav navbar-nav navbar-left">
+                    <li ng-show="root"><a href="#/org/{{root.selectedOrganization.id}}">Spaces</a></li>
+                    <li ng-show="root"><a href="#/org/{{root.selectedOrganization.id}}/users">Users</a></li>
+                </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown uppercase">
                         <a class="dropdown-toggle" data-toggle="dropdown">{{root.user.username}} <b class="caret"></b></a>

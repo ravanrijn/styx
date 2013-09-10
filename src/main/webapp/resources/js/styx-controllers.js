@@ -66,24 +66,14 @@ styxControllers.controller('UsersController', function ($scope, $location, notif
     });
 });
 
-styxControllers.controller('OrganizationController', function ($scope, $location, $routeParams, notificationChannel) {
-    if (!$scope.root) {
-        $scope.loading = true;
-    }
-    $scope.routeToUsers = function (organizationId) {
-        $location.path("/org/" + organizationId + "/users");
-    }
-    $scope.availablePlans = ["paid", "free"];
-    $scope.editingApplication = 0;
-    $scope.editApplication = function (appId) {
-        $scope.editingApplication = appId;
-    }
-    $scope.updateApplication = function (appId) {
-        $scope.editingApplication = appId;
-    }
-    $scope.cancelEditApplication = function () {
-        $scope.editingApplication = 0;
-    }
+styxControllers.controller('OrganizationController', function ($scope, $rootScope, $location, $routeParams, notificationChannel) {
+    $scope.loading = true;
+
+    $scope.$watch('selectedOrgId', function(newValue, oldValue) {
+        if (oldValue && newValue !== oldValue){
+            $location.path("/org/" + newValue);
+        }
+    }, true);
     if (!$scope.root) {
         if (!$routeParams.organizationId) {
             notificationChannel.updateRoot();
@@ -93,9 +83,12 @@ styxControllers.controller('OrganizationController', function ($scope, $location
     } else {
         if ($routeParams.organizationId !== $scope.root.selectedOrganization.id) {
             notificationChannel.updateRoot($routeParams.organizationId);
+        }else{
+            $scope.loading = false;
         }
     }
     notificationChannel.onRootUpdated($scope, function (response) {
+        $scope.selectedOrgId = $scope.root.selectedOrganization.id;
         $scope.loading = false;
     });
 });

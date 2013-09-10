@@ -1,34 +1,17 @@
 <div class="container">
-    <div class="well well-sm" ng-hide="loading">
-        <div class="container">
-            <h3>
-                <span class="text-muted">Organization:</span>
-
-                <div class="btn-group btn-group-sm">
-                    <button type="button"
-                            ng-class="['btn', 'btn-primary', 'dropdown-toggle']"
-                            data-toggle="dropdown">
-                        <span>{{root.selectedOrganization.name}}</span>
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li ng-repeat="organization in root.availableOrganizations"><a
-                                href="#/org/{{organization.id}}">{{organization.name}}</a></li>
-                    </ul>
-                </div>
-                <div class="pull-right">
-                    <div class="btn-group btn-group-sm">
-                        <button type="button" class="btn btn-default"
-                                ng-disabled="editingOrganization || editingApplication !== 0"
-                                ng-click="routeToUsers(root.selectedOrganization.id)">Users <span
-                                class="badge">{{root.selectedOrganization.users.length}}</span></button>
-                        </button>
-                    </div>
-                </div>
-            </h3>
+    <div class="row">
+        <div class="col-md-12">
+            <select ng-model="selectedOrgId"
+                    ng-options="org.id as org.name for org in root.availableOrganizations" class="form-control">
+            </select>
         </div>
     </div>
-    <div class="row" ng-show="loading">
+    <div class="row">
+        <div class="col-md-12" style="min-height: 30px">
+
+        </div>
+    </div>
+    <div class="row" ng-show="!root">
         <div class="col-md-12">
             <div class="panel panel-default" style="min-height:150px">
                 <div class="panel-heading"></div>
@@ -38,7 +21,7 @@
             </div>
         </div>
     </div>
-    <div class="row" ng-repeat="space in root.selectedOrganization.spaces" ng-hide="loading">
+    <div class="row" ng-repeat="space in root.selectedOrganization.spaces">
         <div>
             <div class="col-md-12">
                 <div class="panel panel-default">
@@ -47,6 +30,7 @@
                                 class="badge">{{space.applications.length}}</span></span>
                     </div>
                     <div class="panel-body">
+                        <div spin="defaultSpinnerConfig" spin-if="loading"></div>
                         <table class="table table-condensed" style="width: 100%">
                             <thead>
                             <tr>

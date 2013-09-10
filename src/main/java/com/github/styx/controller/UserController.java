@@ -5,6 +5,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/api/{orgId}/users")
-public class UserManagementController {
+public class UserController {
 
 }
