@@ -127,7 +127,7 @@ class DefaultCloudFoundryServices extends RemoteServices implements CloudFoundry
                 }
                 applications.add(new Application(evalToString("metadata.guid", applicationResponse), evalToString(ENTITY_NAME, applicationResponse), evalToString("entity.memory", applicationResponse), urls, serviceBindings, eval("entity.instances", applicationResponse, Integer.class), ApplicationState.valueOf(evalToString("entity.state", applicationResponse))));
             }
-            spaces.add(new Space(evalToString(RESOURCE_ID, spaceResponse), evalToString(ENTITY_NAME, spaceResponse), null, /*mapSpaceUsers(spaceResponse, organizationUsers),*/ applications));
+            spaces.add(new Space(evalToString(RESOURCE_ID, spaceResponse), evalToString(ENTITY_NAME, spaceResponse), mapSpaceUsers(spaceResponse, organizationUsers), applications));
         }
         final List<Domain> domains = new ArrayList<>();
         for (final Object domainResponse : eval("entity.domains", organization, List.class)) {

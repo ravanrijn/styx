@@ -20,11 +20,11 @@
             </div>
             <div ng-show="root">
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="#/userinfo/{{root.selectedOrganization.id}}">{{root.user.username}}</a></li>
                     <li class="dropdown uppercase">
-                        <a class="dropdown-toggle" data-toggle="dropdown">LOGOUT <b class="caret"></b></a>
+                        <a class="dropdown-toggle" data-toggle="dropdown">{{root.user.username}} <b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                            <li><a href="#/admin">Administration</a></li>
+                            <li><a href="#/admin" ng-show="isInRole(root.user, 'EINDBAAS')">Administration</a></li>
+                            <li><a ng-click="logout()">Logout</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -47,15 +47,6 @@
 <div ng-hide="loading">
     <div ng-view></div>
 </div>
-
-<!--<div class="container" ng-show="loading">-->
-<!--<div class="well well-sm">-->
-<!--<div class="row text-center">-->
-<!--<h3 class="text-center">One moment please...</h3>-->
-<!--<img src="img/chuckie.jpg" alt="I am Chuck." class="img-thumbnail">-->
-<!--</div>-->
-<!--</div>-->
-<!--</div>-->
 
 <div>
     <nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">

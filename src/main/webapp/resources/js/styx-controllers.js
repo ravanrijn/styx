@@ -4,7 +4,19 @@ var styxControllers = angular.module('styx.controllers', ['styx.services']);
 
 styxControllers.controller('StyxController', function ($scope, $route, notificationChannel, authToken) {
 
-    $scope.clearStatus = function(){
+    $scope.isInRole = function (user, expectedRole) {
+        var isInRole = false;
+        angular.forEach(user.roles, function (role, roleIndex) {
+            if (!isInRole) {
+                if (role === expectedRole) {
+                    isInRole = true;
+                }
+            }
+        });
+        return isInRole;
+    }
+
+    $scope.clearStatus = function () {
         $scope.status = null;
     }
 
@@ -29,17 +41,30 @@ styxControllers.controller('StyxController', function ($scope, $route, notificat
     });
 });
 
-styxControllers.controller('UsersController', function ($scope, $location, notificationChannel) {
+styxControllers.controller('UsersController', function ($scope, $location, notificationChannel, $routeParams) {
     $scope.routeToSpaces = function (organizationId) {
         $location.path("/org/" + organizationId);
     }
     if (!$scope.root) {
-        notificationChannel.updateRoot();
+        $scope.loading = true;
+        if (!$routeParams.organizationId) {
+            notificationChannel.updateRoot();
+        } else {
+            notificationChannel.updateRoot($routeParams.organizationId);
+        }
+    } else {
+        if ($routeParams.organizationId !== $scope.root.selectedOrganization.id) {
+            $scope.loading = true;
+            notificationChannel.updateRoot($routeParams.organizationId);
+        }
     }
+    notificationChannel.onRootUpdated($scope, function (response) {
+        $scope.loading = false;
+    });
 });
 
 styxControllers.controller('OrganizationController', function ($scope, $location, $routeParams, notificationChannel) {
-    if(!$scope.root){
+    if (!$scope.root) {
         $scope.loading = true;
     }
     $scope.routeToUsers = function (organizationId) {
@@ -159,7 +184,7 @@ styxControllers.controller('AdminController', function ($scope, $http, $route, $
                         'Content-Type': 'application/json',
                         'Accept': 'application/json',
                         'Authorization': authToken.getToken()},
-                    data:JSON.stringify(plan)
+                    data: JSON.stringify(plan)
                 }
                 var promise = $http(config);
                 promise.success(function (response, status, headers) {
@@ -182,8 +207,8 @@ styxControllers.controller('AdminController', function ($scope, $http, $route, $
         $scope.editingOrg = id;
     }
 
-    $scope.createOrg = function(org){
-        if(org.name.length > 0){
+    $scope.createOrg = function (org) {
+        if (org.name.length > 0) {
             $scope.loading = true;
             org.id = "";
             org.quotaId = org.plan;
@@ -208,7 +233,7 @@ styxControllers.controller('AdminController', function ($scope, $http, $route, $
         }
     }
 
-    $scope.deleteOrg = function(id, name){
+    $scope.deleteOrg = function (id, name) {
         $scope.loading = true;
         var config = {
             method: 'DELETE',
@@ -238,7 +263,7 @@ styxControllers.controller('AdminController', function ($scope, $http, $route, $
                 'Accept': 'application/json',
                 'Authorization': authToken.getToken(),
                 'Content-Type': 'application/json'},
-            data:JSON.stringify({id:id, name:name, quotaId:quotaId})
+            data: JSON.stringify({id: id, name: name, quotaId: quotaId})
         }
         var promise = $http(config);
         promise.success(function (response, status, headers) {
@@ -251,7 +276,7 @@ styxControllers.controller('AdminController', function ($scope, $http, $route, $
         });
     }
 
-    $scope.routeToUsers = function(id){
+    $scope.routeToUsers = function (id) {
         $location.path("/org/" + id + "/users")
     }
 
