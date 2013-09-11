@@ -72,6 +72,11 @@ styxControllers.controller('UsersController', function ($scope, $location, notif
 });
 
 styxControllers.controller('OrganizationController', function ($scope, $rootScope, $location, $routeParams, notificationChannel) {
+    $scope.changeOrganization = function(){
+        if($scope.selectedOrgId !== $scope.root.selectedOrganization.id){
+            $location.path("/org/" + $scope.selectedOrgId);
+        }
+    }
     $scope.loading = true;
     if (!$scope.root) {
         if (!$routeParams.organizationId) {

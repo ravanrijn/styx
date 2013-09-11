@@ -9,7 +9,7 @@
             <div class="form-group">
                 <select ng-model="selectedOrgId"
                         ng-options="org.id as org.name for org in root.availableOrganizations"
-                        ng-change="selectOrganizations()" class="form-control">
+                        ng-change="changeOrganization()" class="form-control">
                 </select>
             </div>
         </div>
