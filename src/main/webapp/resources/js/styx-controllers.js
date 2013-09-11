@@ -45,6 +45,19 @@ styxControllers.controller('StyxController', function ($scope, $route, notificat
 });
 
 styxControllers.controller('UsersController', function ($scope, $location, notificationChannel, $routeParams) {
+    $scope.editUser = function(user){
+        var editingUser = user;
+        if($scope.isInRole(user, 'ORGANIZATION_MANAGER')){
+            editingUser.isManager = true;
+        }
+        if($scope.isInRole(user, 'BILLING_MANAGER')){
+            editingUser.isBillingManager = true;
+        }
+        if($scope.isInRole(user, 'ORGANIZATION_AUDITOR')){
+            editingUser.isAuditor = true;
+        }
+        $scope.editingUser = editingUser;
+    }
     $scope.changeOrganization = function(){
         if($scope.selectedOrgId !== $scope.root.selectedOrganization.id){
             $location.path("/org/" + $scope.selectedOrgId + "/users")
@@ -71,7 +84,7 @@ styxControllers.controller('UsersController', function ($scope, $location, notif
     });
 });
 
-styxControllers.controller('OrganizationController', function ($scope, $rootScope, $location, $routeParams, notificationChannel) {
+styxControllers.controller('OrganizationController', function ($scope, $location, $routeParams, notificationChannel) {
     $scope.changeOrganization = function(){
         if($scope.selectedOrgId !== $scope.root.selectedOrganization.id){
             $location.path("/org/" + $scope.selectedOrgId);

@@ -6,6 +6,8 @@
     </div>
     <div class="row">
         <div class="col-md-12">
+            <h4><span class="text-muted">your // </span> organizations</h4>
+            <p>Select one of your organizations.</p>
             <div class="form-group">
                 <select ng-model="selectedOrgId"
                         ng-options="org.id as org.name for org in root.availableOrganizations"
@@ -17,8 +19,9 @@
 
     <div class="row" ng-repeat="space in root.selectedOrganization.spaces">
         <div class="col-md-12">
-            <h1><span class="text-muted">Space:</span> {{space.name}} <span
-                    class="badge">{{space.applications.length}}</span></h1>
+            <h4><span class="text-muted">apps // </span> {{space.name}} <span
+                    class="badge">{{space.applications.length}}</span></h4>
+            <p>All available applications in this space are listed below.</p>
             <hr/>
 
             <div spin="defaultSpinnerConfig" spin-if="loading"></div>
@@ -37,7 +40,7 @@
                 <tbody>
                 <tr ng-repeat="app in space.applications">
                     <td>
-                        <div class="btn-group btn-group-sm">
+                        <div class="btn-group btn-group-xs">
                             <button type="button"
                                     ng-class="['btn', (app.state == 'STARTED') ? 'btn-success' : 'btn-danger', 'dropdown-toggle']"
                                     data-toggle="dropdown" ng-disabled="editingOrganization">
