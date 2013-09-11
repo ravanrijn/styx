@@ -45,35 +45,12 @@ styxControllers.controller('StyxController', function ($scope, $route, notificat
 });
 
 styxControllers.controller('UsersController', function ($scope, $location, notificationChannel, $routeParams) {
-    $scope.routeToSpaces = function (organizationId) {
-        $location.path("/org/" + organizationId);
-    }
-    if (!$scope.root) {
-        $scope.loading = true;
-        if (!$routeParams.organizationId) {
-            notificationChannel.updateRoot();
-        } else {
-            notificationChannel.updateRoot($routeParams.organizationId);
-        }
-    } else {
-        if ($routeParams.organizationId !== $scope.root.selectedOrganization.id) {
-            $scope.loading = true;
-            notificationChannel.updateRoot($routeParams.organizationId);
+    $scope.changeOrganization = function(){
+        if($scope.selectedOrgId !== $scope.root.selectedOrganization.id){
+            $location.path("/org/" + $scope.selectedOrgId + "/users")
         }
     }
-    notificationChannel.onRootUpdated($scope, function (response) {
-        $scope.loading = false;
-    });
-});
-
-styxControllers.controller('OrganizationController', function ($scope, $rootScope, $location, $routeParams, notificationChannel) {
     $scope.loading = true;
-
-    $scope.$watch('selectedOrgId', function(newValue, oldValue) {
-        if (oldValue && newValue !== oldValue){
-            $location.path("/org/" + newValue);
-        }
-    }, true);
     if (!$scope.root) {
         if (!$routeParams.organizationId) {
             notificationChannel.updateRoot();
@@ -84,6 +61,29 @@ styxControllers.controller('OrganizationController', function ($scope, $rootScop
         if ($routeParams.organizationId !== $scope.root.selectedOrganization.id) {
             notificationChannel.updateRoot($routeParams.organizationId);
         }else{
+            $scope.selectedOrgId = $scope.root.selectedOrganization.id;
+            $scope.loading = false;
+        }
+    }
+    notificationChannel.onRootUpdated($scope, function (response) {
+        $scope.selectedOrgId = $scope.root.selectedOrganization.id;
+        $scope.loading = false;
+    });
+});
+
+styxControllers.controller('OrganizationController', function ($scope, $rootScope, $location, $routeParams, notificationChannel) {
+    $scope.loading = true;
+    if (!$scope.root) {
+        if (!$routeParams.organizationId) {
+            notificationChannel.updateRoot();
+        } else {
+            notificationChannel.updateRoot($routeParams.organizationId);
+        }
+    } else {
+        if ($routeParams.organizationId !== $scope.root.selectedOrganization.id) {
+            notificationChannel.updateRoot($routeParams.organizationId);
+        }else{
+            $scope.selectedOrgId = $scope.root.selectedOrganization.id;
             $scope.loading = false;
         }
     }
@@ -279,7 +279,7 @@ styxControllers.controller('AdminController', function ($scope, $http, $route, $
     }
 
     $scope.newPlan = {name: "", services: 1, memoryLimit: 1024, nonBasicServicesAllowed: false, trialDbAllowed: false};
-    $scope.newOrganization = {name: "", plan: "6cfd32e0-2439-45b8-900f-8146a7e3daf5"};
+    $scope.newOrganization = {name: "", plan: ""};
 
 
     $scope.admin = {plans: [], organizations: []};

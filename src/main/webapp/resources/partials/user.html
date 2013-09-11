@@ -1,124 +1,95 @@
 <div class="container">
-    <div class="well well-sm" ng-hide="loading">
-        <div class="container">
-            <h3>
-                <span class="text-muted">Organization:</span>
-
-                <div class="btn-group btn-group-sm">
-                    <button type="button"
-                            ng-class="['btn', 'btn-primary', 'dropdown-toggle']"
-                            data-toggle="dropdown">
-                        <span>{{root.selectedOrganization.name}}</span>
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li ng-repeat="organization in root.availableOrganizations"><a
-                                href="#/org/{{organization.id}}/users">{{organization.name}}</a></li>
-                    </ul>
-                </div>
-                <div class="pull-right">
-                    <div class="btn-group btn-group-sm">
-                        <button type="button" class="btn btn-default"
-                                ng-click="routeToSpaces(root.selectedOrganization.id)">Spaces <span
-                                class="badge">{{root.selectedOrganization.spaces.length}}</span></button>
-                        <button type="button" class="btn btn-default">Invite</button>
-                    </div>
-                </div>
-            </h3>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <select ng-model="selectedOrgId"
+                        ng-options="org.id as org.name for org in root.availableOrganizations"
+                        ng-change="changeOrganization()" class="form-control">
+                </select>
+            </div>
         </div>
     </div>
     <div class="row">
         <div class="col-md-12">
-            <div class="panel panel-default" style="min-height:150px">
-                <div class="panel-heading">
-                    <span class="panel-title" ng-hide="loading"><span class="text-muted">Organization Users <span class="badge">{{root.selectedOrganization.users.length}}</span></span></span>
-                </div>
-                <div class="panel-body">
-                    <div spin="defaultSpinnerConfig" spin-if="loading"></div>
-                    <table class="table table-hover" ng-hide="loading">
-                        <thead>
-                        <tr>
-                            <th>
-                                User ID
-                            </th>
-                            <th>
-                                Org. Manager
-                            </th>
-                            <th>
-                                Billing Manager
-                            </th>
-                            <th>
-                                Org Auditor
-                            </th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr ng-repeat="user in root.selectedOrganization.users">
-                            <td style="width: 40%">
-                                {{user.username}}
-                            </td>
-                            <td style="width: 20%">
-                                <span ng-class="['glyphicon', (isInRole(user, 'ORGANIZATION_MANAGER')) ? 'glyphicon-ok' : 'glyphicon-remove']"></span>
-                            </td>
-                            <td style="width: 20%">
-                                <span ng-class="['glyphicon', (isInRole(user, 'BILLING_MANAGER')) ? 'glyphicon-ok' : 'glyphicon-remove']"></span>
-                            </td>
-                            <td style="width: 20%">
-                                <span ng-class="['glyphicon', (isInRole(user, 'ORGANIZATION_AUDITOR')) ? 'glyphicon-ok' : 'glyphicon-remove']"></span>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+            <h1 ng-hide="loading"><span class="text-muted">Organization Users <span class="badge">{{root.selectedOrganization.users.length}}</span></span>
+            </h1>
+            <hr/>
+            <div spin="defaultSpinnerConfig" spin-if="loading"></div>
+            <table class="table table-hover" ng-hide="loading">
+                <thead>
+                <tr>
+                    <th>
+                        User ID
+                    </th>
+                    <th>
+                        Org. Manager
+                    </th>
+                    <th>
+                        Billing Manager
+                    </th>
+                    <th>
+                        Org Auditor
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="user in root.selectedOrganization.users">
+                    <td style="width: 40%">
+                        {{user.username}}
+                    </td>
+                    <td style="width: 20%">
+                        <span ng-class="['glyphicon', (isInRole(user, 'ORGANIZATION_MANAGER')) ? 'glyphicon-ok' : 'glyphicon-remove']"></span>
+                    </td>
+                    <td style="width: 20%">
+                        <span ng-class="['glyphicon', (isInRole(user, 'BILLING_MANAGER')) ? 'glyphicon-ok' : 'glyphicon-remove']"></span>
+                    </td>
+                    <td style="width: 20%">
+                        <span ng-class="['glyphicon', (isInRole(user, 'ORGANIZATION_AUDITOR')) ? 'glyphicon-ok' : 'glyphicon-remove']"></span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </div>
     </div>
     <div class="row" ng-repeat="space in root.selectedOrganization.spaces" ng-hide="loading">
         <div class="col-md-12">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                        <span class="panel-title"><span class="text-muted">Space Users:</span> {{space.name}} <span
-                                class="badge">{{space.users.length}}</span></span>
-                </div>
-                <div class="panel-body">
-                    <div class="panel-body">
-                        <table class="table table-hover">
-                            <thead>
-                            <tr>
-                                <th>
-                                    User ID
-                                </th>
-                                <th>
-                                    Space Manager
-                                </th>
-                                <th>
-                                    Developer
-                                </th>
-                                <th>
-                                    Space Auditor
-                                </th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr ng-repeat="user in space.users">
-                                <td style="width: 40%">
-                                    {{user.username}}
-                                </td>
-                                <td style="width: 20%">
-                                    <span ng-class="['glyphicon', (isInRole(user, 'SPACE_MANAGER')) ? 'glyphicon-ok' : 'glyphicon-remove']"></span>
-                                </td>
-                                <td style="width: 20%">
-                                    <span ng-class="['glyphicon', (isInRole(user, 'SPACE_DEVELOPER')) ? 'glyphicon-ok' : 'glyphicon-remove']"></span>
-                                </td>
-                                <td style="width: 20%">
-                                    <span ng-class="['glyphicon', (isInRole(user, 'SPACE_AUDITOR')) ? 'glyphicon-ok' : 'glyphicon-remove']"></span>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+            <h1><span class="text-muted">Space Users:</span> {{space.name}} <span
+                    class="badge">{{space.users.length}}</span></h1>
+            <hr/>
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>
+                        User ID
+                    </th>
+                    <th>
+                        Space Manager
+                    </th>
+                    <th>
+                        Developer
+                    </th>
+                    <th>
+                        Space Auditor
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="user in space.users">
+                    <td style="width: 40%">
+                        {{user.username}}
+                    </td>
+                    <td style="width: 20%">
+                        <span ng-class="['glyphicon', (isInRole(user, 'SPACE_MANAGER')) ? 'glyphicon-ok' : 'glyphicon-remove']"></span>
+                    </td>
+                    <td style="width: 20%">
+                        <span ng-class="['glyphicon', (isInRole(user, 'SPACE_DEVELOPER')) ? 'glyphicon-ok' : 'glyphicon-remove']"></span>
+                    </td>
+                    <td style="width: 20%">
+                        <span ng-class="['glyphicon', (isInRole(user, 'SPACE_AUDITOR')) ? 'glyphicon-ok' : 'glyphicon-remove']"></span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

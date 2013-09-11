@@ -1,196 +1,200 @@
 <div class="container">
     <div class="row">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">Plan <span class="text-muted">Management</span> <span class="badge">{{admin.plans.length}}</span> </h3>
-            </div>
-            <div class="panel-body" style="min-height:150px">
-                <div spin="defaultSpinnerConfig" spin-if="loading"></div>
-                <table class="table table-hover">
-                    <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th class="text-right">Total Services</th>
-                        <th class="text-right">Memory Limit</th>
-                        <th class="text-center">Non Basic Services Allowed</th>
-                        <th class="text-center">Trial DB Allowed</th>
-                        <th></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr ng-repeat="plan in admin.plans">
-                        <td ng-hide="editingPlan === plan.id">{{plan.name}}</td>
-                        <td ng-show="editingPlan === plan.id">
-                            <input type="text" class="form-control" id="plan.name"
-                                   placeholder="{{plan.name}}"
-                                   ng-model="plan.name"/>
-                        </td>
-                        <td class="text-right" ng-hide="editingPlan === plan.id">{{plan.services}}</td>
-                        <td class="text-right" ng-show="editingPlan === plan.id">
-                            <input type="text" class="form-control text-right" id="plan.services"
-                                   placeholder="{{plan.services}}"
-                                   ng-model="plan.services"/>
-                        </td>
-                        <td class="text-right" ng-hide="editingPlan === plan.id">{{plan.memoryLimit}} MB</td>
-                        <td class="text-right" ng-show="editingPlan === plan.id">
-                            <input type="text" class="form-control text-right" id="plan.memoryLimit"
-                                   placeholder="{{plan.memoryLimit}}"
-                                   ng-model="plan.memoryLimit"/>
-                        </td>
-                        <td class="text-center" ng-hide="editingPlan === plan.id"><span ng-class="['glyphicon', (plan.nonBasicServicesAllowed) ? 'glyphicon-ok' : 'glyphicon-remove']"></span></td>
-                        <td class="text-center" ng-show="editingPlan === plan.id">
-                            <input type="checkbox" id="plan.nonBasicServicesAllowed"
-                                   ng-model="plan.nonBasicServicesAllowed"/>
-                        </td>
-                        <td class="text-center" ng-hide="editingPlan === plan.id"><span ng-class="['glyphicon', (plan.trialDbAllowed) ? 'glyphicon-ok' : 'glyphicon-remove']"></span></td>
-                        <td class="text-center" ng-show="editingPlan === plan.id">
-                            <input type="checkbox" id="plan.trialDbAllowed"
-                                   ng-model="plan.trialDbAllowed"/>
-                        <td ng-hide="editingPlan === plan.id">
-                            <div class="pull-right">
-                                <div class="btn-group btn-group-sm">
-                                    <button type="button" class="btn btn-default" ng-click="editPlan(plan.id)" ng-disabled="editingPlan">
-                                        Edit
-                                    </button>
-                                    <button type="button" class="btn btn-danger" ng-disabled="editingPlan" ng-click="deletePlan(plan.id, plan.name)">
-                                        Delete
-                                    </button>
-                                </div>
-                            </div>
-                        </td>
-                        <td ng-show="editingPlan === plan.id">
-                            <div class="pull-right">
-                                <div class="btn-group btn-group-sm">
-                                    <button type="button" class="btn btn-success" ng-click="savePlan(plan.id)">
-                                        Update
-                                    </button>
-                                    <button type="button" class="btn btn-warning" ng-click="cancelEdit()">
-                                        Cancel
-                                    </button>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <input type="text" class="form-control" id="new.plan.name"
-                                   placeholder="Choose a name"
-                                   ng-model="newPlan.name" ng-disabled="editingPlan"/>
-                        </td>
-                        <td class="text-right">
-                            <input type="text" class="form-control text-right" id="new.plan.totalServices"
-                                   placeholder="Choose amount of services"
-                                   ng-model="newPlan.services" ng-disabled="editingPlan"/>
-                        </td>
-                        <td class="text-right">
-                            <input type="text" class="form-control text-right" id="new.plan.memoryLimit"
-                                   placeholder="Choose a memory limit"
-                                   ng-model="newPlan.memoryLimit" ng-disabled="editingPlan"/>
-                        </td>
-                        <td class="text-center">
-                            <input type="checkbox" id="new.plan.nonBasicServicesAllowed"
-                                   ng-model="newPlan.nonBasicServicesAllowed" ng-disabled="editingPlan"/>
-                        </td>
-                        <td class="text-center">
-                            <input type="checkbox" id="new.plan.trialDbAllowed"
-                                   ng-model="newPlan.trialDbAllowed" ng-disabled="editingPlan"/>
-                        </td>
-                        <td>
-                            <div class="pull-right">
-                                <div class="btn-group btn-group-sm">
-                                    <button type="button" class="btn btn-success" ng-disabled="editingPlan" ng-click="createPlan(newPlan)">
-                                        Add
-                                    </button>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+        <h1>Plan <span class="text-muted">Management</span> <span class="badge">{{admin.plans.length}}</span></h1>
+        <hr/>
+        <div spin="defaultSpinnerConfig" spin-if="loading"></div>
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th class="text-right">Total Services</th>
+                <th class="text-right">Memory Limit</th>
+                <th class="text-center">Non Basic Services Allowed</th>
+                <th class="text-center">Trial DB Allowed</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="plan in admin.plans">
+                <td ng-hide="editingPlan === plan.id">{{plan.name}}</td>
+                <td ng-show="editingPlan === plan.id">
+                    <input type="text" class="form-control" id="plan.name"
+                           placeholder="{{plan.name}}"
+                           ng-model="plan.name"/>
+                </td>
+                <td class="text-right" ng-hide="editingPlan === plan.id">{{plan.services}}</td>
+                <td class="text-right" ng-show="editingPlan === plan.id">
+                    <input type="text" class="form-control text-right" id="plan.services"
+                           placeholder="{{plan.services}}"
+                           ng-model="plan.services"/>
+                </td>
+                <td class="text-right" ng-hide="editingPlan === plan.id">{{plan.memoryLimit}} MB</td>
+                <td class="text-right" ng-show="editingPlan === plan.id">
+                    <input type="text" class="form-control text-right" id="plan.memoryLimit"
+                           placeholder="{{plan.memoryLimit}}"
+                           ng-model="plan.memoryLimit"/>
+                </td>
+                <td class="text-center" ng-hide="editingPlan === plan.id"><span
+                        ng-class="['glyphicon', (plan.nonBasicServicesAllowed) ? 'glyphicon-ok' : 'glyphicon-remove']"></span>
+                </td>
+                <td class="text-center" ng-show="editingPlan === plan.id">
+                    <input type="checkbox" id="plan.nonBasicServicesAllowed"
+                           ng-model="plan.nonBasicServicesAllowed"/>
+                </td>
+                <td class="text-center" ng-hide="editingPlan === plan.id"><span
+                        ng-class="['glyphicon', (plan.trialDbAllowed) ? 'glyphicon-ok' : 'glyphicon-remove']"></span>
+                </td>
+                <td class="text-center" ng-show="editingPlan === plan.id">
+                    <input type="checkbox" id="plan.trialDbAllowed"
+                           ng-model="plan.trialDbAllowed"/>
+                <td ng-hide="editingPlan === plan.id">
+                    <div class="pull-right">
+                        <div class="btn-group btn-group-sm">
+                            <button type="button"
+                                    class="btn btn-default"
+                                    data-toggle="dropdown" ng-disabled="editingPlan">
+                                <span><span class="glyphicon glyphicon-cog"></span></span>
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a ng-click="editPlan(plan.id)">Edit</a></li>
+                                <li><a ng-click="deletePlan(plan.id, plan.name)">Delete</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </td>
+                <td ng-show="editingPlan === plan.id">
+                    <div class="pull-right">
+                        <div class="btn-group btn-group-sm">
+                            <button type="button" class="btn btn-success" ng-click="savePlan(plan.id)">
+                                Update
+                            </button>
+                            <button type="button" class="btn btn-warning" ng-click="cancelEdit()">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="text" class="form-control" id="new.plan.name"
+                           placeholder="Choose a name"
+                           ng-model="newPlan.name" ng-disabled="editingPlan"/>
+                </td>
+                <td class="text-right">
+                    <input type="text" class="form-control text-right" id="new.plan.totalServices"
+                           placeholder="Choose amount of services"
+                           ng-model="newPlan.services" ng-disabled="editingPlan"/>
+                </td>
+                <td class="text-right">
+                    <input type="text" class="form-control text-right" id="new.plan.memoryLimit"
+                           placeholder="Choose a memory limit"
+                           ng-model="newPlan.memoryLimit" ng-disabled="editingPlan"/>
+                </td>
+                <td class="text-center">
+                    <input type="checkbox" id="new.plan.nonBasicServicesAllowed"
+                           ng-model="newPlan.nonBasicServicesAllowed" ng-disabled="editingPlan"/>
+                </td>
+                <td class="text-center">
+                    <input type="checkbox" id="new.plan.trialDbAllowed"
+                           ng-model="newPlan.trialDbAllowed" ng-disabled="editingPlan"/>
+                </td>
+                <td>
+                    <div class="pull-right">
+                        <div class="btn-group btn-group-sm">
+                            <button type="button" class="btn btn-success" ng-disabled="editingPlan"
+                                    ng-click="createPlan(newPlan)">
+                                Add
+                            </button>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
     </div>
     <div class="row">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">Organizations <span class="text-muted">Management</span> <span class="badge">{{admin.organizations.length}}</span></h3>
-            </div>
-            <div class="panel-body" style="min-height:150px">
-                <div spin="defaultSpinnerConfig" spin-if="loading"></div>
-                <table class="table table-hover">
-                    <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Plan</th>
-                        <th></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr ng-repeat="organization in admin.organizations">
-                        <td ng-hide="editingOrg === organization.id">{{organization.name}}</td>
-                        <td ng-show="editingOrg === organization.id">
-                            <input type="text" class="form-control" id="org.name"
-                                   placeholder="{{organization.name}}"
-                                   ng-model="organization.name"/>
-                        </td>
-                        <td ng-hide="editingOrg === organization.id">{{organization.quotaName}}</td>
-                        <td ng-show="editingOrg === organization.id">
-                            <select ng-model="organization.quotaId"
-                                    ng-options="plan.id as plan.name for plan in admin.plans" class="form-control">
-                            </select>
-                        </td>
-                        <td ng-hide="editingOrg === organization.id">
-                            <div class="pull-right">
-                                <div class="btn-group btn-group-sm">
-                                    <button type="button" class="btn btn-default" ng-click="editOrg(organization.id)" ng-disabled="editingOrg">
-                                        Edit
-                                    </button>
-                                    <button type="button" class="btn btn-default" ng-disabled="editingOrg" ng-click="routeToUsers(organization.id)">
-                                        Users
-                                    </button>
-                                    <button type="button" class="btn btn btn-danger" ng-disabled="editingOrg" ng-click="deleteOrg(organization.id, organization.name)">
-                                        Delete
-                                    </button>
-                                </div>
-                            </div>
-                        </td>
-                        <td ng-show="editingOrg === organization.id">
-                            <div class="pull-right">
-                                <div class="btn-group btn-group-sm">
-                                    <button type="button" class="btn btn-success" ng-click="saveOrg(organization.id, organization.name, organization.quotaId)">
-                                        Update
-                                    </button>
-                                    <button type="button" class="btn btn-warning" ng-click="cancelEdit()">
-                                        Cancel
-                                    </button>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <input type="text" class="form-control" id="new.org.name"
-                                   placeholder="Choose a name"
-                                   ng-model="newOrganization.name"/>
-                        </td>
-                        <td>
-                            <select ng-model="newOrganization.plan"
-                                    ng-options="plan.id as plan.name for plan in admin.plans" class="form-control">
-                            </select>
-                        </td>
-                        <td>
-                            <div class="pull-right">
-                                <div class="btn-group btn-group-sm">
-                                    <button type="button" class="btn btn-success" ng-disabled="editingOrg" ng-click="createOrg(newOrganization)">
-                                        Add
-                                    </button>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+        <h1>Organizations <span class="text-muted">Management</span> <span
+                class="badge">{{admin.organizations.length}}</span></h1>
+        <hr/>
+        <div spin="defaultSpinnerConfig" spin-if="loading"></div>
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Plan</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="organization in admin.organizations">
+                <td ng-hide="editingOrg === organization.id">{{organization.name}}</td>
+                <td ng-show="editingOrg === organization.id">
+                    <input type="text" class="form-control" id="org.name"
+                           placeholder="{{organization.name}}"
+                           ng-model="organization.name"/>
+                </td>
+                <td ng-hide="editingOrg === organization.id">{{organization.quotaName}}</td>
+                <td ng-show="editingOrg === organization.id">
+                    <select ng-model="organization.quotaId"
+                            ng-options="plan.id as plan.name for plan in admin.plans" class="form-control">
+                    </select>
+                </td>
+                <td ng-hide="editingOrg === organization.id">
+                    <div class="pull-right">
+                        <div class="btn-group btn-group-sm">
+                            <button type="button"
+                                    class="btn btn-default"
+                                    data-toggle="dropdown" ng-disabled="editingOrg">
+                                <span><span class="glyphicon glyphicon-cog"></span></span>
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a ng-click="routeToUsers(organization.id)">Users</a></li>
+                                <li><a ng-click="editOrg(organization.id)">Edit</a></li>
+                                <li><a ng-click="deleteOrg(organization.id, organization.name)">Delete</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </td>
+                <td ng-show="editingOrg === organization.id">
+                    <div class="pull-right">
+                        <div class="btn-group btn-group-sm">
+                            <button type="button" class="btn btn-success"
+                                    ng-click="saveOrg(organization.id, organization.name, organization.quotaId)">
+                                Update
+                            </button>
+                            <button type="button" class="btn btn-warning" ng-click="cancelEdit()">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="text" class="form-control" id="new.org.name"
+                           placeholder="Choose a name"
+                           ng-model="newOrganization.name"/>
+                </td>
+                <td>
+                    <select ng-model="newOrganization.plan"
+                            ng-options="plan.id as plan.name for plan in admin.plans" class="form-control">
+                    </select>
+                </td>
+                <td>
+                    <div class="pull-right">
+                        <div class="btn-group btn-group-sm">
+                            <button type="button" class="btn btn-success" ng-disabled="editingOrg"
+                                    ng-click="createOrg(newOrganization)">
+                                Add
+                            </button>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
     </div>
 </div>
