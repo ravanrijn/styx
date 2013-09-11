@@ -21,8 +21,8 @@ an endpoint on the UAA that will return the user names.
 
 In your BOSH deployment descriptor enable the following setting:
 
-scim:
-    userids_enabled: true
+    scim:
+        userids_enabled: true
 
 # Screenshots
 
