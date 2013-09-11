@@ -22,7 +22,7 @@
             <hr/>
 
             <div spin="defaultSpinnerConfig" spin-if="loading"></div>
-            <table class="table table-condensed" style="width: 100%">
+            <table class="table table-hover" style="width: 100%">
                 <thead>
                 <tr>
                     <th>STATUS</th>
@@ -31,6 +31,7 @@
                     <th>SERVICES</th>
                     <th>MEMORY</th>
                     <th>URL</th>
+                    <th></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -51,9 +52,7 @@
                         </div>
                     </td>
                     <td>
-                        {{app.name}} <a href="#/app-settings/{{root.selectedOrganization.id}}/{{app.id}}"
-                                        style="text-decoration: none"><span
-                            class="glyphicon glyphicon-info-sign"></span></a>
+                        <a>{{app.name}}</a>
                     </td>
                     <td>
                         <input type="text" class="form-control" id="appInstances"
@@ -71,7 +70,23 @@
                         <span ng-hide="editingApplication === app.id">{{app.memory}} MB</span>
                     </td>
                     <td class="text-left">
-                        <div class="text-left" ng-repeat="url in app.urls"><a>http://{{url}}</a><br/></div>
+                        <div class="text-left" ng-repeat="url in app.urls"><a href="http://{{url}}">http://{{url}}</a><br/></div>
+                    </td>
+                    <td>
+                        <div class="pull-right">
+                            <div class="btn-group btn-group-sm">
+                                <button type="button"
+                                        class="btn btn-default"
+                                        data-toggle="dropdown">
+                                    <span><span class="glyphicon glyphicon-cog"></span></span>
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a>Details</a></li>
+                                    <li><a>Delete</a></li>
+                                </ul>
+                            </div>
+                        </div>
                     </td>
                 </tr>
                 </tbody>

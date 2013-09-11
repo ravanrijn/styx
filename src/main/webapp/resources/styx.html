@@ -7,6 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
     <link href="css/styx.css" rel="stylesheet" media="screen">
+    <link rel="icon"
+          type="image/png"
+          href="img/favicon.ico">
 </head>
 
 <body ng-controller="StyxController">
@@ -28,7 +31,8 @@
                     <li class="dropdown uppercase">
                         <a class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-cog"></span><b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                            <li><a href="#/admin" ng-show="isInRole(root.user, 'EINDBAAS')">Administration</a></li>
+                            <li><a href="#/admin" ng-show="isInRole(root.user, 'EINDBAAS')">Manage</a></li>
+                            <li><a href="#/admin" ng-show="isInRole(root.user, 'EINDBAAS')">Invite</a></li>
                             <li><a ng-click="logout()">Logout</a></li>
                         </ul>
                     </li>

@@ -22,13 +22,16 @@
                         User ID
                     </th>
                     <th>
-                        Org. Manager
+                        Manager <span data-toggle="tooltip" title="Can invite/manage users, select/change the plan, establish spending limits"><span class="glyphicon glyphicon-info-sign"></span></span>
                     </th>
                     <th>
-                        Billing Manager
+                        Billing Manager <span data-toggle="tooltip" title="Can edit/change the billing account info, payment info"><span class="glyphicon glyphicon-info-sign"></span></span>
                     </th>
                     <th>
-                        Org Auditor
+                        Auditor <span data-toggle="tooltip" title="Can edit/change the billing account info, payment info"><span class="glyphicon glyphicon-info-sign"></span></span>
+                    </th>
+                    <th>
+
                     </th>
                 </tr>
                 </thead>
@@ -45,6 +48,22 @@
                     </td>
                     <td style="width: 20%">
                         <span ng-class="['glyphicon', (isInRole(user, 'ORGANIZATION_AUDITOR')) ? 'glyphicon-ok' : 'glyphicon-remove']"></span>
+                    </td>
+                    <td>
+                        <div class="pull-right">
+                            <div class="btn-group btn-group-sm">
+                                <button type="button"
+                                        class="btn btn-default"
+                                        data-toggle="dropdown">
+                                    <span><span class="glyphicon glyphicon-cog"></span></span>
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a>Edit</a></li>
+                                    <li><a>Delete</a></li>
+                                </ul>
+                            </div>
+                        </div>
                     </td>
                 </tr>
                 </tbody>
@@ -63,13 +82,16 @@
                         User ID
                     </th>
                     <th>
-                        Space Manager
+                        Manager <span data-toggle="tooltip" title="Can invite/manage users, enable features for a given space"><span class="glyphicon glyphicon-info-sign"></span></span>
                     </th>
                     <th>
-                        Developer
+                        Developer <span data-toggle="tooltip" title="Can create, delete, manage applications and services, full access to all usage reports and logs"><span class="glyphicon glyphicon-info-sign"></span></span>
                     </th>
                     <th>
-                        Space Auditor
+                        Auditor <span data-toggle="tooltip" title="View only access to all space information, settings, reports, logs"><span class="glyphicon glyphicon-info-sign"></span></span>
+                    </th>
+                    <th>
+
                     </th>
                 </tr>
                 </thead>
@@ -86,6 +108,22 @@
                     </td>
                     <td style="width: 20%">
                         <span ng-class="['glyphicon', (isInRole(user, 'SPACE_AUDITOR')) ? 'glyphicon-ok' : 'glyphicon-remove']"></span>
+                    </td>
+                    <td>
+                        <div class="pull-right">
+                            <div class="btn-group btn-group-sm">
+                                <button type="button"
+                                        class="btn btn-default"
+                                        data-toggle="dropdown">
+                                    <span><span class="glyphicon glyphicon-cog"></span></span>
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a>Edit</a></li>
+                                    <li><a>Delete</a></li>
+                                </ul>
+                            </div>
+                        </div>
                     </td>
                 </tr>
                 </tbody>
