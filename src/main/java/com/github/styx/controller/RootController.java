@@ -1,7 +1,5 @@
 package com.github.styx.controller;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.styx.domain.Organization;
 import com.github.styx.domain.Role;
 import com.github.styx.domain.SimpleOrganization;
@@ -41,7 +39,7 @@ public class RootController {
 
     @RequestMapping(value = "/api/{organizationId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<Organization> getRootWithSelectedOrganization(@RequestHeader("Authorization") final String token, @PathVariable("organizationId") String organizationId) {
+    public ResponseEntity<Map<String, Object>> getRootWithSelectedOrganization(@RequestHeader("Authorization") final String token, @PathVariable("organizationId") String organizationId) {
         final List<SimpleOrganization> organizations = cfServices.getOrganizations(token);
         final Organization organization = cfServices.getOrganization(token, organizationId);
         final Map<String, Object> root = composeRoot(token, organizations, organization);
