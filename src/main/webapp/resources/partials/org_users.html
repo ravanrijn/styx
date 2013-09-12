@@ -1,8 +1,10 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <h4><span class="text-muted">your // </span> organizations</h4>
+            <h3><span class="text-muted">your // </span> organizations</h3>
+
             <p>Select one of your organizations.</p>
+
             <div class="form-group">
                 <select ng-model="selectedOrgId"
                         ng-options="org.id as org.name for org in root.availableOrganizations"
@@ -13,9 +15,11 @@
     </div>
     <div class="row">
         <div class="col-md-12">
-            <h4 ng-hide="loading"><span class="text-muted">users //</span> organization <span class="badge">{{root.selectedOrganization.users.length}}</span></span>
-            </h4>
-            <p>All the users in this organization are listed below. <br/>To invite new users to your organization <a>click here</a>.</p>
+            <h3 ng-hide="loading"><span class="text-muted">users //</span> organization <span class="badge">{{root.selectedOrganization.users.length}}</span></span>
+            </h3>
+
+            <p>All the users in this organization are listed below. <br/>To invite new users to your organization <a>click
+                here</a>.</p>
             <hr/>
             <div spin="defaultSpinnerConfig" spin-if="loading"></div>
             <table class="table table-hover" ng-hide="loading">
@@ -25,13 +29,19 @@
                         User ID
                     </th>
                     <th>
-                        Manager <span data-toggle="tooltip" title="Can invite/manage users, select/change the plan, establish spending limits"><span class="glyphicon glyphicon-info-sign"></span></span>
+                        Manager <span data-toggle="tooltip"
+                                      title="Can invite/manage users, select/change the plan, establish spending limits"><span
+                            class="glyphicon glyphicon-info-sign"></span></span>
                     </th>
                     <th>
-                        Billing Manager <span data-toggle="tooltip" title="Can edit/change the billing account info, payment info"><span class="glyphicon glyphicon-info-sign"></span></span>
+                        Billing Manager <span data-toggle="tooltip"
+                                              title="Can edit/change the billing account info, payment info"><span
+                            class="glyphicon glyphicon-info-sign"></span></span>
                     </th>
                     <th>
-                        Auditor <span data-toggle="tooltip" title="Can edit/change the billing account info, payment info"><span class="glyphicon glyphicon-info-sign"></span></span>
+                        Auditor <span data-toggle="tooltip"
+                                      title="Can edit/change the billing account info, payment info"><span
+                            class="glyphicon glyphicon-info-sign"></span></span>
                     </th>
                     <th>
 
@@ -66,7 +76,7 @@
                     </td>
                     <td ng-hide="editingUser.id === user.id" style="width: 15%">
                         <div class="pull-right">
-                            <div class="btn-group btn-group-sm">
+                            <div class="btn-group btn-group-xs">
                                 <button type="button"
                                         class="btn btn-default"
                                         data-toggle="dropdown">
@@ -82,74 +92,13 @@
                     </td>
                     <td ng-show="editingUser.id === user.id" style="width: 15%">
                         <div class="pull-right">
-                            <div class="btn-group btn-group-sm">
+                            <div class="btn-group btn-group-xs">
                                 <button type="button" class="btn btn-success" ng-click="saveUser()">
                                     Update
                                 </button>
                                 <button type="button" class="btn btn-warning" ng-click="cancelEdit()">
                                     Cancel
                                 </button>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="row" ng-repeat="space in root.selectedOrganization.spaces" ng-hide="loading">
-        <div class="col-md-12">
-            <h4 ng-hide="loading"><span class="text-muted">users //</span> {{space.name}} <span class="badge">{{space.users.length}}</span></span>
-            </h4>
-            <p>All the users in this space are listed below.</p>
-            <hr/>
-            <table class="table table-hover">
-                <thead>
-                <tr>
-                    <th>
-                        User ID
-                    </th>
-                    <th>
-                        Manager <span data-toggle="tooltip" title="Can invite/manage users, enable features for a given space"><span class="glyphicon glyphicon-info-sign"></span></span>
-                    </th>
-                    <th>
-                        Developer <span data-toggle="tooltip" title="Can create, delete, manage applications and services, full access to all usage reports and logs"><span class="glyphicon glyphicon-info-sign"></span></span>
-                    </th>
-                    <th>
-                        Auditor <span data-toggle="tooltip" title="View only access to all space information, settings, reports, logs"><span class="glyphicon glyphicon-info-sign"></span></span>
-                    </th>
-                    <th>
-
-                    </th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr ng-repeat="user in space.users">
-                    <td style="width: 40%">
-                        {{user.username}}
-                    </td>
-                    <td style="width: 20%">
-                        <span ng-class="['glyphicon', (isInRole(user, 'SPACE_MANAGER')) ? 'glyphicon-ok' : 'glyphicon-remove']"></span>
-                    </td>
-                    <td style="width: 20%">
-                        <span ng-class="['glyphicon', (isInRole(user, 'SPACE_DEVELOPER')) ? 'glyphicon-ok' : 'glyphicon-remove']"></span>
-                    </td>
-                    <td style="width: 20%">
-                        <span ng-class="['glyphicon', (isInRole(user, 'SPACE_AUDITOR')) ? 'glyphicon-ok' : 'glyphicon-remove']"></span>
-                    </td>
-                    <td>
-                        <div class="pull-right">
-                            <div class="btn-group btn-group-sm">
-                                <button type="button"
-                                        class="btn btn-default"
-                                        data-toggle="dropdown">
-                                    <span><span class="glyphicon glyphicon-cog"></span></span>
-                                    <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li><a>Edit</a></li>
-                                    <li><a>Delete</a></li>
-                                </ul>
                             </div>
                         </div>
                     </td>

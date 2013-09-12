@@ -5,7 +5,8 @@ var styx = angular.module('styx', ['angular-spin', 'styx.services', 'styx.contro
 styx.config(['$routeProvider', '$httpProvider', function($routeProvider, $httpProvider) {
     $routeProvider.when("/org/:organizationId", {templateUrl: 'partials/organization.html',   controller: 'OrganizationController'});
     $routeProvider.when("/org", {templateUrl: 'partials/organization.html',   controller: 'OrganizationController'});
-    $routeProvider.when("/org/:organizationId/users", {templateUrl: 'partials/user.html',   controller: 'UsersController'});
+    $routeProvider.when("/org/:organizationId/users", {templateUrl: 'partials/org_users.html',   controller: 'OrganizationUsersController'});
+    $routeProvider.when("/org/:organizationId/:spaceId/users", {templateUrl: 'partials/space_users.html',   controller: 'SpaceUsersController'});
     $routeProvider.when("/login", {templateUrl: 'partials/login.html',   controller: 'LoginController'});
     $routeProvider.when("/admin", {templateUrl: 'partials/admin.html',   controller: 'AdminController'});
     $routeProvider.otherwise({redirectTo: "/org"});
