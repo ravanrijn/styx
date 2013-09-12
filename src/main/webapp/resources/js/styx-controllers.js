@@ -44,7 +44,41 @@ styxControllers.controller('StyxController', function ($scope, $route, notificat
     });
 });
 
-styxControllers.controller('UsersController', function ($scope, $location, notificationChannel, $routeParams) {
+styxControllers.controller('SpaceUsersController', function ($scope, $location, notificationChannel, $routeParams) {
+    $scope.selectedSpaceId = $routeParams.spaceId;
+    $scope.editUser = function(user){
+        var editingUser = user;
+        if($scope.isInRole(user, 'SPACE_MANAGER')){
+            editingUser.isManager = true;
+        }
+        if($scope.isInRole(user, 'DEVELOPER')){
+            editingUser.isDeveloper = true;
+        }
+        if($scope.isInRole(user, 'SPACE_AUDITOR')){
+            editingUser.isAuditor = true;
+        }
+        $scope.editingUser = editingUser;
+    }
+    $scope.changeSpace = function(newSpaceId, currentSpaceId){
+        if(newSpaceId !== currentSpaceId){
+            $location.path("/org/" + $scope.selectedOrgId + "/" + newSpaceId + "/users")
+        }
+    }
+    if (!$scope.root) {
+        $scope.loading = true;
+        if (!$routeParams.organizationId) {
+            notificationChannel.updateRoot();
+        } else {
+            notificationChannel.updateRoot($routeParams.organizationId);
+        }
+    }
+    notificationChannel.onRootUpdated($scope, function (response) {
+        $scope.selectedSpaceId = $scope.root.selectedOrganization.spaces[0].id;
+        $scope.loading = false;
+    });
+});
+
+styxControllers.controller('OrganizationUsersController', function ($scope, $location, notificationChannel, $routeParams) {
     $scope.editUser = function(user){
         var editingUser = user;
         if($scope.isInRole(user, 'ORGANIZATION_MANAGER')){
