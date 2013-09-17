@@ -1,5 +1,6 @@
 package com.github.styx.service;
 
+import com.github.styx.domain.Application;
 import com.github.styx.domain.Organization;
 import com.github.styx.domain.Quota;
 import com.github.styx.domain.SimpleOrganization;
@@ -19,6 +20,8 @@ public interface CloudFoundryServices {
     ResponseEntity deleteQuota(String token, String id);
 
     ResponseEntity updateQuota(String token, Quota quota);
+
+    Application getApplication(String token, String id);
 
     Organization getOrganization(String token, String id);
 

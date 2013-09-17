@@ -2,7 +2,6 @@ package com.github.styx.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.styx.domain.*;
-import org.springframework.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +10,6 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
 
-import static java.lang.Boolean.toString;
 import static java.lang.String.valueOf;
 import static java.util.Collections.unmodifiableList;
 import static org.mvel2.MVEL.eval;
@@ -100,6 +98,61 @@ class DefaultCloudFoundryServices extends RemoteServices implements CloudFoundry
         return unmodifiableList(spaceUsers);
     }
 
+    private Application mapApplication(final Map<String, Object> applicationResponse, final Map<String, Object> instancesResponse) {
+        final String appId = evalToString(RESOURCE_ID, applicationResponse);
+        final String appName = evalToString(ENTITY_NAME, applicationResponse);
+        final String buildPack = evalToString("entity.buildpack", applicationResponse);
+        final String environment = mapEnvironment(applicationResponse);
+        final String memory = evalToString("entity.memory", applicationResponse);
+        final String diskQuota = evalToString("entity.disk_quota", applicationResponse);
+        final ApplicationState state = ApplicationState.valueOf(evalToString("entity.state", applicationResponse));
+
+        final List<String> urls = new ArrayList<>();
+        for (Object route : eval("entity.routes", applicationResponse, List.class)) {
+            final String host = evalToString("entity.host", route);
+            final String domain = evalToString("entity.domain.entity.name", route);
+            urls.add(host.concat(".").concat(domain));
+        }
+        final List<Event> events = new ArrayList<>();
+        for (Object event : eval("entity.events", applicationResponse, List.class)) {
+            events.add(new Event(evalToString("id", event), evalToString("status", event), evalToString("description", event), evalToString("timestamp", event)));
+        }
+
+        final List<ServiceBinding> serviceBindings = mapServiceBindings(applicationResponse);
+        final List<Instance> instances = mapInstances(instancesResponse);
+        return new Application(appId, appName, buildPack, environment, memory, diskQuota, urls, serviceBindings, instances, events, state);
+    }
+
+    private String mapEnvironment(final Object application) {
+        final Map<String, Object> environmentJson = eval("application.environment_json", application, Map.class);
+
+        final StringBuilder environment = new StringBuilder();
+        for (Map.Entry<String, Object> entry : environmentJson.entrySet()) {
+            environment.append(entry.getKey()).append("=").append(entry.getValue()).append(", ");
+        }
+        return environment.substring(0, environment.length() - 2).toString();
+    }
+
+    private List<ServiceBinding> mapServiceBindings(final Object application) {
+        final List<ServiceBinding> serviceBindings = new ArrayList<>();
+        for (Object serviceBinding : eval("application.service_bindings", application, List.class)) {
+            final String serviceBindingId = evalToString(RESOURCE_ID, serviceBinding);
+
+            serviceBindings.add(new ServiceBinding(serviceBindingId, null, null)); // TODO
+        }
+        return serviceBindings;
+    }
+
+    private List<Instance> mapInstances(final Map<String, Object> instancesResponse) {
+        final List<Instance> instances = new ArrayList<>();
+        for (Map.Entry<String, Object> entry : instancesResponse.entrySet()) {
+            final String instanceId = entry.getKey();
+            final Object instance = entry.getValue();
+            instances.add(new Instance(instanceId, InstanceState.valueOf(evalToString("state", instance)), evalToString("since", instance), evalToString("consoleIp", instance), eval("consolePort", instance, Integer.class)));
+        }
+        return instances;
+    }
+
     private Organization mapOrganization(final String token, final Object organization) {
         final String orgId = evalToString(RESOURCE_ID, organization);
         final String orgName = evalToString(ENTITY_NAME, organization);
@@ -113,19 +166,19 @@ class DefaultCloudFoundryServices extends RemoteServices implements CloudFoundry
         final List<Space> spaces = new ArrayList<>();
         for (final Object spaceResponse : eval("entity.spaces", organization, List.class)) {
 
-            final List<Application> applications = new ArrayList<>();
+            final List<SimpleApplication> applications = new ArrayList<>();
             for (Object applicationResponse : eval("entity.apps", spaceResponse, List.class)) {
                 final List<String> urls = new ArrayList<>();
                 for (Object route : eval("entity.routes", applicationResponse, List.class)) {
-                    String host = evalToString("entity.host", route);
-                    String domain = evalToString("entity.domain.entity.name", route);
+                    final String host = evalToString("entity.host", route);
+                    final String domain = evalToString("entity.domain.entity.name", route);
                     urls.add(host.concat(".").concat(domain));
                 }
                 final List<String> serviceBindings = new ArrayList<>();
                 for(Object serviceBinding : eval("entity.service_bindings", applicationResponse, List.class)){
                     serviceBindings.add(evalToString(RESOURCE_ID, serviceBinding));
                 }
-                applications.add(new Application(evalToString("metadata.guid", applicationResponse), evalToString(ENTITY_NAME, applicationResponse), evalToString("entity.memory", applicationResponse), urls, serviceBindings, eval("entity.instances", applicationResponse, Integer.class), ApplicationState.valueOf(evalToString("entity.state", applicationResponse))));
+                applications.add(new SimpleApplication(evalToString("metadata.guid", applicationResponse), evalToString(ENTITY_NAME, applicationResponse), evalToString("entity.memory", applicationResponse), urls, serviceBindings, eval("entity.instances", applicationResponse, Integer.class), ApplicationState.valueOf(evalToString("entity.state", applicationResponse))));
             }
             spaces.add(new Space(evalToString(RESOURCE_ID, spaceResponse), evalToString(ENTITY_NAME, spaceResponse), mapSpaceUsers(spaceResponse, organizationUsers), applications));
         }
@@ -182,6 +235,13 @@ class DefaultCloudFoundryServices extends RemoteServices implements CloudFoundry
     public ResponseEntity updateQuota(String token, Quota quota) {
         final String quotaRequest = "{\"name\":\"".concat(quota.getName()).concat("\",\"non_basic_services_allowed\":").concat(Boolean.toString(quota.isNonBasicServicesAllowed())).concat(",\"total_services\":").concat(Integer.toString(quota.getServices())).concat(",\"memory_limit\":").concat(Integer.toString(quota.getMemoryLimit())).concat(",\"trial_db_allowed\":").concat(Boolean.toString(quota.isTrialDbAllowed())).concat("}");
         return put(token, baseApiUri.concat("v2/quota_definitions/").concat(quota.getId()), quotaRequest);
+    }
+
+    @Override
+    public Application getApplication(String token, String id) {
+        final Map<String, Object> applicationResponse = get(token, baseApiUri.concat("v2/apps/").concat(id).concat("?inline-relations-depth=".concat(valueOf(2))));
+        final Map<String, Object> instancesResponse = get(token, baseApiUri.concat("v2/apps/".concat(id).concat("/instances")));
+        return mapApplication(applicationResponse, instancesResponse);
     }
 
     @Override

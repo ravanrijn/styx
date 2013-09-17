@@ -1,21 +1,9 @@
 package com.github.styx.domain;
 
-public class SimpleQuota {
-
-    private final String id;
-    private final String name;
+public class SimpleQuota extends Identifiable {
 
     public SimpleQuota(String id, String name) {
-        this.id = id;
-        this.name = name;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
+        super(id, name);
     }
 
     @Override
@@ -27,7 +15,7 @@ public class SimpleQuota {
             return false;
         }
         final SimpleQuota that = (SimpleQuota) o;
-        if (!id.equals(that.id)) {
+        if (!getId().equals(that.getId())) {
             return false;
         }
         return true;
@@ -35,6 +23,6 @@ public class SimpleQuota {
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        return getId().hashCode();
     }
 }

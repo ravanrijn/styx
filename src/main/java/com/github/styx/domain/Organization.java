@@ -5,30 +5,19 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class Organization {
+public class Organization extends Identifiable {
 
-    private final String id;
-    private final String name;
     private final Quota quota;
     private final List<Domain> domains;
     private final List<Space> spaces;
     private final List<User> users;
 
     public Organization(String id, String name, Quota quota, List<Domain> domains, List<Space> spaces, List<User> users) {
-        this.id = id;
-        this.name = name;
+        super(id, name);
         this.quota = quota;
         this.domains = domains;
         this.spaces = spaces;
         this.users = users;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public Quota getQuota() {

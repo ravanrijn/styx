@@ -7,18 +7,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Quota {
+public class Quota extends Identifiable {
 
-    private final String id;
-    private final String name;
     private final int services;
     private final int memoryLimit;
     private final boolean nonBasicServicesAllowed;
     private final boolean trialDbAllowed;
 
     public Quota(String id) {
-        this.id = id;
-        name = null;
+        super(id, null);
         services = 0;
         memoryLimit = 0;
         nonBasicServicesAllowed = false;
@@ -27,20 +24,11 @@ public class Quota {
 
     @JsonCreator
     public Quota(@JsonProperty("id") String id, @JsonProperty("name") String name, @JsonProperty("services") int services, @JsonProperty("memoryLimit") int memoryLimit, @JsonProperty("nonBasicServicesAllowed") boolean nonBasicServicesAllowed, @JsonProperty("trialDbAllowed") boolean trialDbAllowed) {
-        this.id = id;
-        this.name = name;
+        super(id, name);
         this.services = services;
         this.memoryLimit = memoryLimit;
         this.nonBasicServicesAllowed = nonBasicServicesAllowed;
         this.trialDbAllowed = trialDbAllowed;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public int getServices() {
@@ -68,7 +56,7 @@ public class Quota {
             return false;
         }
         final Quota quota = (Quota) object;
-        if (!id.equals(quota.id)) {
+        if (!getId().equals(quota.getId())) {
             return false;
         }
         return true;
@@ -76,6 +64,6 @@ public class Quota {
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        return getId().hashCode();
     }
 }
