@@ -14,12 +14,16 @@ import org.springframework.http.MediaType
 @RequestMapping("/api")
 class QuotaController {
 
+    final ApiClient apiClient;
+
     @Autowired
-    def ApiClient apiClient;
+    def QuotaController(ApiClient apiClient){
+        this.apiClient = apiClient
+    }
 
     @RequestMapping(value = "/quotas", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    def show(@RequestHeader("Authorization") token) {
+    def index(@RequestHeader("Authorization") token) {
         apiClient.quotas(token)
     }
 

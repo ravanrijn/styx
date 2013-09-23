@@ -18,7 +18,7 @@ import java.util.*;
 
 import static com.github.styx.domain.Role.EINDBAAS;
 
-@Controller
+//@Controller
 public class RootController {
 
     private final CloudFoundryServices cfServices;

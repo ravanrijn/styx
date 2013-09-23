@@ -10,8 +10,12 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api")
 class ApplicationController {
 
+    final ApiClient apiClient;
+
     @Autowired
-    def ApiClient apiClient;
+    def ApplicationController(ApiClient apiClient){
+        this.apiClient = apiClient
+    }
 
     @RequestMapping(value = "/apps/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
