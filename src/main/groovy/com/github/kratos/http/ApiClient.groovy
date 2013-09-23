@@ -18,6 +18,13 @@ class ApiClient extends RestClient {
         this.uaaBaseUri = uaaBaseUri;
     }
 
+    def application(token, id) {
+        def cfApplication = get([path: "${apiBaseUri}/v2/apps/${id}", headers: ['Authorization': token]])
+
+
+
+    }
+
     def quotas(String token) {
         get([path: "${apiBaseUri}/v2/quota_definitions", headers: ['Authorization': token]])
     }
