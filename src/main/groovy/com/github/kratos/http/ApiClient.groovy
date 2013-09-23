@@ -22,4 +22,8 @@ class ApiClient extends RestClient {
         get([path: "${apiBaseUri}/v2/quota_definitions", headers: ['Authorization': token]])
     }
 
+    def quota(String token, String id) {
+        get([path: "${apiBaseUri}/v2/quota_definitions/${id}", headers: ['Authorization': token], params: ['inline-relations-depth': 0, test:'bla']])
+    }
+
 }
