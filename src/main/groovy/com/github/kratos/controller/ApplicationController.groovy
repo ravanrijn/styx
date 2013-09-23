@@ -16,7 +16,9 @@ class ApplicationController {
     @RequestMapping(value = "/apps/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     def show(@RequestHeader("Authorization") token, @PathVariable("id") id) {
-        apiClient.application(token, id)
+        def availableApplications = apiClient.applications(token)
+        def selectedApplication = apiClient.application(token, id)
+        [availableApplications: availableApplications, selectedApplication: selectedApplication]
     }
 
 }

@@ -18,6 +18,16 @@ class ApiClient extends RestClient {
         this.uaaBaseUri = uaaBaseUri;
     }
 
+    def applications(token) {
+        def cfApplications = get(path: "${apiBaseUri}/v2/apps", headers: [authorization: token])
+
+        def applications = []
+        for (application in cfApplications.resources) {
+            applications.add([id: application.metadata.guid, name: application.entity.name])
+        }
+        return applications
+    }
+
     def application(token, id) {
         def cfApplication = get([path: "${apiBaseUri}/v2/apps/${id}", headers: ['Authorization': token], params: ['inline-relations-depth': 3]])
 
