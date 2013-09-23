@@ -20,13 +20,13 @@ class QuotaController {
     @RequestMapping(value = "/quotas", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     def show(@RequestHeader("Authorization") token) {
-        apiClient.quotas(token).body
+        apiClient.quotas(token)
     }
 
     @RequestMapping(value = "/quotas/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     def show(@RequestHeader("Authorization") token, @PathVariable("id") id) {
-        apiClient.quota(token, id).body
+        apiClient.quota(token, id)
     }
 
 }

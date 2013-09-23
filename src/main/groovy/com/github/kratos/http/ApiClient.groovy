@@ -20,9 +20,6 @@ class ApiClient extends RestClient {
 
     def application(token, id) {
         def cfApplication = get([path: "${apiBaseUri}/v2/apps/${id}", headers: ['Authorization': token]])
-
-
-
     }
 
     def quotas(String token) {

@@ -38,17 +38,13 @@ class RestClient {
         }
         try {
             final exchange = restTemplate.exchange(uri, HttpMethod.GET, new HttpEntity(headers), new ParameterizedTypeReference<Map<String, Object>>() {})
-            return [
-                    body: exchange.getBody(),
-                    status: exchange.getStatusCode(),
-                    headers: exchange.getHeaders()
-            ]
+            if (exchange.getStatusCode().value() < 299) {
+                return exchange.getBody()
+            }
+            throw new RestClientException(body: exchange.getBody(), status: exchange.getStatusCode(), headers: exchange.getHeaders())
         } catch (HttpClientErrorException e) {
-            return [
-                    body: objectMapper.readValue(e.getResponseBodyAsString(), objectMapper.getTypeFactory().constructMapType(HashMap.class, String.class, Object.class)),
-                    status: e.getStatusCode(),
-                    headers: e.getResponseHeaders()
-            ]
+            throw new RestClientException(body: objectMapper.readValue(e.getResponseBodyAsString(), objectMapper.getTypeFactory().constructMapType(HashMap.class, String.class, Object.class)),
+                    status: e.getStatusCode(), headers: e.getResponseHeaders())
         }
     }
 
