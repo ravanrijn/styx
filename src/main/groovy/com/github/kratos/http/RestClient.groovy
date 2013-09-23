@@ -20,7 +20,7 @@ class RestClient {
 
     def get(config) {
         def uri = config.path
-        final headers = new HttpHeaders();
+        final headers = new HttpHeaders()
         headers.add('Accept', 'application/json')
         if (config.headers) {
             config.headers.each({ key, value -> headers.add(key, value) })
