@@ -31,10 +31,10 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import java.util.List;
 
-@ComponentScan(basePackages = "com.github.styx")
+@ComponentScan(basePackages = {"com.github.styx", "com.github.kratos"})
 @Configuration
 @EnableWebMvc
-@PropertySource("classpath:styx.properties")
+@PropertySource("classpath:kratos.properties")
 public class StyxWebConfig extends WebMvcConfigurerAdapter {
 
     @Autowired
