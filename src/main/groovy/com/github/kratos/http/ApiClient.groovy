@@ -19,11 +19,21 @@ class ApiClient extends RestClient {
     }
 
     def quotas(String token) {
-        get([path: "${apiBaseUri}/v2/quota_definitions", headers: ['Authorization': token]])
+        final cfQuotas = get([path: "${apiBaseUri}/v2/quota_definitions", headers: ['Authorization': token]])
+        def quotas = [:]
+        cfQuotas.each({ cfQuota ->
+            quotas << mapQuota(cfQuota)
+        })
+        return quotas
     }
 
     def quota(String token, String id) {
-        get([path: "${apiBaseUri}/v2/quota_definitions/${id}", headers: ['Authorization': token], params: ['inline-relations-depth': 0]])
+        mapQuota(get([path: "${apiBaseUri}/v2/quota_definitions/${id}", headers: ['Authorization': token], params: ['inline-relations-depth': 0]]))
+    }
+
+    def mapQuota(cfQuota) {
+        [id: cfQuota.metadata.guid, name: cfQuota.entity.name, services: cfQuota.entity.total_services, memoryLimit: cfQuota.entity.memory_limit,
+                trialDbAllowed: cfQuota.entity.trial_db_allowed, nonBasicServicesAllowed: cfQuota.entity.non_basic_services_allowed]
     }
 
 }
