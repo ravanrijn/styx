@@ -22,9 +22,9 @@ class ApiClient extends RestClient {
         def cfApplications = get(path: "${apiBaseUri}/v2/apps", headers: [authorization: token])
 
         def applications = []
-        for (application in cfApplications.resources) {
-            applications.add([id: application.metadata.guid, name: application.entity.name])
-        }
+        cfApplications.resources.each({ cfApplication ->
+            applications << [id: cfApplication.metadata.guid, name: cfApplication.entity.name]
+        })
         return applications
     }
 
@@ -86,9 +86,9 @@ class ApiClient extends RestClient {
             def cfInstances = get([path: "${apiBaseUri}/v2/apps/${id}/instances", headers: ['Authorization': token]])
 
             def instances = []
-            for (entry in cfInstances) {
-                instances.add([id: entry.key, state: entry.value.state, consoleIp: entry.value.console_ip, consolePort: entry.value.console_port])
-            }
+            cfInstances.each({key, value ->
+                instances << [id: key, state: value.state, consoleIp: value.console_ip, consolePort: value.console_port]
+            })
             if (!instances.isEmpty()) {
                 application.put('instances', instances)
             }
