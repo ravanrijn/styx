@@ -1,5 +1,6 @@
 package com.github.kratos.http
 
+import com.github.kratos.resources.Quota
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -9,12 +10,14 @@ class ApiClient {
     final String apiBaseUri
     final String uaaBaseUri
     final HttpClient httpClient
+    final Quota quota
 
     @Autowired
     def ApiClient(HttpClient httpClient, String apiBaseUri, String uaaBaseUri) {
         this.httpClient = httpClient
         this.apiBaseUri = apiBaseUri
         this.uaaBaseUri = uaaBaseUri
+        this.quota = new Quota(httpClient, apiBaseUri)
     }
 
     def applications(token) {
@@ -97,32 +100,11 @@ class ApiClient {
     }
 
     def quotas(String token) {
-        final cfQuotas = httpClient.get {
-            path "$apiBaseUri/v2/quota_definitions"
-            withHeaders authorization: token, accept: 'application/json'
-            withQueryParams 'inline-relations-depth': 0
-            exchange()
-        }
-        final quotas = []
-        cfQuotas.resources.each({ cfQuota ->
-            quotas << mapQuota(cfQuota)
-        })
-        quotas
+        quota.list(token)
     }
 
     def quota(String token, String id) {
-        final cfQuota = httpClient.get {
-            path "$apiBaseUri/v2/quota_definitions/$id"
-            withHeaders authorization: token, accept: 'application/json'
-            withQueryParams 'inline-relations-depth': 0
-            exchange
-        }
-        mapQuota(cfQuota)
-    }
-
-    def mapQuota(cfQuota) {
-        [id: cfQuota.metadata.guid, name: cfQuota.entity.name, services: cfQuota.entity.total_services, memoryLimit: cfQuota.entity.memory_limit,
-                trialDbAllowed: cfQuota.entity.trial_db_allowed, nonBasicServicesAllowed: cfQuota.entity.non_basic_services_allowed]
+        quota.get(token, id)
     }
 
 }

@@ -61,30 +61,31 @@ class HttpClient {
         def static newInstance(Closure closure, HttpMethod httpMethod, RestTemplate restTemplate, ObjectMapper objectMapper) {
             HttpClientDsl httpClientDsl = new HttpClientDsl(httpMethod, restTemplate, objectMapper)
             closure.delegate = httpClientDsl
-            closure()
+            def closureComposition = closure >> httpClientDsl.exchange
+            closureComposition()
         }
 
         def path(String path) {
             this.path = path
         }
 
-        def withHeaders(Map<String, String> headers) {
+        def headers(Map<String, String> headers) {
             this.headers = headers
         }
 
-        def withBody(Object body) {
+        def body(Object body) {
             this.body = body
         }
 
-        def withUriParams(Map<String, String> uriParams) {
+        def uriParams(Map<String, String> uriParams) {
             this.uriParams = uriParams
         }
 
-        def withQueryParams(Map<String, String> queryParams) {
+        def queryParams(Map<String, String> queryParams) {
             this.queryParams = queryParams
         }
 
-        def exchange() {
+        def exchange = {
             final uri = path
             final httpHeaders = new HttpHeaders()
             if (headers) {
@@ -116,9 +117,17 @@ class HttpClient {
                 throw new RestClientException(body: objectMapper.readValue(e.getResponseBodyAsString(), objectMapper.getTypeFactory().constructMapType(HashMap.class, String.class, Object.class)),
                         status: e.getStatusCode(), headers: e.getResponseHeaders())
             }
-
         }
+    }
 
+
+    public static void main(String[] args) {
+        String token = "bearer eyJhbGciOiJSUzI1NiJ9.eyJqdGkiOiJiNDZkYmZlZC02NDMwLTQ1M2UtOGNjOC00ZjUyN2Q5NDFlNDgiLCJzdWIiOiI1MDM1ZjAwNy1iOWNlLTQyZjktODVlYy03MjNmMjVkNjcwYmYiLCJzY29wZSI6WyJjbG91ZF9jb250cm9sbGVyLmFkbWluIiwiY2xvdWRfY29udHJvbGxlci5yZWFkIiwiY2xvdWRfY29udHJvbGxlci53cml0ZSIsIm9wZW5pZCIsInBhc3N3b3JkLndyaXRlIiwic2NpbS5yZWFkIiwic2NpbS53cml0ZSJdLCJjbGllbnRfaWQiOiJjZiIsImNpZCI6ImNmIiwiZ3JhbnRfdHlwZSI6InBhc3N3b3JkIiwidXNlcl9pZCI6IjUwMzVmMDA3LWI5Y2UtNDJmOS04NWVjLTcyM2YyNWQ2NzBiZiIsInVzZXJfbmFtZSI6ImFkbWluIiwiZW1haWwiOiJhZG1pbiIsImlhdCI6MTM4MDAxMDUxNCwiZXhwIjoxMzgwMDUzNzE0LCJpc3MiOiJodHRwczovL3VhYS5jZi5lZGVuLmtsbS5jb20vb2F1dGgvdG9rZW4iLCJhdWQiOlsic2NpbSIsIm9wZW5pZCIsImNsb3VkX2NvbnRyb2xsZXIiLCJwYXNzd29yZCJdfQ.FIZ7WfBvzMrR7pp4PodxLwE83jqABFX8ch9MAnvaqUNbXiAWkSFwZ2TTiJhtxiWqli7BdqQaJD4hoM6GPu4cdoCc3TrydbZbXvpZC5zRW184q-zh8oZyjva1KSpiNXvnWHRgr4xgZ6tO1Rdt_mr9l1qOBBNPGQmv4iKSBMyX7G4"
+        println new HttpClient(new RestTemplate(), new ObjectMapper()).get {
+            path "http://api.cf.eden.klm.com/v2/apps"
+            headers authorization: token, accept: 'application/json'
+            queryParams 'inline-relations-depth': 0
+        }
     }
 
 }
