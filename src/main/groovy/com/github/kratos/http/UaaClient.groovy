@@ -45,15 +45,15 @@ class UaaClient {
     }
 
     def userToken(username, password){
-        final MultiValueMap<String, String> body = new LinkedMultiValueMap();
-        body.add("grant_type", "password");
-        body.add("username", username);
-        body.add("password", password);
+        final MultiValueMap<String, String> requestBody = new LinkedMultiValueMap();
+        requestBody.add("grant_type", "password");
+        requestBody.add("username", username);
+        requestBody.add("password", password);
 
         final String authorizationEndpoint = authorizationEndpoint()
         final token = httpClient.post {
             path "$authorizationEndpoint/oauth/token"
-            body body
+            body requestBody
             headers defaultHeaders()
         }
         [tokenType: token.token_type, accessToken: token.access_token, refreshToken: token.refresh_token]
