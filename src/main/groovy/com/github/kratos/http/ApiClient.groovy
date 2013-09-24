@@ -114,7 +114,7 @@ class ApiClient {
             path "$apiBaseUri/v2/quota_definitions/$id"
             withHeaders authorization: token, accept: 'application/json'
             withQueryParams 'inline-relations-depth': 0
-            exchange
+            exchange()
         }
         mapQuota(cfQuota)
     }

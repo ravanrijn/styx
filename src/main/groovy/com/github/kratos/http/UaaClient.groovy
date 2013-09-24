@@ -27,7 +27,7 @@ class UaaClient {
 
     def userDetails(token) {
         final userDetails = httpClient.get {
-            path "${uaaBaseUri}/userinfo"
+            path "$uaaBaseUri/userinfo"
             withHeaders authorization: token, accept: 'application/json'
             exchange()
         }
@@ -42,7 +42,7 @@ class UaaClient {
 
         final authorizationEndpoint = authorizationEndpoint()
         final token = httpClient.post {
-            path "${authorizationEndpoint}/oauth/token"
+            path "$authorizationEndpoint/oauth/token"
             withBody body
             withHeaders defaultHeaders()
             exchange()
@@ -57,7 +57,7 @@ class UaaClient {
 
         final authorizationEndpoint = authorizationEndpoint()
         final token = httpClient.post {
-            path "${authorizationEndpoint}/oauth/token"
+            path "$authorizationEndpoint/oauth/token"
             withBody body
             withHeaders defaultHeaders()
             exchange()
@@ -67,7 +67,7 @@ class UaaClient {
 
     def authorizationEndpoint() {
         final info = httpClient.get {
-            path "${apiBaseUri}/v2/info"
+            path "$apiBaseUri/v2/info"
             withHeaders accept: 'application/json'
             exchange()
         }
@@ -75,7 +75,8 @@ class UaaClient {
     }
 
     def defaultHeaders() {
-        [accept: 'application/json', authorization: "Basic ".concat(encodeBase64String(clientId.concat(":").concat(clientSecret).getBytes())), 'content-type': 'application/x-www-form-urlencoded;charset=utf-8']
+        def authorization = encodeBase64String("$clientId:$clientSecret".getBytes())
+        [accept: 'application/json', authorization: "Basic $authorization", 'content-type': 'application/x-www-form-urlencoded;charset=utf-8']
     }
 
 }
