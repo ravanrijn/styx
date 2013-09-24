@@ -28,8 +28,7 @@ class UaaClient {
     def userDetails(token) {
         final userDetails = httpClient.get {
             path "$uaaBaseUri/userinfo"
-            withHeaders authorization: token, accept: 'application/json'
-            exchange()
+            headers authorization: token, accept: 'application/json'
         }
         return [id:userDetails.user_id, username: userDetails.user_name, roles:[]]
     }
@@ -43,9 +42,8 @@ class UaaClient {
         final authorizationEndpoint = authorizationEndpoint()
         final token = httpClient.post {
             path "$authorizationEndpoint/oauth/token"
-            withBody body
-            withHeaders defaultHeaders()
-            exchange()
+            body body
+            headers defaultHeaders()
         }
         [tokenType: token.token_type, accessToken: token.access_token, refreshToken: token.refresh_token]
     }
@@ -58,9 +56,8 @@ class UaaClient {
         final authorizationEndpoint = authorizationEndpoint()
         final token = httpClient.post {
             path "$authorizationEndpoint/oauth/token"
-            withBody body
-            withHeaders defaultHeaders()
-            exchange()
+            body body
+            headers defaultHeaders()
         }
         [tokenType: token.token_type, accessToken: token.access_token, refreshToken: token.refresh_token]
     }
@@ -68,8 +65,7 @@ class UaaClient {
     def authorizationEndpoint() {
         final info = httpClient.get {
             path "$apiBaseUri/v2/info"
-            withHeaders accept: 'application/json'
-            exchange()
+            headers accept: 'application/json'
         }
         info.authorization_endpoint
     }

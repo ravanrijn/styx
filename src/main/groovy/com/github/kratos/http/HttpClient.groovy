@@ -111,10 +111,10 @@ class HttpClient {
                 if (exchange.getStatusCode().value() < 300) {
                     return exchange.getBody()
                 }
-                throw new RestClientException(body: exchange.getBody(), status: exchange.getStatusCode(), headers: exchange.getHeaders())
+                throw new HttpClientException(body: exchange.getBody(), status: exchange.getStatusCode(), headers: exchange.getHeaders())
             } catch (HttpClientErrorException e) {
                 LOG.error("Unable to retrieve result.", e)
-                throw new RestClientException(body: objectMapper.readValue(e.getResponseBodyAsString(), objectMapper.getTypeFactory().constructMapType(HashMap.class, String.class, Object.class)),
+                throw new HttpClientException(body: objectMapper.readValue(e.getResponseBodyAsString(), objectMapper.getTypeFactory().constructMapType(HashMap.class, String.class, Object.class)),
                         status: e.getStatusCode(), headers: e.getResponseHeaders())
             }
         }
