@@ -43,11 +43,8 @@ class Application {
                 events: [],
                 urls: []
         ]
-        if (cfApplication.entity.buildpack == null) {
-            application.buildpack = cfApplication.entity.detected_buildpack
-        } else {
-            application.buildpack = cfApplication.entity.buildpack
-        }
+        application.buildpack = cfApplication.entity.detected_buildpack != null ? cfApplication.entity.detected_buildpack : cfApplication.entity.buildpack
+
         cfApplication.entity.routes.each { route ->
             final String url = "${route.entity.host}.${route.entity.domain.entity.name}"
             application.urls << url
