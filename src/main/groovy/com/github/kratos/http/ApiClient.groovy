@@ -86,7 +86,6 @@ class ApiClient {
             final cfInstances = httpClient.get {
                 path "${apiBaseUri}/v2/apps/${id}/instances"
                 withHeaders authorization: token, accept: 'application/json'
-                withQueryParams 'inline-relations-depth': 2
                 exchange()
             }
             cfInstances.each({ key, value ->
