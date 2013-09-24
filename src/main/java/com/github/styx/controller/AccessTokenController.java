@@ -22,8 +22,8 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
  *
  * This service basically proxies the requests straight to UAA.
  */
-@Controller
-@RequestMapping("/api/access_token")
+//@Controller
+//@RequestMapping("/api/access_token")
 public class AccessTokenController {
 
     private static final Logger LOG = LoggerFactory.getLogger(AccessTokenController.class);
@@ -42,8 +42,8 @@ public class AccessTokenController {
      * @param password
      * @return
      */
-    @RequestMapping(method = POST, produces = APPLICATION_JSON_VALUE)
-    @ResponseBody
+//    @RequestMapping(method = POST, produces = APPLICATION_JSON_VALUE)
+//    @ResponseBody
     public ResponseEntity<Map<String, Object>> authenticate(@RequestParam("username") final String username, @RequestParam("password") final String password) {
         LOG.debug("Login attempt for {}.", username);
         final Map<String, Object> response = new HashMap<>();
