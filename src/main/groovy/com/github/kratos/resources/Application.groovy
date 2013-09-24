@@ -14,7 +14,7 @@ class Application {
 
     def list(String token) {
         final cfApplications = httpClient.get {
-            path "${apiBaseUri}/v2/apps"
+            path "$apiBaseUri/v2/apps"
             headers authorization: token, accept: 'application/json'
             queryParams 'inline-relations-depth': 0
         }
@@ -27,7 +27,7 @@ class Application {
 
     def get(token, id) {
         final cfApplication = httpClient.get {
-            path "${apiBaseUri}/v2/apps/${id}"
+            path "$apiBaseUri/v2/apps/$id"
             headers authorization: token, accept: 'application/json'
             queryParams 'inline-relations-depth': 3
         }
@@ -58,7 +58,7 @@ class Application {
         }
 
         final cfServices = httpClient.get {
-            path "${apiBaseUri}/v2/services"
+            path "$apiBaseUri/v2/services"
             headers authorization: token, accept: 'application/json'
             queryParams 'inline-relations-depth': 2
         }
@@ -78,7 +78,7 @@ class Application {
 
         if (cfApplication.entity.state == 'STARTED') {
             final cfInstances = httpClient.get {
-                path "${apiBaseUri}/v2/apps/${id}/instances"
+                path "$apiBaseUri/v2/apps/$id/instances"
                 headers authorization: token, accept: 'application/json'
             }
             cfInstances.each({ key, value ->
