@@ -107,7 +107,7 @@ class HttpClient {
                 httpEntity = new HttpEntity(body, httpHeaders)
             }
             try {
-                final exchange = restTemplate.exchange(uri, httpMethod, httpEntity, new ParameterizedTypeReference<Map<String, Object>>() {}, uriParams)
+                final exchange = restTemplate.exchange(uri, httpMethod, httpEntity, new ParameterizedTypeReference<Map<String, Object>>() {})
                 if (exchange.getStatusCode().value() < 300) {
                     return exchange.getBody()
                 }

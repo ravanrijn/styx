@@ -28,10 +28,20 @@ class UaaClient {
     def userDetails(token) {
         final userDetails = httpClient.get {
             path "$uaaBaseUri/userinfo"
-            withHeaders authorization: token, accept: 'application/json'
-            exchange()
+            headers authorization: token, accept: 'application/json'
         }
         return [id:userDetails.user_id, username: userDetails.user_name, roles:[]]
+    }
+
+    def userNames(userIds) {
+        String uri = "$uaaBaseUri/ids/Users?filter="
+        userIds.each{id -> uri = "${uri}id eq \'$id\' or "}
+        def appToken = applicationToken()
+        final cfUserNames = httpClient.get {
+            path uri[0..-4]
+            headers authorization: "$appToken.tokenType $appToken.accessToken", accept: 'application/json'
+        }
+        cfUserNames.resources.collect{cfUserName -> [id: cfUserName.id, username: cfUserName.userName]}
     }
 
     def userToken(username, password){
@@ -40,27 +50,24 @@ class UaaClient {
         body.add("username", username);
         body.add("password", password);
 
-        final authorizationEndpoint = authorizationEndpoint()
+        final String authorizationEndpoint = authorizationEndpoint()
         final token = httpClient.post {
             path "$authorizationEndpoint/oauth/token"
-            withBody body
-            withHeaders defaultHeaders()
-            exchange()
+            body body
+            headers defaultHeaders()
         }
         [tokenType: token.token_type, accessToken: token.access_token, refreshToken: token.refresh_token]
     }
 
     def applicationToken(){
-        final MultiValueMap<String, String> body = new LinkedMultiValueMap();
-        body.add("grant_type", "client_credentials");
-        body.add("response_type", "token");
-
-        final authorizationEndpoint = authorizationEndpoint()
+        final MultiValueMap<String, String> requestBody = new LinkedMultiValueMap();
+        requestBody.add("grant_type", "client_credentials");
+        requestBody.add("response_type", "token");
+        final String baseUri = authorizationEndpoint()
         final token = httpClient.post {
-            path "$authorizationEndpoint/oauth/token"
-            withBody body
-            withHeaders defaultHeaders()
-            exchange()
+            path "$baseUri/oauth/token"
+            body requestBody
+            headers defaultHeaders()
         }
         [tokenType: token.token_type, accessToken: token.access_token, refreshToken: token.refresh_token]
     }
@@ -68,8 +75,7 @@ class UaaClient {
     def authorizationEndpoint() {
         final info = httpClient.get {
             path "$apiBaseUri/v2/info"
-            withHeaders accept: 'application/json'
-            exchange()
+            headers accept: 'application/json'
         }
         info.authorization_endpoint
     }

@@ -1,5 +1,6 @@
 package com.github.kratos.http
 
+import com.github.kratos.resources.Organization
 import com.github.kratos.resources.Quota
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -8,16 +9,18 @@ import org.springframework.stereotype.Service
 class ApiClient {
 
     final String apiBaseUri
-    final String uaaBaseUri
+    final UaaClient uaaClient
     final HttpClient httpClient
     final Quota quota
+    final Organization organization
 
     @Autowired
-    def ApiClient(HttpClient httpClient, String apiBaseUri, String uaaBaseUri) {
+    def ApiClient(HttpClient httpClient, String apiBaseUri, UaaClient uaaClient) {
         this.httpClient = httpClient
         this.apiBaseUri = apiBaseUri
-        this.uaaBaseUri = uaaBaseUri
+        this.uaaClient = uaaClient
         this.quota = new Quota(httpClient, apiBaseUri)
+        this.organization = new Organization(httpClient, uaaClient, apiBaseUri)
     }
 
     def applications(token) {
@@ -92,6 +95,14 @@ class ApiClient {
             })
         }
         application
+    }
+
+    def organizations(String token){
+        organization.list(token)
+    }
+
+    def organization(String token, String id){
+        organization.get(token, id)
     }
 
     def quotas(String token) {

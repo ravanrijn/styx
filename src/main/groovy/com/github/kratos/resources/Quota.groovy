@@ -34,7 +34,7 @@ class Quota {
         mapQuota(cfQuota)
     }
 
-    def mapQuota(cfQuota) {
+    static def mapQuota(cfQuota) {
         [id: cfQuota.metadata.guid, name: cfQuota.entity.name, services: cfQuota.entity.total_services, memoryLimit: cfQuota.entity.memory_limit,
                 trialDbAllowed: cfQuota.entity.trial_db_allowed, nonBasicServicesAllowed: cfQuota.entity.non_basic_services_allowed]
     }
