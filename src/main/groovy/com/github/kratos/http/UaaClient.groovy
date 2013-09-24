@@ -25,6 +25,15 @@ class UaaClient {
         this.clientSecret = clientSecret
     }
 
+    def userDetails(token) {
+        final userDetails = httpClient.get {
+            path "${uaaBaseUri}/userinfo"
+            withHeaders authorization: token, accept: 'application/json'
+            exchange()
+        }
+        return [id:userDetails.user_id, username: userDetails.user_name, roles:[]]
+    }
+
     def userToken(username, password){
         final MultiValueMap<String, String> body = new LinkedMultiValueMap();
         body.add("grant_type", "password");
