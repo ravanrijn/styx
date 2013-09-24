@@ -23,9 +23,8 @@ class ApiClient {
     def applications(token) {
         final cfApplications = httpClient.get {
             path "${apiBaseUri}/v2/apps"
-            withHeaders authorization: token, accept: 'application/json'
-            withQueryParams 'inline-relations-depth': 0
-            exchange()
+            headers authorization: token, accept: 'application/json'
+            queryParams 'inline-relations-depth': 0
         }
         final applications = []
         cfApplications.resources.each({ cfApplication ->
@@ -37,15 +36,13 @@ class ApiClient {
     def application(token, id) {
         final cfApplication = httpClient.get {
             path "${apiBaseUri}/v2/apps/${id}"
-            withHeaders authorization: token, accept: 'application/json'
-            withQueryParams 'inline-relations-depth': 3
-            exchange()
+            headers authorization: token, accept: 'application/json'
+            queryParams 'inline-relations-depth': 3
         }
         final cfServices = httpClient.get {
             path "${apiBaseUri}/v2/services"
-            withHeaders authorization: token, accept: 'application/json'
-            withQueryParams 'inline-relations-depth': 2
-            exchange()
+            headers authorization: token, accept: 'application/json'
+            queryParams 'inline-relations-depth': 2
         }
         def application = [
                 id: cfApplication.metadata.guid,
@@ -88,8 +85,7 @@ class ApiClient {
         if (cfApplication.entity.state == 'STARTED') {
             final cfInstances = httpClient.get {
                 path "${apiBaseUri}/v2/apps/${id}/instances"
-                withHeaders authorization: token, accept: 'application/json'
-                exchange()
+                headers authorization: token, accept: 'application/json'
             }
             cfInstances.each({ key, value ->
                 application.instances << [id: key, state: value.state, consoleIp: value.console_ip, consolePort: value.console_port]
