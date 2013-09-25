@@ -64,7 +64,7 @@ public class StyxWebConfig extends WebMvcConfigurerAdapter {
 
     @Bean(name = "threadPool", destroyMethod = "shutdown")
     public ExecutorService getTaskExecutor() {
-        return new ThreadPoolExecutor(0, 200,
+        return new ThreadPoolExecutor(0, 100,
                 60L, TimeUnit.SECONDS,
                 new SynchronousQueue<Runnable>());
     }

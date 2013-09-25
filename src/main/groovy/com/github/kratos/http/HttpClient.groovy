@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.ParameterizedTypeReference
-import org.springframework.core.task.TaskExecutor
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
@@ -15,8 +14,7 @@ import org.springframework.web.client.RestTemplate
 
 import java.util.concurrent.Callable
 import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
-import java.util.concurrent.FutureTask
+import java.util.concurrent.TimeUnit
 
 @Component
 class HttpClient {
@@ -71,21 +69,21 @@ class HttpClient {
             this.objectMapper = objectMapper
         }
 
-        def static newInstance(HttpMethod httpMethod, RestTemplate restTemplate, ObjectMapper objectMapper, ExecutorService pool, Closure... closures){
-            def futures = closures.collect{ closure ->
+        def static newInstance(HttpMethod httpMethod, RestTemplate restTemplate, ObjectMapper objectMapper, ExecutorService pool, Closure... closures) {
+            def futures = closures.collect { closure ->
                 HttpClientDsl httpClientDsl = new HttpClientDsl(httpMethod, restTemplate, objectMapper)
                 closure.delegate = httpClientDsl
                 closure()
-                def future = pool.submit({httpClientDsl.exchange()} as Callable)
-                [id:httpClientDsl.id ?: httpClientDsl.path, result:{future.get()}]
+                def future = pool.submit({ httpClientDsl.exchange() } as Callable)
+                [id: httpClientDsl.id ?: httpClientDsl.path, result: { future.get(30, TimeUnit.SECONDS) }]
             }
-            def findFuture = {id ->
-                futures.find{
+            def findFuture = { id ->
+                futures.find {
                     future.id == id
                     future.result()
                 }
             }
-            [get:findFuture, list:futures]
+            [get: findFuture, list: futures]
         }
 
         def static newInstance(Closure closure, HttpMethod httpMethod, RestTemplate restTemplate, ObjectMapper objectMapper) {
@@ -95,7 +93,7 @@ class HttpClient {
             closureComposition()
         }
 
-        def id(String id){
+        def id(String id) {
             this.id = id
         }
 
