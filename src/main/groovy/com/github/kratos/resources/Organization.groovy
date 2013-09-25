@@ -63,7 +63,7 @@ class Organization {
                     memory: cfApp.entity.memory,
                     instances: cfApp.entity.instances,
                     state: cfApp.entity.state,
-                    urls: cfApp.entity.routes.collect { route -> String result = "${route.entity.host}.${route.entity.domain.entity.name}" },
+                    urls: cfApp.entity.routes.collect { route -> "${route.entity.host}.${route.entity.domain.entity.name}" as String },
                     services: cfApp.entity.service_bindings.size()]
         }
     }
