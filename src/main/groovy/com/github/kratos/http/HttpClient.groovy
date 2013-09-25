@@ -72,13 +72,20 @@ class HttpClient {
         }
 
         def static newInstance(HttpMethod httpMethod, RestTemplate restTemplate, ObjectMapper objectMapper, ExecutorService pool, Closure... closures){
-            closures.collect{ closure ->
+            def futures = closures.collect{ closure ->
                 HttpClientDsl httpClientDsl = new HttpClientDsl(httpMethod, restTemplate, objectMapper)
                 closure.delegate = httpClientDsl
                 closure()
                 def future = pool.submit({httpClientDsl.exchange()} as Callable)
                 [id:httpClientDsl.id ?: httpClientDsl.path, result:{future.get()}]
             }
+            def findFuture = {id ->
+                futures.find{
+                    future.id == id
+                    future.result()
+                }
+            }
+            [get:findFuture, list:futures]
         }
 
         def static newInstance(Closure closure, HttpMethod httpMethod, RestTemplate restTemplate, ObjectMapper objectMapper) {

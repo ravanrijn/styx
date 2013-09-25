@@ -68,7 +68,7 @@ class Organization {
         final futures = httpClient.get(getRequests.toArray() as Closure[])
         cfApps.collect { cfApp ->
             def urls = []
-            futures.each { future ->
+            futures.list.each { future ->
                 future.result().resources.each { route ->
                     if (route.entity.apps.find { app -> app.metadata.guid == cfApp.metadata.guid }) {
                         urls.add("${route.entity.host}.${route.entity.domain.entity.name}" as String)
