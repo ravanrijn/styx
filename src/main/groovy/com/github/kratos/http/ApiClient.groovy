@@ -3,6 +3,7 @@ package com.github.kratos.http
 import com.github.kratos.resources.Organization
 import com.github.kratos.resources.Application
 import com.github.kratos.resources.Quota
+import com.github.kratos.resources.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -15,6 +16,7 @@ class ApiClient {
     final Application application
     final Quota quota
     final Organization organization
+    final User user
 
     @Autowired
     def ApiClient(HttpClient httpClient, String apiBaseUri, UaaClient uaaClient) {
@@ -24,6 +26,7 @@ class ApiClient {
         this.application = new Application(httpClient, apiBaseUri)
         this.quota = new Quota(httpClient, apiBaseUri)
         this.organization = new Organization(httpClient, uaaClient, apiBaseUri)
+        this.user = new User(httpClient, apiBaseUri)
     }
 
     def applications(token) {
@@ -48,6 +51,16 @@ class ApiClient {
 
     def quota(String token, String id) {
         quota.get(token, id)
+    }
+
+    def mergeUser(String token, Map uaaUser){
+        def cfUser = user.get(token, uaaUser.id)
+        uaaUser.roles = uaaUser.roles + cfUser.roles
+        uaaUser
+    }
+
+    def user(String token, String id) {
+        user.get(token, id)
     }
 
 }

@@ -26,7 +26,7 @@ class RootController {
 
     def constructRoot = { String token, String id = null ->
         def organizations = apiClient.organizations(token)
-        [user: uaaClient.userDetails(token),
+        [user: apiClient.mergeUser(token, uaaClient.userDetails(token)),
                 organizations: organizations,
                 organization: apiClient.organization(token, id ?: organizations.first().id)]
     }
