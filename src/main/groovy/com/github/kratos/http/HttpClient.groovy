@@ -59,6 +59,7 @@ class HttpClient {
         private final ObjectMapper objectMapper
         private final HttpMethod httpMethod
         private String path
+        private String id
         private Object body
         private Map<String, String> headers
         private Map<String, String> uriParams = [:]
@@ -74,8 +75,9 @@ class HttpClient {
             closures.collect{ closure ->
                 HttpClientDsl httpClientDsl = new HttpClientDsl(httpMethod, restTemplate, objectMapper)
                 closure.delegate = httpClientDsl
-                def closureComposition = closure >> httpClientDsl.exchange
-                pool.submit({closureComposition()} as Callable)
+                closure()
+                def future = pool.submit({httpClientDsl.exchange()} as Callable)
+                [id:httpClientDsl.id ?: httpClientDsl.path, result:{future.get()}]
             }
         }
 
@@ -84,6 +86,10 @@ class HttpClient {
             closure.delegate = httpClientDsl
             def closureComposition = closure >> httpClientDsl.exchange
             closureComposition()
+        }
+
+        def id(String id){
+            this.id = id
         }
 
         def path(String path) {
