@@ -23,7 +23,7 @@
         <mockito.version>1.9.5</mockito.version>
         <servlet.api.version>2.5</servlet.api.version>
         <slf4j.version>1.7.3</slf4j.version>
-        <spring.version>3.2.2.RELEASE</spring.version>
+        <spring.version>3.2.4.RELEASE</spring.version>
         <httpcomponents.version>4.2.4</httpcomponents.version>
     </properties>
 

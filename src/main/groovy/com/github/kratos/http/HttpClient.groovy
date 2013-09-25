@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.ParameterizedTypeReference
+import org.springframework.core.task.TaskExecutor
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
@@ -12,21 +13,32 @@ import org.springframework.stereotype.Component
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestTemplate
 
+import java.util.concurrent.Callable
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
+import java.util.concurrent.FutureTask
+
 @Component
 class HttpClient {
 
     private final static Logger LOG = LoggerFactory.getLogger(HttpClient.class)
     private final RestTemplate restTemplate
     private final ObjectMapper objectMapper
+    private final ExecutorService pool
 
     @Autowired
-    def HttpClient(RestTemplate restTemplate, ObjectMapper objectMapper) {
+    def HttpClient(RestTemplate restTemplate, ObjectMapper objectMapper, ExecutorService pool) {
+        this.pool = pool
         this.restTemplate = restTemplate
         this.objectMapper = objectMapper
     }
 
     def get(Closure closure) {
         HttpClientDsl.newInstance(closure, HttpMethod.GET, restTemplate, objectMapper)
+    }
+
+    def get(Closure... closures) {
+        HttpClientDsl.newInstance(HttpMethod.GET, restTemplate, objectMapper, pool, closures)
     }
 
     def post(Closure closure) {
@@ -56,6 +68,15 @@ class HttpClient {
             this.httpMethod = httpMethod
             this.restTemplate = restTemplate
             this.objectMapper = objectMapper
+        }
+
+        def static newInstance(HttpMethod httpMethod, RestTemplate restTemplate, ObjectMapper objectMapper, ExecutorService pool, Closure... closures){
+            closures.collect{ closure ->
+                HttpClientDsl httpClientDsl = new HttpClientDsl(httpMethod, restTemplate, objectMapper)
+                closure.delegate = httpClientDsl
+                def closureComposition = closure >> httpClientDsl.exchange
+                pool.submit({closureComposition()} as Callable)
+            }
         }
 
         def static newInstance(Closure closure, HttpMethod httpMethod, RestTemplate restTemplate, ObjectMapper objectMapper) {

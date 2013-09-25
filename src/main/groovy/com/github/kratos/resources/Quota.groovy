@@ -13,11 +13,11 @@ class Quota {
     }
 
     def list(String token) {
-        final cfQuotas = httpClient.get {
+        final cfQuotas = httpClient.get ({
             path "$apiBaseUri/v2/quota_definitions"
             headers authorization: token, accept: 'application/json'
             queryParams 'inline-relations-depth': 0
-        }
+        })
         final quotas = []
         cfQuotas.resources.each({ cfQuota ->
             quotas << mapQuota(cfQuota)

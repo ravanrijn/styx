@@ -28,13 +28,13 @@ class Organization {
         final cfOrganization = httpClient.get {
             path "$apiBaseUri/v2/organizations/$id"
             headers authorization: token, accept: 'application/json'
-            queryParams 'inline-relations-depth': 4
+            queryParams 'inline-relations-depth': 2
         }
         [id: cfOrganization.metadata.guid,
                 name: cfOrganization.entity.name,
                 quota: Quota.mapQuota(cfOrganization.entity.quota_definition),
                 users: mapOrganizationUsers(cfOrganization),
-                spaces: mapSpaces(cfOrganization.entity.spaces)]
+                spaces: mapSpaces(cfOrganization.entity.spaces, token)]
     }
 
     def mapSpaceUsers(cfSpace) {
@@ -52,19 +52,35 @@ class Organization {
         merge(managers, developers, auditors)
     }
 
-    def mapSpaces(cfSpaces) {
-        cfSpaces.collect { cfSpace -> [id: cfSpace.metadata.guid, name: cfSpace.entity.name, users: mapSpaceUsers(cfSpace.entity), apps: mapApplications(cfSpace.entity.apps)] }
+    def mapSpaces(cfSpaces, token) {
+        cfSpaces.collect { cfSpace -> [id: cfSpace.metadata.guid, name: cfSpace.entity.name, users: mapSpaceUsers(cfSpace.entity), apps: mapApplications(cfSpace.entity.apps, token)] }
     }
 
-    def mapApplications(cfApps) {
+    def mapApplications(cfApps, token) {
+        def getRequests = cfApps.collect { cfApp ->
+            Closure getRequest = {
+                path "${apiBaseUri}${cfApp.entity.routes_url}"
+                headers authorization: token, accept: 'application/json'
+                queryParams 'inline-relations-depth': 1
+            }
+            getRequest
+        }
+        final routes = httpClient.get(getRequests.toArray() as Closure[]).collect { future -> future.get() }
         cfApps.collect { cfApp ->
+            def urls = []
+            routes.each { routeResult ->
+                routeResult.resources.each { route ->
+                    if (route.entity.apps.find { app -> app.metadata.guid == cfApp.metadata.guid }) {
+                        urls.add("${route.entity.host}.${route.entity.domain.entity.name}" as String)
+                    }
+                }
+            }
             [id: cfApp.metadata.guid,
                     name: cfApp.entity.name,
                     memory: cfApp.entity.memory,
                     instances: cfApp.entity.instances,
                     state: cfApp.entity.state,
-                    urls: cfApp.entity.routes.collect { route -> "${route.entity.host}.${route.entity.domain.entity.name}" as String },
-                    services: cfApp.entity.service_bindings.size()]
+                    urls: urls]
         }
     }
 
