@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.ResponseBody
 
 @Controller
-@RequestMapping("/api")
 class RootController {
 
     final ApiClient apiClient
@@ -31,13 +30,18 @@ class RootController {
                 organization: apiClient.organization(token, id ?: organizations.first().id)]
     }
 
-    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
+    def String htmlResource(){
+        return "styx";
+    }
+
+    @RequestMapping(value = "/api", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     def index(@RequestHeader("Authorization") String token){
         constructRoot(token)
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/api/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     def get(@RequestHeader("Authorization") String token, @PathVariable("id") String id){
         constructRoot(token, id)
