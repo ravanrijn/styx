@@ -38,12 +38,20 @@ class Application {
                 diskQuota: cfApplication.entity.disk_quota,
                 state: cfApplication.entity.state,
                 buildpack: '',
+                environment: '',
                 instances: [],
                 services: [],
                 events: [],
                 urls: []
         ]
         application.buildpack = cfApplication.entity.detected_buildpack != null ? cfApplication.entity.detected_buildpack : cfApplication.entity.buildpack
+
+        cfApplication.entity.environment_json.eachWithIndex { property, value, index ->
+            application.environment += "$property=$value"
+            if (index < cfApplication.entity.environment_json.size() - 1) {
+                application.environment += ','
+            }
+        }
 
         cfApplication.entity.routes.each { route ->
             final String url = "${route.entity.host}.${route.entity.domain.entity.name}"
@@ -78,9 +86,9 @@ class Application {
                 path "$apiBaseUri/v2/apps/$id/instances"
                 headers authorization: token, accept: 'application/json'
             }
-            cfInstances.each({ key, value ->
+            cfInstances.each { key, value ->
                 application.instances << [id: key, state: value.state, consoleIp: value.console_ip, consolePort: value.console_port]
-            })
+            }
         }
         application
     }
