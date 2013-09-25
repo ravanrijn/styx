@@ -1,17 +1,16 @@
 package com.github.kratos.resources
 
 import com.github.kratos.http.HttpClient
-import com.github.kratos.http.UaaClient
 
 class Organization {
 
     private final HttpClient httpClient
-    private final UaaClient uaaClient
+    private final String uaaBaseUri
     private final String apiBaseUri
 
-    def Organization(HttpClient httpClient, UaaClient uaaClient, String apiBaseUri) {
+    def Organization(HttpClient httpClient, String uaaBaseUri, String apiBaseUri) {
         this.httpClient = httpClient
-        this.uaaClient = uaaClient
+        this.uaaBaseUri = uaaBaseUri
         this.apiBaseUri = apiBaseUri
     }
 
@@ -24,7 +23,7 @@ class Organization {
         cfOrganizations.resources.collect { cfOrganization -> [id: cfOrganization.metadata.guid, name: cfOrganization.entity.name, quotaId: cfOrganization.entity.quota_definition_guid] }
     }
 
-    def get(String token, String id) {
+    def get(String appToken, String token, String id) {
         final cfOrganization = httpClient.get {
             path "$apiBaseUri/v2/organizations/$id"
             headers authorization: token, accept: 'application/json'
@@ -33,7 +32,7 @@ class Organization {
         [id: cfOrganization.metadata.guid,
                 name: cfOrganization.entity.name,
                 quota: Quota.mapQuota(cfOrganization.entity.quota_definition),
-                users: mapOrganizationUsers(cfOrganization),
+                users: mapOrganizationUsers(cfOrganization, appToken),
                 spaces: mapSpaces(cfOrganization.entity.spaces, token)]
     }
 
@@ -84,7 +83,16 @@ class Organization {
         }
     }
 
-    def mapOrganizationUsers(cfOrganization) {
+    def mapOrganizationUsers(cfOrganization, appToken) {
+        def loadUserNames = { userIds ->
+            String uri = "$uaaBaseUri/ids/Users?filter="
+            userIds.each { id -> uri = "${uri}id eq \'$id\' or " }
+            def cfUserNames = httpClient.get {
+                path uri[0..-4]
+                headers authorization: appToken, accept: 'application/json'
+            }
+            cfUserNames.resources.collect{cfUserName -> [id: cfUserName.id, username: cfUserName.userName]}
+        }
         def getRoles = { configs -> configs.collect { config -> config.assignees.find { assignee -> config.id == assignee.metadata.guid } ? config.name : null } }
         def organizationUsers = cfOrganization.entity.users.collect { cfUser ->
             def userRoles = getRoles([[id: cfUser.metadata.guid, assignees: cfOrganization.entity.managers, name: 'MANAGER'],
@@ -93,7 +101,7 @@ class Organization {
             userRoles.removeAll([null])
             [id: cfUser.metadata.guid, username: '', roles: userRoles]
         }
-        uaaClient.userNames(organizationUsers.collect { user -> user.id }).collect { result ->
+        loadUserNames(organizationUsers.collect { user -> user.id }).collect { result ->
             def searchResult = organizationUsers.find { user -> user.id == result.id }
             searchResult.username = result.username
             searchResult

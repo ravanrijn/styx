@@ -1,7 +1,6 @@
 package com.github.kratos.controller
 
 import com.github.kratos.http.ApiClient
-import com.github.kratos.http.UaaClient
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Controller
@@ -15,17 +14,15 @@ import org.springframework.web.bind.annotation.ResponseBody
 class RootController {
 
     final ApiClient apiClient
-    final UaaClient uaaClient
 
     @Autowired
-    def RootController(ApiClient apiClient, UaaClient uaaClient){
+    def RootController(ApiClient apiClient){
         this.apiClient = apiClient
-        this.uaaClient = uaaClient
     }
 
     def constructRoot = { String token, String id = null ->
         def organizations = apiClient.organizations(token)
-        [user: apiClient.mergeUser(token, uaaClient.userDetails(token)),
+        [user: apiClient.user(token),
                 organizations: organizations,
                 organization: apiClient.organization(token, id ?: organizations.first().id)]
     }
