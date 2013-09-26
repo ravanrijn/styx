@@ -1,9 +1,12 @@
 package com.github.kratos.http
 
-import com.github.kratos.resources.Organization
+import static com.github.kratos.resources.Organization.listTransform as transformOrganizations
+import static com.github.kratos.resources.Organization.getTransform as transformOrganization
 import com.github.kratos.resources.Application
-import com.github.kratos.resources.Quota
-import com.github.kratos.resources.User
+import static com.github.kratos.resources.Quota.getTransform as transformQuota
+import static com.github.kratos.resources.Quota.listTransform as transformQuotas
+import static com.github.kratos.resources.User.uaaGetTransform as transformUaaUser
+import static com.github.kratos.resources.User.cfGetTransform as transformCfUser
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.util.LinkedMultiValueMap
@@ -20,9 +23,6 @@ class ApiClient {
     final String clientSecret
     final HttpClient httpClient
     final Application application
-    final Quota quota
-    final Organization organization
-    final User user
 
     @Autowired
     def ApiClient(HttpClient httpClient, String apiBaseUri, String uaaBaseUri, String clientId, String clientSecret) {
@@ -32,9 +32,6 @@ class ApiClient {
         this.apiBaseUri = apiBaseUri
         this.uaaBaseUri = uaaBaseUri
         this.application = new Application(httpClient, apiBaseUri)
-        this.quota = new Quota(httpClient, apiBaseUri)
-        this.organization = new Organization(httpClient, uaaBaseUri, apiBaseUri)
-        this.user = new User(httpClient, apiBaseUri)
     }
 
     def applications(token) {
@@ -46,20 +43,64 @@ class ApiClient {
     }
 
     def organizations(String token){
-        organization.list(token)
+        httpClient.get {
+            path "$apiBaseUri/v2/organizations"
+            headers authorization: token, accept: 'application/json'
+            queryParams 'inline-relations-depth': 0
+            transform transformOrganizations
+        }
     }
 
-    def organization(String token, String id){
-        def appToken = appToken()
-        organization.get("${appToken.tokenType} ${appToken.accessToken}" as String, token, id)
+    def organization(String token, String orgId){
+        def getDetails = { userIds, cfApps ->
+            def appToken = appToken()
+            String usernamesUri = "$uaaBaseUri/ids/Users?filter="
+            userIds.each { userId -> usernamesUri = "${usernamesUri}id eq \'$userId\' or " }
+            def requests = cfApps.collect{cfApp ->
+                { ->
+                    path "${apiBaseUri}${cfApp.entity.routes_url}"
+                    headers authorization: token, accept: 'application/json'
+                    queryParams 'inline-relations-depth': 1
+                }
+            }
+            requests.add(
+                { ->
+                    id "usernames"
+                    path usernamesUri[0..-4]
+                    headers authorization: "${appToken.tokenType} ${appToken.accessToken}" as String, accept: 'application/json'
+                    transform {result -> result.resources.collect { item -> [id: item.id, username: item.userName] }}
+                }
+            )
+            httpClient.get(requests.toArray() as Closure[])
+        }
+        final transformOrg = transformOrganization.curry(getDetails)
+
+
+
+        httpClient.get {
+            path "$apiBaseUri/v2/organizations/${orgId}"
+            headers authorization: token, accept: 'application/json'
+            queryParams 'inline-relations-depth': 2
+            transform transformOrg
+        }
     }    
     
     def quotas(String token) {
-        quota.list(token)
+        httpClient.get {
+            path "$apiBaseUri/v2/quota_definitions"
+            headers authorization: token, accept: 'application/json'
+            queryParams 'inline-relations-depth': 0
+            transform transformQuotas
+        }
     }
 
     def quota(String token, String id) {
-        quota.get(token, id)
+        httpClient.get {
+            path "$apiBaseUri/v2/quota_definitions/$id"
+            headers authorization: token, accept: 'application/json'
+            queryParams 'inline-relations-depth': 0
+            transform transformQuota
+        }
     }
 
     def info(){
@@ -71,14 +112,13 @@ class ApiClient {
     }
 
     def appToken(){
-        def authorization = encodeBase64String("$clientId:$clientSecret".getBytes())
         final MultiValueMap<String, String> requestBody = new LinkedMultiValueMap();
         requestBody.add("grant_type", "client_credentials");
         requestBody.add("response_type", "token");
         final token = httpClient.post {
             path "${info().authorizationEndpoint}/oauth/token"
             body requestBody
-            headers accept: 'application/json', authorization: "Basic $authorization", 'content-type': 'application/x-www-form-urlencoded;charset=utf-8'
+            headers authorizationHeaders()
         }
         [tokenType: token.token_type, accessToken: token.access_token, refreshToken: token.refresh_token]
     }
@@ -88,25 +128,35 @@ class ApiClient {
         requestBody.add("grant_type", "password");
         requestBody.add("username", username);
         requestBody.add("password", password);
-        final String authorizationEndpoint = authorizationEndpoint()
-        final token = httpClient.post {
-            path "$authorizationEndpoint/oauth/token"
+        httpClient.post {
+            path "${info().authorizationEndpoint}/oauth/token"
             body requestBody
-            headers defaultHeaders()
+            headers authorizationHeaders()
+            transform {result -> [tokenType: result.token_type, accessToken: result.access_token, refreshToken: result.refresh_token]}
         }
-        [tokenType: token.token_type, accessToken: token.access_token, refreshToken: token.refresh_token]
     }
 
     def user(String token){
-        final result = httpClient.get {
+        def appToken = appToken()
+        final uaaUser = httpClient.get {
             path "$uaaBaseUri/userinfo"
             headers authorization: token, accept: 'application/json'
+            transform transformUaaUser
         }
-        def appToken = appToken()
-        def uaaUser = [id:result.user_id, username: result.user_name, roles:[]]
-        def cfUser = user.get("${appToken.tokenType} ${appToken.accessToken}" as String, uaaUser.id)
-        uaaUser.roles = uaaUser.roles + cfUser.roles
-        uaaUser
+        httpClient.get {
+            path "${apiBaseUri}/v2/users/${uaaUser.id}"
+            headers authorization: "${appToken.tokenType} ${appToken.accessToken}" as String, accept: 'application/json'
+            queryParams 'inline-relations-depth': 0
+            transform {result ->
+                uaaUser.roles = transformCfUser(result).roles + uaaUser.roles
+                uaaUser
+            }
+        }
+    }
+
+    def authorizationHeaders() {
+        def authorization = encodeBase64String("$clientId:$clientSecret".getBytes())
+        [accept: 'application/json', authorization: "Basic $authorization", 'content-type': 'application/x-www-form-urlencoded;charset=utf-8']
     }
 
 }
