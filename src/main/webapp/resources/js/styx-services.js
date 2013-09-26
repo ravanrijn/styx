@@ -55,7 +55,7 @@ styxServices.factory('notificationChannel', function ($rootScope, apiServices, a
     notificationChannel.login = function(username, password){
         var tokenPromise = apiServices.getAuthToken(username, password);
         tokenPromise.success(function (response, status, headers) {
-            authToken.setToken(response.token);
+            authToken.setToken(response.tokenType + " " + response.accessToken);
             $rootScope.$broadcast(LOGIN_SUCCESS, {root: response, status: status, headers: headers});
         });
         tokenPromise.error(function (response, status, headers) {

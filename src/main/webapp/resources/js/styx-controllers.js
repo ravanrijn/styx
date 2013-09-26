@@ -37,9 +37,6 @@ styxControllers.controller('StyxController', function ($scope, $route, notificat
     }
     $scope.isAdmin = false;
     notificationChannel.onRootUpdated($scope, function (response) {
-        $scope.mayEditOrganization = $.grep(response.root.links, function (link) {
-            return link.rel === 'updateOrganization';
-        }) !== [];
         $scope.root = response.root;
     });
 });
@@ -120,7 +117,7 @@ styxControllers.controller('OrganizationUsersController', function ($scope, $loc
 
 styxControllers.controller('OrganizationController', function ($scope, $location, $routeParams, notificationChannel) {
     $scope.changeOrganization = function(){
-        if($scope.selectedOrgId !== $scope.root.selectedOrganization.id){
+        if($scope.selectedOrgId !== $scope.root.organization.id){
             $location.path("/org/" + $scope.selectedOrgId);
         }
     }
@@ -132,15 +129,15 @@ styxControllers.controller('OrganizationController', function ($scope, $location
             notificationChannel.updateRoot($routeParams.organizationId);
         }
     } else {
-        if ($routeParams.organizationId !== $scope.root.selectedOrganization.id) {
+        if ($routeParams.organizationId !== $scope.root.organization.id) {
             notificationChannel.updateRoot($routeParams.organizationId);
         }else{
-            $scope.selectedOrgId = $scope.root.selectedOrganization.id;
+            $scope.selectedOrgId = $scope.root.organization.id;
             $scope.loading = false;
         }
     }
     notificationChannel.onRootUpdated($scope, function (response) {
-        $scope.selectedOrgId = $scope.root.selectedOrganization.id;
+        $scope.selectedOrgId = response.root.organization.id;
         $scope.loading = false;
     });
 });
@@ -163,46 +160,46 @@ styxControllers.controller('AdminController', function ($scope, $http, $route, $
     }
     $scope.loading = true;
 
-    var appendPlanNames = function (admin) {
+    var appendQuotaNames = function (admin) {
         angular.forEach(admin.organizations, function (organization, organizationIndex) {
-            angular.forEach(admin.plans, function (plan, planIndex) {
-                if (plan.id === organization.quotaId) {
-                    organization.quotaName = plan.name;
+            angular.forEach(admin.quotas, function (quota, quotaIndex) {
+                if (quota.id === organization.quotaId) {
+                    organization.quotaName = quota.name;
                 }
             });
         });
     }
 
-    $scope.createPlan = function (plan) {
+    $scope.createQuota = function (quota) {
         $scope.loading = true;
-        if (plan.name.length > 0) {
-            plan.id = "";
+        if (quota.name.length > 0) {
+            quota.id = "";
             var config = {
                 method: 'POST',
-                url: "api/plans",
+                url: "api/quotas",
                 headers: {
                     'Accept': 'application/json',
                     'Authorization': authToken.getToken(),
                     'Content-Type': 'application/json'},
-                data: JSON.stringify(plan)
+                data: JSON.stringify(quota)
             }
             var promise = $http(config);
             promise.success(function (response, status, headers) {
-                notificationChannel.changeStatus(200, "New plan " + plan.name + " has been added.")
+                notificationChannel.changeStatus(200, "New quota " + quota.name + " has been added.")
                 $route.reload();
             });
             promise.error(function (response, status, headers) {
-                notificationChannel.changeStatus(500, "New plan " + plan.name + " could not be added.");
+                notificationChannel.changeStatus(500, "New quota " + quota.name + " could not be added.");
                 $route.reload();
             });
         }
     }
 
-    $scope.deletePlan = function (id, name) {
+    $scope.deleteQuota = function (id, name) {
         $scope.loading = true;
         var config = {
             method: 'DELETE',
-            url: "api/plans/" + id,
+            url: "api/quotas/" + id,
             headers: {
                 'Accept': 'application/json',
                 'Authorization': authToken.getToken(),
@@ -210,39 +207,39 @@ styxControllers.controller('AdminController', function ($scope, $http, $route, $
         }
         var promise = $http(config);
         promise.success(function (response, status, headers) {
-            notificationChannel.changeStatus(200, "Plan " + name + " has been successfully deleted.");
+            notificationChannel.changeStatus(200, "Quota " + name + " has been successfully deleted.");
             $route.reload();
         });
         promise.error(function (response, status, headers) {
-            notificationChannel.changeStatus(500, "Unable to delete plan " + name + ".");
+            notificationChannel.changeStatus(500, "Unable to delete quota " + name + ".");
             $route.reload();
         });
     }
 
-    $scope.editPlan = function (id) {
-        $scope.editingPlan = id;
+    $scope.editQuota = function (id) {
+        $scope.editingQuota = id;
     }
 
-    $scope.savePlan = function (id) {
+    $scope.saveQuota = function (id) {
         $scope.loading = true;
-        angular.forEach($scope.admin.plans, function (plan, planIndex) {
-            if (plan.id === id) {
+        angular.forEach($scope.admin.quotas, function (quota, quotaIndex) {
+            if (quota.id === id) {
                 var config = {
                     method: 'PUT',
-                    url: "api/plans/" + id,
+                    url: "api/quotas/" + id,
                     headers: {
                         'Content-Type': 'application/json',
                         'Accept': 'application/json',
                         'Authorization': authToken.getToken()},
-                    data: JSON.stringify(plan)
+                    data: JSON.stringify(quota)
                 }
                 var promise = $http(config);
                 promise.success(function (response, status, headers) {
-                    notificationChannel.changeStatus(200, "Plan " + plan.name + " has been successfully updated.")
+                    notificationChannel.changeStatus(200, "Quota " + quota.name + " has been successfully updated.")
                     $route.reload();
                 });
                 promise.error(function (response, status, headers) {
-                    notificationChannel.changeStatus(500, "Unable to update plan " + plan.name + ".")
+                    notificationChannel.changeStatus(500, "Unable to update quota " + quota.name + ".")
                     $route.reload();
                 });
             }
@@ -261,7 +258,7 @@ styxControllers.controller('AdminController', function ($scope, $http, $route, $
         if (org.name.length > 0) {
             $scope.loading = true;
             org.id = "";
-            org.quotaId = org.plan;
+            org.quotaId = org.quota;
             var config = {
                 method: 'POST',
                 url: "api/organizations",
@@ -330,11 +327,11 @@ styxControllers.controller('AdminController', function ($scope, $http, $route, $
         $location.path("/org/" + id + "/users")
     }
 
-    $scope.newPlan = {name: "", services: 1, memoryLimit: 1024, nonBasicServicesAllowed: false, trialDbAllowed: false};
-    $scope.newOrganization = {name: "", plan: ""};
+    $scope.newQuota = {name: "", services: 1, memoryLimit: 1024, nonBasicServicesAllowed: false, trialDbAllowed: false};
+    $scope.newOrganization = {name: "", quota: ""};
 
 
-    $scope.admin = {plans: [], organizations: []};
+    $scope.admin = {quotas: [], organizations: []};
     var config = {
         method: 'GET',
         url: "api/admin",
@@ -347,7 +344,7 @@ styxControllers.controller('AdminController', function ($scope, $http, $route, $
     var promise = $http(config);
     promise.success(function (response, status, headers) {
         var admin = response;
-        appendPlanNames(admin);
+        appendQuotaNames(admin);
         $scope.admin = admin;
         $scope.loading = false;
     });

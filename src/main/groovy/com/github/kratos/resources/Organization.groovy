@@ -32,8 +32,8 @@ class Organization {
         merge(managers, developers, auditors)
     }
 
-    static def mapSpaces(cfSpaces, token) {
-        cfSpaces.collect { cfSpace -> [id: cfSpace.metadata.guid, name: cfSpace.entity.name, users: mapSpaceUsers(cfSpace.entity), apps: mapApplications(cfSpace.entity.apps, token)] }
+    static def mapSpaces(cfSpaces, futures) {
+        cfSpaces.collect { cfSpace -> [id: cfSpace.metadata.guid, name: cfSpace.entity.name, users: mapSpaceUsers(cfSpace.entity), apps: mapApplications(cfSpace.entity.apps, futures)] }
     }
 
     static def mapApplications(cfApps, futures) {
