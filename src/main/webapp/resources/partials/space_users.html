@@ -7,7 +7,7 @@
 
             <div class="form-group">
                 <select ng-model="selectedSpaceId"
-                        ng-options="space.id as space.name for space in root.selectedOrganization.spaces"
+                        ng-options="space.id as space.name for space in root.organization.spaces"
                         ng-change="changeSpace(selectedSpaceId, space.id)" class="form-control">
                 </select>
             </div>
@@ -16,7 +16,7 @@
     <div class="row" ng-show="loading">
         <div spin="defaultSpinnerConfig" spin-if="loading"></div>
     </div>
-    <div class="row" ng-repeat="space in root.selectedOrganization.spaces">
+    <div class="row" ng-repeat="space in root.organization.spaces">
         <div class="col-md-12">
             <h3 ng-hide="loading"><span class="text-muted">users //</span> {{space.name}} <span class="badge">{{space.users.length}}</span></span>
             </h3>

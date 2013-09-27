@@ -17,12 +17,13 @@ class Organization {
                 spaces: mapSpaces(cfOrganization.entity.spaces, futures)]
     }
 
-    static def mapSpaceUsers(cfSpace) {
+    static def mapSpaceUsers(cfSpace, futures) {
+        def usernames = futures.findFutureById("usernames")
         def merge = { List... lists ->
             def merged = [] as Set
             lists.flatten().each { item ->
                 def searchResult = merged.find { result -> result.id == item.id }
-                searchResult ? searchResult.roles = searchResult.roles + item.roles : merged << [id: item.id, roles: item.roles]
+                searchResult ? searchResult.roles = searchResult.roles + item.roles : merged << [id: item.id, username: usernames.find{username -> username.id == item.id}?.username, roles: item.roles]
             }
             merged
         }
@@ -33,7 +34,7 @@ class Organization {
     }
 
     static def mapSpaces(cfSpaces, futures) {
-        cfSpaces.collect { cfSpace -> [id: cfSpace.metadata.guid, name: cfSpace.entity.name, users: mapSpaceUsers(cfSpace.entity), apps: mapApplications(cfSpace.entity.apps, futures)] }
+        cfSpaces.collect { cfSpace -> [id: cfSpace.metadata.guid, name: cfSpace.entity.name, users: mapSpaceUsers(cfSpace.entity, futures), apps: mapApplications(cfSpace.entity.apps, futures)] }
     }
 
     static def mapApplications(cfApps, futures) {

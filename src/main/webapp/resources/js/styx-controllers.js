@@ -70,7 +70,7 @@ styxControllers.controller('SpaceUsersController', function ($scope, $location, 
         }
     }
     notificationChannel.onRootUpdated($scope, function (response) {
-        $scope.selectedSpaceId = $scope.root.selectedOrganization.spaces[0].id;
+        $scope.selectedSpaceId = $scope.root.organization.spaces[0].id;
         $scope.loading = false;
     });
 });
@@ -90,7 +90,7 @@ styxControllers.controller('OrganizationUsersController', function ($scope, $loc
         $scope.editingUser = editingUser;
     }
     $scope.changeOrganization = function(){
-        if($scope.selectedOrgId !== $scope.root.selectedOrganization.id){
+        if($scope.selectedOrgId !== $scope.root.organization.id){
             $location.path("/org/" + $scope.selectedOrgId + "/users")
         }
     }
@@ -102,15 +102,15 @@ styxControllers.controller('OrganizationUsersController', function ($scope, $loc
             notificationChannel.updateRoot($routeParams.organizationId);
         }
     } else {
-        if ($routeParams.organizationId !== $scope.root.selectedOrganization.id) {
+        if ($routeParams.organizationId !== $scope.root.organization.id) {
             notificationChannel.updateRoot($routeParams.organizationId);
         }else{
-            $scope.selectedOrgId = $scope.root.selectedOrganization.id;
+            $scope.selectedOrgId = $scope.root.organization.id;
             $scope.loading = false;
         }
     }
     notificationChannel.onRootUpdated($scope, function (response) {
-        $scope.selectedOrgId = $scope.root.selectedOrganization.id;
+        $scope.selectedOrgId = $scope.root.organization.id;
         $scope.loading = false;
     });
 });
