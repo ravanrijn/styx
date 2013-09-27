@@ -173,7 +173,6 @@ styxControllers.controller('AdminController', function ($scope, $http, $route, $
     $scope.createQuota = function (quota) {
         $scope.loading = true;
         if (quota.name.length > 0) {
-            quota.id = "";
             var config = {
                 method: 'POST',
                 url: "api/quotas",
@@ -257,8 +256,6 @@ styxControllers.controller('AdminController', function ($scope, $http, $route, $
     $scope.createOrg = function (org) {
         if (org.name.length > 0) {
             $scope.loading = true;
-            org.id = "";
-            org.quotaId = org.quota;
             var config = {
                 method: 'POST',
                 url: "api/organizations",
@@ -310,7 +307,7 @@ styxControllers.controller('AdminController', function ($scope, $http, $route, $
                 'Accept': 'application/json',
                 'Authorization': authToken.getToken(),
                 'Content-Type': 'application/json'},
-            data: JSON.stringify({id: id, name: name, quotaId: quotaId})
+            data: JSON.stringify({name: name, quotaId: quotaId})
         }
         var promise = $http(config);
         promise.success(function (response, status, headers) {

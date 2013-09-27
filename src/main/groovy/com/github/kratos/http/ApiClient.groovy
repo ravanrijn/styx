@@ -1,5 +1,7 @@
 package com.github.kratos.http
 
+import com.fasterxml.jackson.databind.ObjectMapper
+
 import static com.github.kratos.resources.Organization.listTransform as transformOrganizations
 import static com.github.kratos.resources.Organization.getTransform as transformOrganization
 import com.github.kratos.resources.Application
@@ -17,18 +19,20 @@ import static org.apache.commons.codec.binary.Base64.encodeBase64String
 @Service
 class ApiClient {
 
-    final String apiBaseUri
-    final String uaaBaseUri
-    final String clientId
-    final String clientSecret
-    final HttpClient httpClient
-    final Application application
+    private final String apiBaseUri
+    private final String uaaBaseUri
+    private final String clientId
+    private final String clientSecret
+    private final HttpClient httpClient
+    private final ObjectMapper mapper
+    private final Application application
 
     @Autowired
-    def ApiClient(HttpClient httpClient, String apiBaseUri, String uaaBaseUri, String clientId, String clientSecret) {
+    def ApiClient(HttpClient httpClient, ObjectMapper mapper, String apiBaseUri, String uaaBaseUri, String clientId, String clientSecret) {
         this.clientId = clientId
         this.clientSecret = clientSecret
         this.httpClient = httpClient
+        this.mapper = mapper
         this.apiBaseUri = apiBaseUri
         this.uaaBaseUri = uaaBaseUri
         this.application = new Application(httpClient, apiBaseUri)
@@ -48,6 +52,31 @@ class ApiClient {
             headers authorization: token, accept: 'application/json'
             queryParams 'inline-relations-depth': 0
             transform transformOrganizations
+        }
+    }
+
+    def createOrganization(token, org){
+        httpClient.post {
+            path "${apiBaseUri}/v2/organizations"
+            headers authorization: token, accept: 'application/json'
+            body mapper.writeValueAsString([name:org.name, quota_definition_guid:org.quotaId])
+            transform {result -> [id:result.metadata.guid, name:result.entity.name, quotaId:result.entity.quota_definition_guid]}
+        }
+    }
+
+    def updateOrganization(token, org){
+        httpClient.put {
+            path "${apiBaseUri}/v2/organizations/${org.id}"
+            headers authorization: token, accept: 'application/json'
+            body mapper.writeValueAsString([name:org.name, quota_definition_guid:org.quotaId])
+            transform {result -> [id:result.metadata.guid, name:result.entity.name, quotaId:result.entity.quota_definition_guid]}
+        }
+    }
+
+    def deleteOrganization(token, id){
+        httpClient.delete {
+            path "${apiBaseUri}/v2/organizations/${id}"
+            headers authorization: token, accept: 'application/json'
         }
     }
 
@@ -73,18 +102,39 @@ class ApiClient {
             )
             httpClient.get(requests.toArray() as Closure[])
         }
-        final transformOrg = transformOrganization.curry(getDetails)
-
-
-
         httpClient.get {
             path "$apiBaseUri/v2/organizations/${orgId}"
             headers authorization: token, accept: 'application/json'
             queryParams 'inline-relations-depth': 2
-            transform transformOrg
+            transform transformOrganization.curry(getDetails)
         }
     }    
-    
+
+    def createQuota(String token, Map quota) {
+        httpClient.post{
+            path "$apiBaseUri/v2/quota_definitions"
+            headers authorization: token, accept: 'application/json'
+            body mapper.writeValueAsString([name:quota.name, non_basic_services_allowed:quota.nonBasicServicesAllowed, total_services:quota.services, memory_limit:quota.memoryLimit, trial_db_allowed:quota.trialDbAllowed])
+            transform transformQuota
+        }
+    }
+
+    def deleteQuota(token, id) {
+        httpClient.delete {
+            path "$apiBaseUri/v2/quota_definitions/$id"
+            headers authorization: token, accept: 'application/json'
+        }
+    }
+
+    def updateQuota(token, quota) {
+        httpClient.put{
+            path "$apiBaseUri/v2/quota_definitions/${quota.id}"
+            headers authorization: token, accept: 'application/json'
+            body mapper.writeValueAsString([name:quota.name, non_basic_services_allowed:quota.nonBasicServicesAllowed, total_services:quota.services, memory_limit:quota.memoryLimit, trial_db_allowed:quota.trialDbAllowed])
+            transform transformQuota
+        }
+    }
+
     def quotas(String token) {
         httpClient.get {
             path "$apiBaseUri/v2/quota_definitions"

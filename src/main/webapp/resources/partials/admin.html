@@ -58,11 +58,11 @@
                 <td>
                     <input type="text" class="form-control" id="new.org.name"
                            placeholder="Choose a name"
-                           ng-model="newOrganization.name"/>
+                           ng-model="newOrganization.name" required/>
                 </td>
                 <td>
-                    <select ng-model="newOrganization.quota"
-                            ng-options="quota.id as quota.name for quota in admin.quotas" class="form-control">
+                    <select ng-model="newOrganization.quotaId"
+                            ng-options="quota.id as quota.name for quota in admin.quotas" class="form-control" required>
                     </select>
                 </td>
                 <td>
@@ -104,13 +104,13 @@
                 </td>
                 <td class="text-right" ng-hide="editingQuota === quota.id">{{quota.services}}</td>
                 <td class="text-right" ng-show="editingQuota === quota.id">
-                    <input type="text" class="form-control text-right" id="quota.services"
+                    <input type="number" class="form-control text-right" id="quota.services"
                            placeholder="{{quota.services}}"
                            ng-model="quota.services"/>
                 </td>
                 <td class="text-right" ng-hide="editingQuota === quota.id">{{quota.memoryLimit}} MB</td>
                 <td class="text-right" ng-show="editingQuota === quota.id">
-                    <input type="text" class="form-control text-right" id="quota.memoryLimit"
+                    <input type="number" class="form-control text-right" id="quota.memoryLimit"
                            placeholder="{{quota.memoryLimit}}"
                            ng-model="quota.memoryLimit"/>
                 </td>
@@ -161,12 +161,12 @@
                            ng-model="newQuota.name" ng-disabled="editingQuota"/>
                 </td>
                 <td class="text-right">
-                    <input type="text" class="form-control text-right" id="new.quota.totalServices"
+                    <input type="number" class="form-control text-right" id="new.quota.totalServices"
                            placeholder="Choose amount of services"
                            ng-model="newQuota.services" ng-disabled="editingQuota"/>
                 </td>
                 <td class="text-right">
-                    <input type="text" class="form-control text-right" id="new.quota.memoryLimit"
+                    <input type="number" class="form-control text-right" id="new.quota.memoryLimit"
                            placeholder="Choose a memory limit"
                            ng-model="newQuota.memoryLimit" ng-disabled="editingQuota"/>
                 </td>
