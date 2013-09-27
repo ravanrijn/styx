@@ -5,13 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestHeader
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestMethod
-import org.springframework.web.bind.annotation.ResponseBody
-import org.springframework.web.bind.annotation.ResponseStatus
+import org.springframework.web.bind.annotation.*
 
 @Controller
 class AdminController {
@@ -40,14 +34,14 @@ class AdminController {
     @RequestMapping(value = "/api/organizations", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
-    def createOrg(@RequestHeader("Authorization") token, @RequestBody Map org){
+    def createOrg(@RequestHeader("Authorization") token, @RequestBody org){
         apiClient.createOrganization(token, org)
     }
 
     @RequestMapping(value = "/api/organizations/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    def updateOrg(@RequestHeader("Authorization") token, @PathVariable("id") String id, @RequestBody Map org){
+    def updateOrg(@RequestHeader("Authorization") token, @PathVariable("id") String id, @RequestBody org){
         org.id = id
         apiClient.updateOrganization(token, org)
     }
@@ -55,7 +49,7 @@ class AdminController {
     @RequestMapping(value = "/api/quotas", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
-    def createQuota(@RequestHeader("Authorization") token, @RequestBody Map quota){
+    def createQuota(@RequestHeader("Authorization") token, @RequestBody quota){
         apiClient.createQuota(token, quota)
     }
 
@@ -69,7 +63,7 @@ class AdminController {
     @RequestMapping(value = "/api/quotas/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    def updateQuota(@RequestHeader("Authorization") token, @PathVariable("id") String id, @RequestBody Map quota){
+    def updateQuota(@RequestHeader("Authorization") token, @PathVariable("id") String id, @RequestBody quota){
         quota.id = id
         apiClient.updateQuota(token, quota)
     }

@@ -110,7 +110,7 @@ class ApiClient {
         }
     }    
 
-    def createQuota(String token, Map quota) {
+    def createQuota(String token, quota) {
         httpClient.post{
             path "$apiBaseUri/v2/quota_definitions"
             headers authorization: token, accept: 'application/json'
