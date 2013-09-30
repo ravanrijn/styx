@@ -27,6 +27,10 @@ styxControllers.controller('StyxController', function ($scope, $route, notificat
         $scope.status = status;
     });
 
+    $scope.cancelEdit = function () {
+        $route.reload();
+    }
+
     $scope.logout = function () {
         authToken.clear();
         $scope.root = null;
@@ -243,10 +247,6 @@ styxControllers.controller('AdminController', function ($scope, $http, $route, $
                 });
             }
         });
-    }
-
-    $scope.cancelEdit = function () {
-        $route.reload();
     }
 
     $scope.editOrg = function (id) {
