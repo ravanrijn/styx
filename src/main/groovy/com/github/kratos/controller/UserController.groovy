@@ -28,9 +28,4 @@ class UserController {
         apiClient.updateOrganizationUsers(token, orgId, user)
     }
 
-//    @RequestMapping("/{orgId}/{spaceId}")
-//    def updateSpaceUser(@RequestHeader("Authorization") String token, @PathVariable("orgId") String orgId, @PathVariable("spaceId") String spaceId, @RequestBody user){
-//
-//    }
-
 }

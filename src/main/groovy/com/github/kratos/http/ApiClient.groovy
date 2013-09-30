@@ -46,19 +46,6 @@ class ApiClient {
         application.get(token, id)
     }
 
-//    def updateSpaceUsers(token, id, user){
-//        def updateRequest = [manager_guids:[], developer_guids:[], auditor_guids:[]]
-//        users.each{user ->
-//            if(user.roles.contains("DEVELOPER")){
-//                updateRequest.developer_guids << user.id
-//            }else if (user.roles.contains("MANAGER")){
-//                updateRequest.manager_guids << user.id
-//            }else if (user.roles.contains("AUDITOR")){
-//                updateRequest.auditor_guids << user.id
-//            }
-//        }
-//    }
-
     def updateOrganizationUsers(token, id, user){
         def updateRequest = [user_guids:[], billing_manager_guids:[], manager_guids:[], auditor_guids:[]]
         def appendUser = {
