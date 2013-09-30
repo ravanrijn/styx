@@ -79,16 +79,17 @@ styxControllers.controller('SpaceUsersController', function ($scope, $location, 
     });
 });
 
-styxControllers.controller('OrganizationUsersController', function ($scope, $location, notificationChannel, $routeParams) {
+styxControllers.controller('OrganizationUsersController', function ($scope, $route, $location, notificationChannel, apiServices, $routeParams) {
+    $scope.loading = false;
     $scope.editUser = function(user){
         var editingUser = user;
-        if($scope.isInRole(user, 'ORGANIZATION_MANAGER')){
+        if($scope.isInRole(user, 'MANAGER')){
             editingUser.isManager = true;
         }
         if($scope.isInRole(user, 'BILLING_MANAGER')){
             editingUser.isBillingManager = true;
         }
-        if($scope.isInRole(user, 'ORGANIZATION_AUDITOR')){
+        if($scope.isInRole(user, 'AUDITOR')){
             editingUser.isAuditor = true;
         }
         $scope.editingUser = editingUser;
@@ -98,8 +99,30 @@ styxControllers.controller('OrganizationUsersController', function ($scope, $loc
             $location.path("/org/" + $scope.selectedOrgId + "/users")
         }
     }
-    $scope.loading = true;
+    $scope.updateOrganization = function(orgId, user){
+        $scope.loading = true;
+        user.roles = []
+        if(user.isManager){
+            user.roles.push("MANAGER")
+        }
+        if(user.isAuditor){
+            user.roles.push("AUDITOR")
+        }
+        if(user.isBillingManager){
+            user.roles.push("BILLING_MANAGER")
+        }
+        apiServices.updateOrganizationUser(orgId, user).
+        success(function(data, status, headers, config) {
+            notificationChannel.changeStatus(200, "Successfully updated " + user.username + ".")
+            $route.reload()
+        }).
+        error(function(data, status, headers, config) {
+            notificationChannel.changeStatus(500, "Unable to successfully update " + user.username + ".")
+            $route.reload()
+        });
+    }
     if (!$scope.root) {
+        $scope.loading = true;
         if (!$routeParams.organizationId) {
             notificationChannel.updateRoot();
         } else {
@@ -110,7 +133,6 @@ styxControllers.controller('OrganizationUsersController', function ($scope, $loc
             notificationChannel.updateRoot($routeParams.organizationId);
         }else{
             $scope.selectedOrgId = $scope.root.organization.id;
-            $scope.loading = false;
         }
     }
     notificationChannel.onRootUpdated($scope, function (response) {

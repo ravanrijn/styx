@@ -46,6 +46,51 @@ class ApiClient {
         application.get(token, id)
     }
 
+//    def updateSpaceUsers(token, id, user){
+//        def updateRequest = [manager_guids:[], developer_guids:[], auditor_guids:[]]
+//        users.each{user ->
+//            if(user.roles.contains("DEVELOPER")){
+//                updateRequest.developer_guids << user.id
+//            }else if (user.roles.contains("MANAGER")){
+//                updateRequest.manager_guids << user.id
+//            }else if (user.roles.contains("AUDITOR")){
+//                updateRequest.auditor_guids << user.id
+//            }
+//        }
+//    }
+
+    def updateOrganizationUsers(token, id, user){
+        def updateRequest = [user_guids:[], billing_manager_guids:[], manager_guids:[], auditor_guids:[]]
+        def appendUser = {
+            if(!updateRequest.user_guids.contains(user.id)){
+                updateRequest.user_guids << user.id as String
+            }
+        }
+        user.roles.each{role ->
+            switch(role){
+                case "BILLINGMANAGER":
+                    updateRequest.billing_manager_guids << user.id as String
+                    appendUser()
+                    break
+                case "MANAGER":
+                    updateRequest.manager_guids << user.id as String
+                    appendUser()
+                    break
+                case "AUDITOR":
+                    updateRequest.auditor_guids << user.id as String
+                    appendUser()
+                    break
+            }
+        }
+        httpClient.put {
+            path "$apiBaseUri/v2/organizations/$id"
+            headers authorization: token, accept: 'application/json'
+            body mapper.writeValueAsString(updateRequest)
+            queryParams 'collection-method': 'add'
+            transform {result -> [id:result.metadata.guid, name:result.entity.name]}
+        }
+    }
+
     def organizations(String token){
         httpClient.get {
             path "$apiBaseUri/v2/organizations"
@@ -83,8 +128,6 @@ class ApiClient {
     def organization(String token, String orgId){
         def getDetails = { userIds, cfApps ->
             def appToken = appToken()
-            String usernamesUri = "$uaaBaseUri/ids/Users?filter="
-            userIds.each { userId -> usernamesUri = "${usernamesUri}id eq \'$userId\' or " }
             def requests = cfApps.collect{cfApp ->
                 { ->
                     path "${apiBaseUri}${cfApp.entity.routes_url}"
@@ -92,14 +135,18 @@ class ApiClient {
                     queryParams 'inline-relations-depth': 1
                 }
             }
-            requests.add(
-                { ->
-                    id "usernames"
-                    path usernamesUri[0..-4]
-                    headers authorization: "${appToken.tokenType} ${appToken.accessToken}" as String, accept: 'application/json'
-                    transform {result -> result.resources.collect { item -> [id: item.id, username: item.userName] }}
-                }
-            )
+            if(userIds.size() > 0){
+                String usernamesUri = "$uaaBaseUri/ids/Users?filter="
+                userIds.each { userId -> usernamesUri = "${usernamesUri}id eq \'$userId\' or " }
+                requests.add(
+                    { ->
+                        id "usernames"
+                        path usernamesUri[0..-4]
+                        headers authorization: "${appToken.tokenType} ${appToken.accessToken}" as String, accept: 'application/json'
+                        transform {result -> result.resources.collect { item -> [id: item.id, username: item.userName] }}
+                    }
+                )
+            }
             httpClient.get(requests.toArray() as Closure[])
         }
         httpClient.get {
