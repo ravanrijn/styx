@@ -2,9 +2,10 @@ package com.github.kratos.http
 
 import com.fasterxml.jackson.databind.ObjectMapper
 
+import static com.github.kratos.resources.Application.listTransform as transformApplications
+import static com.github.kratos.resources.Application.getTransform as transformApplication
 import static com.github.kratos.resources.Organization.listTransform as transformOrganizations
 import static com.github.kratos.resources.Organization.getTransform as transformOrganization
-import com.github.kratos.resources.Application
 import static com.github.kratos.resources.Quota.getTransform as transformQuota
 import static com.github.kratos.resources.Quota.listTransform as transformQuotas
 import static com.github.kratos.resources.User.uaaGetTransform as transformUaaUser
@@ -25,7 +26,6 @@ class ApiClient {
     private final String clientSecret
     private final HttpClient httpClient
     private final ObjectMapper mapper
-    private final Application application
 
     @Autowired
     def ApiClient(HttpClient httpClient, ObjectMapper mapper, String apiBaseUri, String uaaBaseUri, String clientId, String clientSecret) {
@@ -35,15 +35,45 @@ class ApiClient {
         this.mapper = mapper
         this.apiBaseUri = apiBaseUri
         this.uaaBaseUri = uaaBaseUri
-        this.application = new Application(httpClient, apiBaseUri)
     }
 
     def applications(token) {
-        application.list(token)
+        httpClient.get {
+            path "$apiBaseUri/v2/apps"
+            headers authorization: token, accept: 'application/json'
+            queryParams 'inline-relations-depth': 0
+            transform transformApplications
+        }
     }
 
-    def application(token, id) {
-        application.get(token, id)
+    def application(String token, String appId){
+        def getDetails = { cfApp ->
+            def requests = []
+            requests.add(
+                    {->
+                        id "services"
+                        path "$apiBaseUri/v2/services"
+                        headers authorization: token, accept: 'application/json'
+                        queryParams 'inline-relations-depth': 2
+                    }
+            )
+            if (cfApp.entity.state == 'STARTED') {
+                requests.add(
+                        {->
+                            id "instances"
+                            path "$apiBaseUri/v2/apps/$appId/instances"
+                            headers authorization: token, accept: 'application/json'
+                        }
+                )
+            }
+            httpClient.get(requests.toArray() as Closure[])
+        }
+        httpClient.get {
+            path "$apiBaseUri/v2/apps/${appId}"
+            headers authorization: token, accept: 'application/json'
+            queryParams 'inline-relations-depth': 3
+            transform transformApplication.curry(getDetails)
+        }
     }
 
     def findUserByUsername(token, query){
