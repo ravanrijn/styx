@@ -117,32 +117,47 @@ class ApiClient {
     }
 
     def updateOrganizationUser(token, id, user){
-        def updateRequest = [user_guids:[], billing_manager_guids:[], manager_guids:[], auditor_guids:[]]
-        def appendUser = {
-            if(!updateRequest.user_guids.contains(user.id)){
-                updateRequest.user_guids << user.id as String
-            }
+        def userDetails = httpClient.get {
+            path "$apiBaseUri/v2/users/${user.id}"
+            headers authorization: token, accept: 'application/json'
+            queryParams 'inline-relations-depth': 1
         }
-        user.roles.each{role ->
+        def doesNotMatchProvidedOrganization = { item ->
+            if(item.entity?.organization_guid){
+                return item.entity.organization_guid != id
+            }
+            return item.metadata.guid != id
+        }
+        def updateUserRequest = [
+                space_guids: userDetails.entity.spaces.findAll{space -> doesNotMatchProvidedOrganization(space)}.collect {space -> space.metadata.guid},
+                organization_guids: userDetails.entity.organizations.findAll {organization -> doesNotMatchProvidedOrganization(organization)}.collect{org -> org.metadata.guid},
+                managed_organization_guids: userDetails.entity.managed_organizations.findAll {organization -> doesNotMatchProvidedOrganization(organization)}.collect{org -> org.metadata.guid},
+                billing_managed_organization_guids: userDetails.entity.billing_managed_organizations.findAll {organization -> doesNotMatchProvidedOrganization(organization)}.collect{org -> org.metadata.guid},
+                audited_organization_guids: userDetails.entity.audited_organizations.findAll {organization -> doesNotMatchProvidedOrganization(organization)}.collect{org -> org.metadata.guid},
+                managed_space_guids: userDetails.entity.managed_spaces.findAll {space -> doesNotMatchProvidedOrganization(space)}.collect{space -> space.metadata.guid},
+                audited_space_guids: userDetails.entity.audited_spaces.findAll {space -> doesNotMatchProvidedOrganization(space)}.collect{space -> space.metadata.guid}
+        ]
+        if(updateUserRequest.organization_guids.find{org_id -> org_id == id} && user.roles.isEmpty()){
+            return getTransformCfUser(userDetails)
+        }
+        updateUserRequest.organization_guids.add(id)
+        user?.roles.each{role ->
             switch(role){
                 case "BILLING_MANAGER":
-                    updateRequest.billing_manager_guids << user.id as String
-                    appendUser()
+                    updateUserRequest.billing_managed_organization_guids << id as String
                     break
                 case "MANAGER":
-                    updateRequest.manager_guids << user.id as String
-                    appendUser()
+                    updateUserRequest.managed_organization_guids << id as String
                     break
                 case "AUDITOR":
-                    updateRequest.auditor_guids << user.id as String
-                    appendUser()
+                    updateUserRequest.audited_organization_guids << id as String
                     break
             }
         }
         httpClient.put {
-            path "$apiBaseUri/v2/organizations/$id"
+            path "$apiBaseUri/v2/users/${user.id}"
             headers authorization: token, accept: 'application/json'
-            body mapper.writeValueAsString(updateRequest)
+            body mapper.writeValueAsString(updateUserRequest)
             queryParams 'collection-method': 'add'
             transform {result -> [id:result.metadata.guid, name:result.entity.name]}
         }

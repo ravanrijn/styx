@@ -1,6 +1,6 @@
 'use strict';
 
-var styx = angular.module('styx', ['angular-spin', 'styx.services', 'styx.controllers']);
+var styx = angular.module('styx', ['ui.bootstrap', 'angular-spin', 'styx.services', 'styx.controllers']);
 
 styx.config(['$routeProvider', '$httpProvider', function($routeProvider, $httpProvider) {
     $routeProvider.when("/org/:organizationId", {templateUrl: 'partials/organization.html',   controller: 'OrganizationController'});

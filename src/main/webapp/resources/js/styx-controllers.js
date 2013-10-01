@@ -5,7 +5,7 @@ var styxControllers = angular.module('styx.controllers', ['styx.services']);
 styxControllers.controller('StyxController', function ($scope, $route, notificationChannel, authToken) {
 
     $scope.isInRole = function (user, expectedRole) {
-        if(!$scope.root){
+        if (!$scope.root) {
             return false;
         }
         var isInRole = false;
@@ -47,21 +47,21 @@ styxControllers.controller('StyxController', function ($scope, $route, notificat
 
 styxControllers.controller('SpaceUsersController', function ($scope, $location, notificationChannel, $routeParams) {
     $scope.selectedSpaceId = $routeParams.spaceId;
-    $scope.editUser = function(user){
+    $scope.editUser = function (user) {
         var editingUser = user;
-        if($scope.isInRole(user, 'SPACE_MANAGER')){
+        if ($scope.isInRole(user, 'SPACE_MANAGER')) {
             editingUser.isManager = true;
         }
-        if($scope.isInRole(user, 'DEVELOPER')){
+        if ($scope.isInRole(user, 'DEVELOPER')) {
             editingUser.isDeveloper = true;
         }
-        if($scope.isInRole(user, 'SPACE_AUDITOR')){
+        if ($scope.isInRole(user, 'SPACE_AUDITOR')) {
             editingUser.isAuditor = true;
         }
         $scope.editingUser = editingUser;
     }
-    $scope.changeSpace = function(newSpaceId, currentSpaceId){
-        if(newSpaceId !== currentSpaceId){
+    $scope.changeSpace = function (newSpaceId, currentSpaceId) {
+        if (newSpaceId !== currentSpaceId) {
             $location.path("/org/" + $scope.selectedOrgId + "/" + newSpaceId + "/users")
         }
     }
@@ -79,60 +79,94 @@ styxControllers.controller('SpaceUsersController', function ($scope, $location, 
     });
 });
 
-styxControllers.controller('OrganizationUsersController', function ($scope, $route, $location, notificationChannel, apiServices, $routeParams) {
+styxControllers.controller('OrganizationUsersController', function ($scope, $route, $location, $q, notificationChannel, apiServices, $routeParams) {
     $scope.loading = false;
-    $scope.editUser = function(user){
+    $scope.editUser = function (user) {
         var editingUser = user;
-        if($scope.isInRole(user, 'MANAGER')){
+        if ($scope.isInRole(user, 'MANAGER')) {
             editingUser.isManager = true;
         }
-        if($scope.isInRole(user, 'BILLING_MANAGER')){
+        if ($scope.isInRole(user, 'BILLING_MANAGER')) {
             editingUser.isBillingManager = true;
         }
-        if($scope.isInRole(user, 'AUDITOR')){
+        if ($scope.isInRole(user, 'AUDITOR')) {
             editingUser.isAuditor = true;
         }
         $scope.editingUser = editingUser;
     }
-    $scope.changeOrganization = function(){
-        if($scope.selectedOrgId !== $scope.root.organization.id){
+    $scope.changeOrganization = function () {
+        if ($scope.selectedOrgId !== $scope.root.organization.id) {
             $location.path("/org/" + $scope.selectedOrgId + "/users")
         }
     }
-    $scope.updateOrganization = function(orgId, user){
+    $scope.findUsers = function (term) {
+        var dfr = $q.defer();
+        apiServices.findUserByName(term).
+            success(function (data, status, headers, config) {
+                dfr.resolve(data);
+            }).
+            error(function (data, status, headers, config) {
+
+            });
+        return dfr.promise;
+    }
+
+    $scope.addOrganizationUser = function (organization, user) {
+        $scope.loading = true
+        apiServices.updateOrganizationUser(organization.id, user).
+            success(function (data, status, headers, config) {
+                notificationChannel.changeStatus(200, "Successfully added " + user.username + " to " + organization.name + ".")
+                $route.reload()
+            }).
+            error(function (data, status, headers, config) {
+                notificationChannel.changeStatus(500, "Unable to add " + user.username + " to " + organization.name + ".")
+                $route.reload()
+            });
+    }
+
+    $scope.updateOrganization = function (organization, user) {
         $scope.loading = true;
         user.roles = []
-        if(user.isManager){
+        if (user.isManager) {
             user.roles.push("MANAGER")
         }
-        if(user.isAuditor){
+        if (user.isAuditor) {
             user.roles.push("AUDITOR")
         }
-        if(user.isBillingManager){
+        if (user.isBillingManager) {
             user.roles.push("BILLING_MANAGER")
         }
-        apiServices.updateOrganizationUser(orgId, user).
-        success(function(data, status, headers, config) {
-            notificationChannel.changeStatus(200, "Successfully updated " + user.username + ".")
-            $route.reload()
-        }).
-        error(function(data, status, headers, config) {
-            notificationChannel.changeStatus(500, "Unable to successfully update " + user.username + ".")
-            $route.reload()
-        });
+        apiServices.updateOrganizationUser(organization.id, user).
+            success(function (data, status, headers, config) {
+                var found = false;
+                angular.forEach(organization.users, function(orgUser, orgUserIndex){
+                    if(orgUser.id == user.id){
+                        found = true;
+                    }
+                })
+                if(!found){
+                    organization.users.push({id:user.id, username:user.username, roles:[]});
+                }
+                notificationChannel.changeStatus(200, "Successfully updated " + user.username + ".");
+                $route.reload();
+            }).
+            error(function (data, status, headers, config) {
+                notificationChannel.changeStatus(500, "Unable to successfully update " + user.username + ".");
+                $route.reload();
+            });
     }
-    $scope.removeUserFromOrganization = function(organization, user){
+    $scope.removeUserFromOrganization = function (organization, user) {
         $scope.loading = true;
         apiServices.deleteOrganizationUser(organization.id, user.id).
-        success(function(data, status, headers, config) {
-            organization.users.splice(organization.users.indexOf(user), 1)
-            notificationChannel.changeStatus(200, "Successfully removed " + user.username + " from " + organization.name + ".")
-            $route.reload()
-        }).
-        error(function(data, status, headers, config) {
-            notificationChannel.changeStatus(500, "Unable to removed user " + user.username + " from " + organization.name + ".")
-            $route.reload()
-        });
+            success(function (data, status, headers, config) {
+                organization.users.splice(organization.users.indexOf(user), 1)
+                notificationChannel.changeStatus(200, "Successfully removed " + user.username + " from " + organization.name + ".")
+                $route.reload()
+            }).
+            error(function (data, status, headers, config) {
+                notificationChannel.changeStatus(500, "Unable to removed user " + user.username + " from " + organization.name + ".")
+                $route.reload()
+            });
     }
     if (!$scope.root) {
         $scope.loading = true;
@@ -144,7 +178,7 @@ styxControllers.controller('OrganizationUsersController', function ($scope, $rou
     } else {
         if ($routeParams.organizationId !== $scope.root.organization.id) {
             notificationChannel.updateRoot($routeParams.organizationId);
-        }else{
+        } else {
             $scope.selectedOrgId = $scope.root.organization.id;
         }
     }
@@ -155,8 +189,8 @@ styxControllers.controller('OrganizationUsersController', function ($scope, $rou
 });
 
 styxControllers.controller('OrganizationController', function ($scope, $location, $routeParams, notificationChannel) {
-    $scope.changeOrganization = function(){
-        if($scope.selectedOrgId !== $scope.root.organization.id){
+    $scope.changeOrganization = function () {
+        if ($scope.selectedOrgId !== $scope.root.organization.id) {
             $location.path("/org/" + $scope.selectedOrgId);
         }
     }
@@ -170,7 +204,7 @@ styxControllers.controller('OrganizationController', function ($scope, $location
     } else {
         if ($routeParams.organizationId !== $scope.root.organization.id) {
             notificationChannel.updateRoot($routeParams.organizationId);
-        }else{
+        } else {
             $scope.selectedOrgId = $scope.root.organization.id;
             $scope.loading = false;
         }
@@ -194,7 +228,7 @@ styxControllers.controller('LoginController', function ($scope, $location, notif
 });
 
 styxControllers.controller('AdminController', function ($scope, $http, $route, $location, notificationChannel, authToken) {
-    if(!$scope.root){
+    if (!$scope.root) {
         notificationChannel.updateRoot();
     }
     $scope.loading = true;

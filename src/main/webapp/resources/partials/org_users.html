@@ -44,7 +44,14 @@
                             class="glyphicon glyphicon-info-sign"></span></span>
                     </th>
                     <th>
-
+                        <div class="input-group input-group-sm" style="width: 250px">
+                            <input type="text" placeholder="Find by username" ng-model="selectedUser" typeahead="user as user.username for user in findUsers($viewValue) | filter:$viewValue" class="form-control input-text ng-pristine ng-valid">
+                            <div class="input-group-btn">
+                                <a class="btn btn-default btn-success" ng-click="updateOrganization(root.organization, selectedUser)">
+                                    <i class="icon-save icon-white"></i>&nbsp;add
+                                </a>
+                            </div>
+                        </div>
                     </th>
                 </tr>
                 </thead>
@@ -93,7 +100,7 @@
                     <td ng-show="editingUser.id === user.id" style="width: 15%">
                         <div class="pull-right">
                             <div class="btn-group btn-group-xs">
-                                <button type="button" class="btn btn-success" ng-click="updateOrganization(root.organization.id, user)">
+                                <button type="button" class="btn btn-success" ng-click="updateOrganization(root.organization, user)">
                                     Update
                                 </button>
                                 <button type="button" class="btn btn-warning" ng-click="cancelEdit()">
