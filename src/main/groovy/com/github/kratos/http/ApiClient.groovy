@@ -55,7 +55,7 @@ class ApiClient {
         }
         user.roles.each{role ->
             switch(role){
-                case "BILLINGMANAGER":
+                case "BILLING_MANAGER":
                     updateRequest.billing_manager_guids << user.id as String
                     appendUser()
                     break
