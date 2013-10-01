@@ -1,0 +1,123 @@
+<div class="container">
+    <div class="row" ng-show="!root">
+        <div class="col-md-12">
+            <div spin="defaultSpinnerConfig" spin-if="loading"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <h3><span class="text-muted">organization // </span> {{root.organization.name}}
+                <span class="dropdown">
+                    <button type="button" class="btn btn-default btn-sm" data-toggle="dropdown">
+                        <span><span class="glyphicon glyphicon-cog"></span></span>
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a>Edit</a></li>
+                        <li><a href="#/org/{{root.organization.id}}/users">Manage users</a></li>
+                        <li><a>Add space</a></li>
+                        <li><a>Delete</a></li>
+                    </ul>
+                </span>
+            </h3>
+            <p ng-show="root.selectedOrganization">Quota for {{root.organization.name}}:
+                <span class="text-muted">memory-limit = </span>{{root.organization.quota.memoryLimit}}MB ::
+                <span class="text-muted">services-limit = </span>{{root.organization.quota.services}} ::
+                <span class="text-muted">plan-name =</span> {{root.organization.quota.name}}
+            </p>
+            <div class="form-group">
+                <select ng-model="selectedOrgId"
+                        ng-options="org.id as org.name for org in root.organizations"
+                        ng-change="changeOrganization()" class="form-control">
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" ng-repeat="space in root.organization.spaces">
+        <div class="col-md-12">
+            <h3><span class="text-muted">space // </span> {{space.name}}
+                <span class="dropdown">
+                    <button type="button" class="btn btn-default btn-sm" data-toggle="dropdown">
+                        <span><span class="glyphicon glyphicon-cog"></span></span>
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a>Edit</a></li>
+                        <li><a href="#/org/{{root.organization.id}}/{{space.id}}/users">Manage users</a></li>
+                        <li><a>Delete</a></li>
+                    </ul>
+                </span>
+            </h3>
+            <p>Applications in this space:</p>
+            <div spin="defaultSpinnerConfig" spin-if="loading"></div>
+            <table class="table table-hover table-condensed" style="width: 100%">
+                <thead>
+                <tr>
+                    <th style="width: 10%">Status</th>
+                    <th style="width: 20%">Application</th>
+                    <th style="width: 40%">URL</th>
+                    <th style="width: 10%; text-align: right">Memory</th>
+                    <th style="width: 10%; text-align: right">Instances</th>
+                    <th style="width: 10%; text-align: right">Options</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="app in space.apps">
+                    <td>
+                        <div class="btn-group btn-group-xs">
+                            <button type="button"
+                                    ng-class="['btn', (app.state == 'STARTED') ? 'btn-success' : 'btn-danger', 'dropdown-toggle']"
+                                    data-toggle="dropdown" ng-disabled="editingOrganization">
+                                <span ng-show="app.state == 'STOPPED'">STOPPED</span>
+                                <span ng-show="app.state == 'STARTED'">STARTED</span>
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li ng-show="app.state == 'STARTED'"><a href="#">STOP</a></li>
+                                <li ng-show="app.state == 'STOPPED'"><a href="#">START</a></li>
+                            </ul>
+                        </div>
+                    </td>
+                    <td>
+                        <a>{{app.name}}</a>
+                    </td>
+                    <td class="text-left">
+                        <div class="text-left" ng-repeat="url in app.urls"><a href="http://{{url}}">http://{{url}}</a><br/></div>
+                    </td>
+                    <td style="text-align: right">
+                        <input type="text" class="form-control" id="appMemory"
+                               placeholder="{{app.memory}}"
+                               ng-model="app.memory" ng-show="editingApplication === app.id"/>
+                        <span ng-hide="editingApplication === app.id">{{app.memory}} MB</span>
+                    </td>
+                    <td style="text-align: right">
+                    <input type="text" class="form-control" id="appInstances"
+                    placeholder="{{app.instances}}"
+                    ng-model="app.instances" ng-show="editingApplication === app.id"/>
+                    <span ng-hide="editingApplication === app.id">{{app.instances}}</span>
+                    </td>
+                    <td>
+                        <div class="pull-right">
+                            <div class="dropdown">
+                                <button type="button"
+                                        class="btn btn-default btn-xs"
+                                        data-toggle="dropdown">
+                                    <span><span class="glyphicon glyphicon-cog"></span></span>
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a>Details</a></li>
+                                    <li><a>Stop</a></li>
+                                    <li><a>Start</a></li>
+                                    <li><a>Delete</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

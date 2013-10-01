@@ -1,0 +1,81 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h3><span class="text-muted">your // </span> spaces</h3>
+
+            <p>Select one of your spaces.</p>
+
+            <div class="form-group">
+                <select ng-model="selectedSpaceId"
+                        ng-options="space.id as space.name for space in root.organization.spaces"
+                        ng-change="changeSpace(selectedSpaceId, space.id)" class="form-control">
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="row" ng-show="loading">
+        <div spin="defaultSpinnerConfig" spin-if="loading"></div>
+    </div>
+    <div class="row" ng-repeat="space in root.organization.spaces">
+        <div class="col-md-12">
+            <h3 ng-hide="loading"><span class="text-muted">users //</span> {{space.name}} <span class="badge">{{space.users.length}}</span></span>
+            </h3>
+            <p>All the users in this space are listed below.<br/>To invite new users to this space <a>click
+                here</a>.</p>
+            <hr/>
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>
+                        User ID
+                    </th>
+                    <th>
+                        Manager <span data-toggle="tooltip" title="Can invite/manage users, enable features for a given space"><span class="glyphicon glyphicon-info-sign"></span></span>
+                    </th>
+                    <th>
+                        Developer <span data-toggle="tooltip" title="Can create, delete, manage applications and services, full access to all usage reports and logs"><span class="glyphicon glyphicon-info-sign"></span></span>
+                    </th>
+                    <th>
+                        Auditor <span data-toggle="tooltip" title="View only access to all space information, settings, reports, logs"><span class="glyphicon glyphicon-info-sign"></span></span>
+                    </th>
+                    <th>
+
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="user in space.users">
+                    <td style="width: 40%">
+                        {{user.username}}
+                    </td>
+                    <td style="width: 20%">
+                        <span ng-class="['glyphicon', (isInRole(user, 'SPACE_MANAGER')) ? 'glyphicon-ok' : 'glyphicon-remove']"></span>
+                    </td>
+                    <td style="width: 20%">
+                        <span ng-class="['glyphicon', (isInRole(user, 'SPACE_DEVELOPER')) ? 'glyphicon-ok' : 'glyphicon-remove']"></span>
+                    </td>
+                    <td style="width: 20%">
+                        <span ng-class="['glyphicon', (isInRole(user, 'SPACE_AUDITOR')) ? 'glyphicon-ok' : 'glyphicon-remove']"></span>
+                    </td>
+                    <td>
+                        <div class="pull-right">
+                            <div class="btn-group btn-group-xs">
+                                <button type="button"
+                                        class="btn btn-default"
+                                        data-toggle="dropdown">
+                                    <span><span class="glyphicon glyphicon-cog"></span></span>
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a>Edit</a></li>
+                                    <li><a>Delete</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

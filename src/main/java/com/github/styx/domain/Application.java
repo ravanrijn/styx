@@ -1,139 +1,69 @@
 package com.github.styx.domain;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
-import static org.mvel2.MVEL.eval;
-import static org.mvel2.MVEL.evalToString;
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class Application extends Identifiable {
 
-public class Application {
-
-    private final String id;
-
-    private final String name;
-
-    private final String buildpack;
-
-    private final String state;
-
-    private final int instances;
-
-    private final int memory;
-
-    private final Map<String, String> environment;
-
+    private final String buildPack;
+    private final String environment;
+    private final String memory;
+    private final String diskQuota;
     private final List<String> urls;
+    private final List<ServiceBinding> serviceBindings;
+    private final List<Instance> instances;
+    private final List<Event> events;
+    private final ApplicationState state;
 
-    private final List<ServiceInstance> serviceInstances = new ArrayList<>();
-
-    private final List<ApplicationInstance> applicationInstances = new ArrayList<>();
-
-    public Application(String id, String name, String buildpack, String state, int instances, int memory, Map<String, String> environment, List<String> urls) {
-        this.id = id;
-        this.name = name;
-        this.buildpack = buildpack;
-        this.state = state;
-        this.instances = instances;
-        this.memory = memory;
+    public Application(String id, String name, String buildPack, String environment, String memory, String diskQuota, List<String> urls, List<ServiceBinding> serviceBindings, List<Instance> instances, List<Event> events, ApplicationState state) {
+        super(id, name);
+        this.buildPack = buildPack;
         this.environment = environment;
+        this.memory = memory;
+        this.diskQuota = diskQuota;
         this.urls = urls;
+        this.serviceBindings = serviceBindings;
+        this.instances = instances;
+        this.events = events;
+        this.state = state;
     }
 
-    public void addInstance(ApplicationInstance instance) {
-        applicationInstances.add(instance);
+    public String getBuildPack() {
+        return buildPack;
     }
 
-    public void addServiceInstance(ServiceInstance instance) {
-        serviceInstances.add(instance);
+    public String getEnvironment() {
+        return environment;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public String getBuildpack() {
-        return buildpack;
-    }
-
-    public int getInstances() {
-        return instances;
-    }
-
-    public int getMemory() {
+    public String getMemory() {
         return memory;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    public Integer getHealth() {
-        if (applicationInstances.size() > 0) {
-            int instancesRunning = 0;
-            for (ApplicationInstance instance : applicationInstances) {
-                if (instance.isRunning()) {
-                    instancesRunning++;
-                }
-            }
-            return (100 / applicationInstances.size() * instancesRunning);
-        }
-        return null;
-    }
-
-    public Map<String, String> getEnvironment() {
-        return Collections.unmodifiableMap(environment);
+    public String getDiskQuota() {
+        return diskQuota;
     }
 
     public List<String> getUrls() {
         return urls;
     }
 
-    public List<ApplicationInstance> getApplicationInstances() {
-        return Collections.unmodifiableList(applicationInstances);
+    public List<ServiceBinding> getServiceBindings() {
+        return serviceBindings;
     }
 
-    public List<ServiceInstance> getServiceInstances() {
-        return Collections.unmodifiableList(serviceInstances);
+    public List<Instance> getInstances() {
+        return instances;
     }
 
-    public static Application fromCloudFoundryModel(Object response) {
-        List<String> urls = new ArrayList<>();
-        for (Object route : eval("entity.routes", response, List.class)) {
-            String host = evalToString("entity.host", route);
-            String domain = evalToString("entity.domain.entity.name", route);
-            urls.add(host.concat(".").concat(domain));
-        }
-
-        Application application = new Application(evalToString("metadata.guid", response),
-                evalToString("entity.name", response),
-                evalToString("entity.buildpack", response),
-                evalToString("entity.state", response),
-                eval("entity.instances", response, int.class),
-                eval("entity.memory", response, int.class),
-                eval("entity.environment_json", response, Map.class), urls);
-        return application;
+    public List<Event> getEvents() {
+        return events;
     }
 
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
-                .append("id", id)
-                .append("name", name)
-                .append("buildpack", buildpack)
-                .append("memory", memory)
-                .append("environment", environment)
-                .append("urls", urls)
-                .append("applicationInstances", applicationInstances)
-                .append("serviceInstances", serviceInstances).toString();
+    public ApplicationState getState() {
+        return state;
     }
 
 }

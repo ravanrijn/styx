@@ -1,0 +1,110 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h3><span class="text-muted">your // </span> organizations</h3>
+
+            <p>Select one of your organizations.</p>
+
+            <div class="form-group">
+                <select ng-model="selectedOrgId"
+                        ng-options="org.id as org.name for org in root.organizations"
+                        ng-change="changeOrganization()" class="form-control">
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <h3 ng-hide="loading"><span class="text-muted">users //</span> organization <span class="badge">{{root.organization.users.length}}</span></span>
+            </h3>
+
+            <p>All the users in this organization are listed below. <br/>To invite new users to your organization <a>click
+                here</a>.</p>
+            <hr/>
+            <div spin="defaultSpinnerConfig" spin-if="loading"></div>
+            <table class="table table-hover" ng-hide="loading">
+                <thead>
+                <tr>
+                    <th>
+                        User ID
+                    </th>
+                    <th>
+                        Manager <span data-toggle="tooltip"
+                                      title="Can invite/manage users, select/change the plan, establish spending limits"><span
+                            class="glyphicon glyphicon-info-sign"></span></span>
+                    </th>
+                    <th>
+                        Billing Manager <span data-toggle="tooltip"
+                                              title="Can edit/change the billing account info, payment info"><span
+                            class="glyphicon glyphicon-info-sign"></span></span>
+                    </th>
+                    <th>
+                        Auditor <span data-toggle="tooltip"
+                                      title="Can edit/change the billing account info, payment info"><span
+                            class="glyphicon glyphicon-info-sign"></span></span>
+                    </th>
+                    <th>
+
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="user in root.organization.users">
+                    <td style="width: 40%">
+                        {{user.username}}
+                    </td>
+                    <td style="width: 15%" ng-hide="editingUser.id === user.id">
+                        <span ng-class="['glyphicon', (isInRole(user, 'MANAGER')) ? 'glyphicon-ok' : 'glyphicon-remove']"></span>
+                    </td>
+                    <td style="width: 15%" ng-show="editingUser.id === user.id">
+                        <input type="checkbox" id="org.user.manager"
+                               ng-model="editingUser.isManager"/>
+                    </td>
+                    <td style="width: 15%" ng-hide="editingUser.id === user.id">
+                        <span ng-class="['glyphicon', (isInRole(user, 'BILLING_MANAGER')) ? 'glyphicon-ok' : 'glyphicon-remove']"></span>
+                    </td>
+                    <td style="width: 15%" ng-show="editingUser.id === user.id">
+                        <input type="checkbox" id="org.user.billingmanager"
+                               ng-model="editingUser.isBillingManager"/>
+                    </td>
+                    <td style="width: 15%" ng-hide="editingUser.id === user.id">
+                        <span ng-class="['glyphicon', (isInRole(user, 'AUDITOR')) ? 'glyphicon-ok' : 'glyphicon-remove']"></span>
+                    </td>
+                    <td style="width: 15%" ng-show="editingUser.id === user.id">
+                        <input type="checkbox" id="org.user.auditor"
+                               ng-model="editingUser.isAuditor"/>
+                    </td>
+                    <td ng-hide="editingUser.id === user.id" style="width: 15%">
+                        <div class="pull-right">
+                            <div class="btn-group btn-group-xs">
+                                <button type="button"
+                                        class="btn btn-default"
+                                        data-toggle="dropdown">
+                                    <span><span class="glyphicon glyphicon-cog"></span></span>
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a ng-click="editUser(user)">Edit</a></li>
+                                    <li><a>Delete</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </td>
+                    <td ng-show="editingUser.id === user.id" style="width: 15%">
+                        <div class="pull-right">
+                            <div class="btn-group btn-group-xs">
+                                <button type="button" class="btn btn-success" ng-click="updateOrganization(root.organization.id, user)">
+                                    Update
+                                </button>
+                                <button type="button" class="btn btn-warning" ng-click="cancelEdit()">
+                                    Cancel
+                                </button>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

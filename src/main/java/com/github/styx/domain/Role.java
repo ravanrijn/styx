@@ -1,0 +1,13 @@
+package com.github.styx.domain;
+
+public enum Role {
+
+    ORGANIZATION_MANAGER,
+    ORGANIZATION_BILLING_MANAGER,
+    ORGANIZATION_AUDITOR,
+    SPACE_MANAGER,
+    SPACE_DEVELOPER,
+    SPACE_AUDITOR,
+    EINDBAAS
+
+}
