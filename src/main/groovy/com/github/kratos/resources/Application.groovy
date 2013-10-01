@@ -1,36 +1,21 @@
 package com.github.kratos.resources
 
-import com.github.kratos.http.HttpClient
-
 class Application {
 
-    final HttpClient httpClient
-    final String apiBaseUri
-
-    def Application(HttpClient httpClient, String apiBaseUri) {
-        this.httpClient = httpClient
-        this.apiBaseUri = apiBaseUri
+    static def listTransform = { result ->
+        result.resources.collect{
+            cfApplication -> [id: cfApplication.metadata.guid, name: cfApplication.entity.name]
+        }
     }
 
-    def list(String token) {
-        final cfApplications = httpClient.get {
-            path "$apiBaseUri/v2/apps"
-            headers authorization: token, accept: 'application/json'
-            queryParams 'inline-relations-depth': 0
-        }
-        final applications = []
-        cfApplications.resources.each({ cfApplication ->
-            applications << [id: cfApplication.metadata.guid, name: cfApplication.entity.name]
-        })
-        return applications
+    static def getTransform = { getDetails, cfApplication ->
+        def futures = getDetails(cfApplication)
+        def services = mapServices(cfApplication, futures)
+        def instances = mapInstances(futures)
+        mapApplication(cfApplication, services, instances)
     }
 
-    def get(token, id) {
-        final cfApplication = httpClient.get {
-            path "$apiBaseUri/v2/apps/$id"
-            headers authorization: token, accept: 'application/json'
-            queryParams 'inline-relations-depth': 3
-        }
+    static def mapApplication(cfApplication, services, instances) {
         def application = [
                 id: cfApplication.metadata.guid,
                 name: cfApplication.entity.name,
@@ -39,8 +24,8 @@ class Application {
                 state: cfApplication.entity.state,
                 buildpack: '',
                 environment: '',
-                instances: [],
-                services: [],
+                instances: instances,
+                services: services,
                 events: [],
                 urls: []
         ]
@@ -61,12 +46,12 @@ class Application {
             application.events << [id: event.metadata.guid, status: event.entity.exit_status, description: event.entity.exit_description,
                     timestamp: event.entity.timestamp]
         }
+        application
+    }
 
-        final cfServices = httpClient.get {
-            path "$apiBaseUri/v2/services"
-            headers authorization: token, accept: 'application/json'
-            queryParams 'inline-relations-depth': 2
-        }
+    static def mapServices(cfApplication, futures) {
+        def cfServices = futures.findFutureById("services")
+        def services = []
         cfApplication.entity.service_bindings.each { binding ->
             def plan = binding.entity.service_instance.entity.service_plan
             def servicePlan = [id: plan.metadata.guid, name: plan.entity.name, description: plan.entity.description]
@@ -78,19 +63,20 @@ class Application {
                 }
             }
             def instance = binding.entity.service_instance
-            application.services << [id: instance.metadata.guid, name: instance.entity.name, plan: servicePlan, type: serviceType]
+            services << [id: instance.metadata.guid, name: instance.entity.name, plan: servicePlan, type: serviceType]
         }
+        services
+    }
 
-        if (cfApplication.entity.state == 'STARTED') {
-            final cfInstances = httpClient.get {
-                path "$apiBaseUri/v2/apps/$id/instances"
-                headers authorization: token, accept: 'application/json'
-            }
+    static def mapInstances(futures) {
+        def cfInstances = futures.findFutureById("instances")
+        def instances = []
+        if (cfInstances) {
             cfInstances.each { key, value ->
-                application.instances << [id: key, state: value.state, consoleIp: value.console_ip, consolePort: value.console_port]
+                instances << [id: key, state: value.state, consoleIp: value.console_ip, consolePort: value.console_port]
             }
         }
-        application
+        instances
     }
 
 }

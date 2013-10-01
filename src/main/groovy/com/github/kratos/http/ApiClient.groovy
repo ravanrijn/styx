@@ -2,6 +2,8 @@ package com.github.kratos.http
 
 import com.fasterxml.jackson.databind.ObjectMapper
 
+import static com.github.kratos.resources.Application.listTransform as transformApplications
+import static com.github.kratos.resources.Application.getTransform as transformApplication
 import static com.github.kratos.resources.Organization.listTransform as transformOrganizations
 import static com.github.kratos.resources.Organization.getTransform as transformOrganization
 import com.github.kratos.resources.Application
@@ -39,11 +41,42 @@ class ApiClient {
     }
 
     def applications(token) {
-        application.list(token)
+        httpClient.get {
+            path "$apiBaseUri/v2/apps"
+            headers authorization: token, accept: 'application/json'
+            queryParams 'inline-relations-depth': 0
+            transform transformApplications
+        }
     }
 
-    def application(token, id) {
-        application.get(token, id)
+    def application(String token, String appId){
+        def getDetails = { cfApp ->
+            def requests = []
+            requests.add(
+                    {->
+                        id "services"
+                        path "$apiBaseUri/v2/services"
+                        headers authorization: token, accept: 'application/json'
+                        queryParams 'inline-relations-depth': 2
+                    }
+            )
+            if (cfApp.entity.state == 'STARTED') {
+                requests.add(
+                        {->
+                            id "instances"
+                            path "$apiBaseUri/v2/apps/$appId/instances"
+                            headers authorization: token, accept: 'application/json'
+                        }
+                )
+            }
+            httpClient.get(requests.toArray() as Closure[])
+        }
+        httpClient.get {
+            path "$apiBaseUri/v2/apps/${appId}"
+            headers authorization: token, accept: 'application/json'
+            queryParams 'inline-relations-depth': 3
+            transform transformApplication.curry(getDetails)
+        }
     }
 
     def updateOrganizationUsers(token, id, user){
