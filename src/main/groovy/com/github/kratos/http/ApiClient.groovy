@@ -6,7 +6,6 @@ import static com.github.kratos.resources.Application.listTransform as transform
 import static com.github.kratos.resources.Application.getTransform as transformApplication
 import static com.github.kratos.resources.Organization.listTransform as transformOrganizations
 import static com.github.kratos.resources.Organization.getTransform as transformOrganization
-import com.github.kratos.resources.Application
 import static com.github.kratos.resources.Quota.getTransform as transformQuota
 import static com.github.kratos.resources.Quota.listTransform as transformQuotas
 import static com.github.kratos.resources.User.uaaGetTransform as transformUaaUser
