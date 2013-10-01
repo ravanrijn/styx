@@ -46,6 +46,15 @@ class ApiClient {
         application.get(token, id)
     }
 
+    def findUserByUsername(token, query){
+        httpClient.get{
+            path "$uaaBaseUri/ids/Users"
+            headers authorization: token, accept: "application/json"
+            queryParams "filter": "userName like \'${query}%\'"
+            transform {result -> result.resources.collect{item -> [id:item.id,username:item.userName]}}
+        }
+    }
+
     def deleteOrganizationUser(token, organizationId, userId){
         def appToken = appToken()
         def userDetails = httpClient.get{

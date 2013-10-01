@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
 
 @Controller
@@ -32,6 +33,12 @@ class UserController {
     @ResponseBody
     def deleteOrganizationUser(@RequestHeader("Authorization") String token, @PathVariable("orgId") String orgId, @PathVariable("userId") String userId){
         apiClient.deleteOrganizationUser(token, orgId, userId)
+    }
+
+    @RequestMapping(value = "/users", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    def findUser(@RequestHeader("Authorization") String token, @RequestParam("q") String query){
+        apiClient.findUserByUsername(token, query)
     }
 
 }
