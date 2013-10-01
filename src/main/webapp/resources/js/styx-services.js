@@ -116,6 +116,18 @@ styxServices.factory('apiServices', function ($http, authToken) {
         return $http(config)
     }
 
+    apiServices.findUserByName = function(term){
+        var config = {
+            method: 'GET',
+            url: 'api/users?q=' + term,
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': authToken.getToken()
+            }
+        }
+        return $http(config)
+    }
+
     apiServices.updateOrganizationUser = function(orgId, user){
         var config = {
             method: 'PUT',
