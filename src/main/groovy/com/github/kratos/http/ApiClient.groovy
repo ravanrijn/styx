@@ -46,7 +46,38 @@ class ApiClient {
         application.get(token, id)
     }
 
-    def updateOrganizationUsers(token, id, user){
+    def deleteOrganizationUser(token, organizationId, userId){
+        def appToken = appToken()
+        def userDetails = httpClient.get{
+            path "$apiBaseUri/v2/users/${userId}"
+            headers authorization: "${appToken.tokenType} ${appToken.accessToken}", accept: 'application/json'
+            queryParams 'inline-relations-depth': 1
+        }
+        def doesNotMatchProvidedOrganization = { item ->
+            if(item.entity?.organization_guid){
+                return item.entity.organization_guid != organizationId
+            }
+            return item.metadata.guid != organizationId
+        }
+        def updateUserRequest = [
+                space_guids: userDetails.entity.spaces.findAll{space -> doesNotMatchProvidedOrganization(space)}.collect {space -> space.metadata.guid},
+                organization_guids: userDetails.entity.organizations.findAll {organization -> doesNotMatchProvidedOrganization(organization)}.collect{org -> org.metadata.guid},
+                managed_organization_guids: userDetails.entity.managed_organizations.findAll {organization -> doesNotMatchProvidedOrganization(organization)}.collect{org -> org.metadata.guid},
+                billing_managed_organization_guids: userDetails.entity.billing_managed_organizations.findAll {organization -> doesNotMatchProvidedOrganization(organization)}.collect{org -> org.metadata.guid},
+                audited_organization_guids: userDetails.entity.audited_organizations.findAll {organization -> doesNotMatchProvidedOrganization(organization)}.collect{org -> org.metadata.guid},
+                managed_space_guids: userDetails.entity.managed_spaces.findAll {space -> doesNotMatchProvidedOrganization(space)}.collect{space -> space.metadata.guid},
+                audited_space_guids: userDetails.entity.audited_spaces.findAll {space -> doesNotMatchProvidedOrganization(space)}.collect{space -> space.metadata.guid}
+        ]
+        httpClient.put{
+            path "$apiBaseUri/v2/users/${userId}"
+            headers authorization: "${appToken.tokenType} ${appToken.accessToken}", accept: 'application/json'
+            body mapper.writeValueAsString(updateUserRequest)
+            queryParams 'collection-method': 'replace'
+            transform transformCfUser
+        }
+    }
+
+    def updateOrganizationUser(token, id, user){
         def updateRequest = [user_guids:[], billing_manager_guids:[], manager_guids:[], auditor_guids:[]]
         def appendUser = {
             if(!updateRequest.user_guids.contains(user.id)){

@@ -25,7 +25,13 @@ class UserController {
     @RequestMapping(value = "/{orgId}/users", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     def updateOrganizationUser(@RequestHeader("Authorization") String token, @PathVariable("orgId") String orgId, @RequestBody user){
-        apiClient.updateOrganizationUsers(token, orgId, user)
+        apiClient.updateOrganizationUser(token, orgId, user)
+    }
+
+    @RequestMapping(value = "/{orgId}/users/{userId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    def deleteOrganizationUser(@RequestHeader("Authorization") String token, @PathVariable("orgId") String orgId, @PathVariable("userId") String userId){
+        apiClient.deleteOrganizationUser(token, orgId, userId)
     }
 
 }

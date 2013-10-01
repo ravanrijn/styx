@@ -121,6 +121,19 @@ styxControllers.controller('OrganizationUsersController', function ($scope, $rou
             $route.reload()
         });
     }
+    $scope.removeUserFromOrganization = function(organization, user){
+        $scope.loading = true;
+        apiServices.deleteOrganizationUser(organization.id, user.id).
+        success(function(data, status, headers, config) {
+            organization.users.splice(organization.users.indexOf(user), 1)
+            notificationChannel.changeStatus(200, "Successfully removed " + user.username + " from " + organization.name + ".")
+            $route.reload()
+        }).
+        error(function(data, status, headers, config) {
+            notificationChannel.changeStatus(500, "Unable to removed user " + user.username + " from " + organization.name + ".")
+            $route.reload()
+        });
+    }
     if (!$scope.root) {
         $scope.loading = true;
         if (!$routeParams.organizationId) {
