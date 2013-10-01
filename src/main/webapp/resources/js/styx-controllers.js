@@ -384,3 +384,7 @@ styxControllers.controller('AdminController', function ($scope, $http, $route, $
 
     });
 });
+
+styxControllers.controller('ApplicationController', function ($scope) {
+
+});

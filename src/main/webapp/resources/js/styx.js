@@ -7,6 +7,7 @@ styx.config(['$routeProvider', '$httpProvider', function($routeProvider, $httpPr
     $routeProvider.when("/org", {templateUrl: 'partials/organization.html',   controller: 'OrganizationController'});
     $routeProvider.when("/org/:organizationId/users", {templateUrl: 'partials/org_users.html',   controller: 'OrganizationUsersController'});
     $routeProvider.when("/org/:organizationId/:spaceId/users", {templateUrl: 'partials/space_users.html',   controller: 'SpaceUsersController'});
+    $routeProvider.when("/app/:applicationId", {templateUrl: 'partials/application.html', controller: 'ApplicationController'});
     $routeProvider.when("/login", {templateUrl: 'partials/login.html',   controller: 'LoginController'});
     $routeProvider.when("/admin", {templateUrl: 'partials/admin.html',   controller: 'AdminController'});
     $routeProvider.otherwise({redirectTo: "/org"});
