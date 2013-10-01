@@ -385,6 +385,32 @@ styxControllers.controller('AdminController', function ($scope, $http, $route, $
     });
 });
 
-styxControllers.controller('ApplicationController', function ($scope) {
+styxControllers.controller('ApplicationController', function ($scope, $location,  $routeParams, $http, authToken) {
+    $scope.changeApplication = function(){
+        if($scope.selectedAppId !== $scope.app.application.id){
+            $location.path("/app/" + $scope.selectedAppId);
+        }
+    }
 
+    $scope.loading = true;
+
+    var appId = $routeParams.applicationId;
+    var config = {
+        method: 'GET',
+        url: "api/apps/" + appId,
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': authToken.getToken()
+        }
+    }
+    var promise = $http(config);
+    promise.success(function (response, status, headers) {
+        $scope.app = response;
+        $scope.selectedAppId = response.application.id;
+        $scope.loading = false;
+    });
+    promise.error(function (response, status, headers) {
+
+    });
 });

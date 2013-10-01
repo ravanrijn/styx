@@ -5,6 +5,8 @@ class Application {
     static def listTransform = { result ->
         result.resources.collect{
             cfApplication -> [id: cfApplication.metadata.guid, name: cfApplication.entity.name]
+        }.sort{
+            a, b -> a.name.compareTo(b.name)
         }
     }
 

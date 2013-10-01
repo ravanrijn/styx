@@ -1,0 +1,158 @@
+<div class="container">
+    <div class="row" ng-show="!app">
+        <div class="col-md-12">
+            <div spin="defaultSpinnerConfig" spin-if="loading"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <h3><span class="text-muted">your // </span> applications </h3>
+            <div class="form-group">
+                <select ng-model="selectedAppId"
+                        ng-options="app.id as app.name for app in app.applications"
+                        ng-change="changeApplication()" class="form-control">
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <h3><span class="text-muted">application // </span> {{app.application.name}}
+                <span class="dropdown">
+                    <button type="button" class="btn btn-default btn-sm" data-toggle="dropdown">
+                        <span><span class="glyphicon glyphicon-cog"></span></span>
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a>Delete</a></li>
+                    </ul>
+                </span>
+            </h3>
+            <div spin="defaultSpinnerConfig" spin-if="loading"></div>
+            <table class="table table-hover table-condensed" style="width: 100%">
+                <thead>
+                <tr>
+                    <th style="width: 10%">Status</th>
+                    <th style="width: 15%">Application</th>
+                    <th style="width: 20%">Url</th>
+                    <th style="width: 10%; text-align: right">Memory</th>
+                    <th style="width: 10%; text-align: right">Disk quota</th>
+                    <th style="width: 15%">Buildpack</th>
+                    <th style="width: 20%">Environment</th>
+                    <th style="width: 10%; text-align: right">Options</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>{{app.application.state}}</td>
+                    <td>{{app.application.name}}</td>
+                    <td><div class="text-left" ng-repeat="url in app.application.urls"><a href="http://{{url}}">http://{{url}}</a><br/></div></td>
+                    <td class="text-right">{{app.application.memory}}</td>
+                    <td class="text-right">{{app.application.diskQuota}}</td>
+                    <td>{{app.application.buildpack}}</td>
+                    <td>{{app.application.environment}}</td>
+                    <td>
+                        <div class="pull-right">
+                            <div class="dropdown">
+                                <button type="button"
+                                        class="btn btn-default btn-xs"
+                                        data-toggle="dropdown">
+                                    <span><span class="glyphicon glyphicon-cog"></span></span>
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a>Edit</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <h3><span class="text-muted">{{app.application.name}} // </span> services </h3>
+            <div spin="defaultSpinnerConfig" spin-if="loading"></div>
+            <table class="table table-hover table-condensed" style="width: 100%">
+                <thead>
+                <tr>
+                    <th style="width: 10%">Name</th>
+                    <th style="width: 40%">Plan</th>
+                    <th style="width: 40%">Service</th>
+                    <th style="width: 10%; text-align: right">Options</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="service in app.application.services">
+                    <td>{{service.name}}</td>
+                    <td>{{service.plan.name}}</td>
+                    <td>{{service.type.name}} {{service.type.version}}</td>
+                    <td>
+                        <div class="pull-right">
+                            <div class="dropdown">
+                                <button type="button"
+                                        class="btn btn-default btn-xs"
+                                        data-toggle="dropdown">
+                                    <span><span class="glyphicon glyphicon-cog"></span></span>
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a>Delete</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <h3><span class="text-muted">{{app.application.name}} // </span> instances </h3>
+            <div spin="defaultSpinnerConfig" spin-if="loading"></div>
+            <table class="table table-hover table-condensed" style="width: 100%">
+                <thead>
+                <tr>
+                    <th style="width: 10%">#</th>
+                    <th style="width: 30%">State</th>
+                    <th style="width: 30%">Console IP</th>
+                    <th style="width: 30%">Console Port</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="instance in app.application.instances">
+                    <td>{{instance.id}}</td>
+                    <td>{{instance.state}}</td>
+                    <td>{{instance.consoleIp}}</td>
+                    <td>{{instance.consolePort}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <h3><span class="text-muted">{{app.application.name}} // </span> events </h3>
+            <div spin="defaultSpinnerConfig" spin-if="loading"></div>
+            <table class="table table-hover table-condensed" style="width: 100%">
+                <thead>
+                <tr>
+                    <th style="width: 10%">Status</th>
+                    <th style="width: 40%">Description</th>
+                    <th style="width: 40%">Timestamp</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="event in app.application.events">
+                    <td>{{event.status}}</td>
+                    <td>{{event.description}}</td>
+                    <td>{{event.timestamp}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

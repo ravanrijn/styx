@@ -21,9 +21,9 @@ class ApplicationController {
     @ResponseBody
     def show(@RequestHeader("Authorization") token, @PathVariable("id") id) {
         final user = apiClient.user(token)
-        final availableApplications = apiClient.applications(token)
-        final selectedApplication = apiClient.application(token, id)
-        [user: user, availableApplications: availableApplications, selectedApplication: selectedApplication]
+        final applications = apiClient.applications(token)
+        final application = apiClient.application(token, id)
+        [user: user, applications: applications, application: application]
     }
 
 }
