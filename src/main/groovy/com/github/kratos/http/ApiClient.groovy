@@ -27,7 +27,6 @@ class ApiClient {
     private final String clientSecret
     private final HttpClient httpClient
     private final ObjectMapper mapper
-    private final Application application
 
     @Autowired
     def ApiClient(HttpClient httpClient, ObjectMapper mapper, String apiBaseUri, String uaaBaseUri, String clientId, String clientSecret) {
@@ -37,7 +36,6 @@ class ApiClient {
         this.mapper = mapper
         this.apiBaseUri = apiBaseUri
         this.uaaBaseUri = uaaBaseUri
-        this.application = new Application(httpClient, apiBaseUri)
     }
 
     def applications(token) {
