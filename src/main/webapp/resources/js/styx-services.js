@@ -103,6 +103,19 @@ styxServices.factory('apiServices', function ($http, authToken) {
         });
     }
 
+    apiServices.deleteOrganizationUser = function(orgId, userId){
+        var config = {
+            method: 'DELETE',
+            url: 'api/' + orgId + '/users/' + userId,
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': authToken.getToken(),
+                'Content-Type': 'application/json'
+            }
+        }
+        return $http(config)
+    }
+
     apiServices.updateOrganizationUser = function(orgId, user){
         var config = {
             method: 'PUT',
