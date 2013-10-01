@@ -1,6 +1,6 @@
 package com.github.kratos.controller
 
-import com.github.kratos.http.UaaClient
+import com.github.kratos.http.ApiClient
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Controller
@@ -13,17 +13,17 @@ import org.springframework.web.bind.annotation.ResponseBody
 @RequestMapping("/api/access_token")
 class AccessTokenController {
 
-    final UaaClient uaaClient;
+    final ApiClient apiClient;
 
     @Autowired
-    def AccessTokenController(UaaClient uaaClient) {
-        this.uaaClient = uaaClient
+    def AccessTokenController(ApiClient apiClient) {
+        this.apiClient = apiClient
     }
 
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     def authenticate(@RequestParam("username") username,  @RequestParam("password") password) {
-        uaaClient.userToken(username, password)
+        apiClient.userToken(username, password)
     }
 
 }

@@ -6,7 +6,7 @@
     </div>
     <div class="row">
         <div class="col-md-12">
-            <h3><span class="text-muted">organization // </span> {{root.selectedOrganization.name}}
+            <h3><span class="text-muted">organization // </span> {{root.organization.name}}
                 <span class="dropdown">
                     <button type="button" class="btn btn-default btn-sm" data-toggle="dropdown">
                         <span><span class="glyphicon glyphicon-cog"></span></span>
@@ -14,27 +14,27 @@
                     </button>
                     <ul class="dropdown-menu">
                         <li><a>Edit</a></li>
-                        <li><a href="#/org/{{root.selectedOrganization.id}}/users">Manage users</a></li>
+                        <li><a href="#/org/{{root.organization.id}}/users">Manage users</a></li>
                         <li><a>Add space</a></li>
                         <li><a>Delete</a></li>
                     </ul>
                 </span>
             </h3>
-            <p ng-show="root.selectedOrganization">Quota for {{root.selectedOrganization.name}}:
-                <span class="text-muted">memory-limit = </span>{{root.selectedOrganization.quota.memoryLimit}}MB ::
-                <span class="text-muted">services-limit = </span>{{root.selectedOrganization.quota.services}} ::
-                <span class="text-muted">plan-name =</span> {{root.selectedOrganization.quota.name}}
+            <p ng-show="root.selectedOrganization">Quota for {{root.organization.name}}:
+                <span class="text-muted">memory-limit = </span>{{root.organization.quota.memoryLimit}}MB ::
+                <span class="text-muted">services-limit = </span>{{root.organization.quota.services}} ::
+                <span class="text-muted">plan-name =</span> {{root.organization.quota.name}}
             </p>
             <div class="form-group">
                 <select ng-model="selectedOrgId"
-                        ng-options="org.id as org.name for org in root.availableOrganizations"
+                        ng-options="org.id as org.name for org in root.organizations"
                         ng-change="changeOrganization()" class="form-control">
                 </select>
             </div>
         </div>
     </div>
 
-    <div class="row" ng-repeat="space in root.selectedOrganization.spaces">
+    <div class="row" ng-repeat="space in root.organization.spaces">
         <div class="col-md-12">
             <h3><span class="text-muted">space // </span> {{space.name}}
                 <span class="dropdown">
@@ -44,7 +44,7 @@
                     </button>
                     <ul class="dropdown-menu">
                         <li><a>Edit</a></li>
-                        <li><a href="#/org/{{root.selectedOrganization.id}}/{{space.id}}/users">Manage users</a></li>
+                        <li><a href="#/org/{{root.organization.id}}/{{space.id}}/users">Manage users</a></li>
                         <li><a>Delete</a></li>
                     </ul>
                 </span>
@@ -56,15 +56,14 @@
                 <tr>
                     <th style="width: 10%">Status</th>
                     <th style="width: 20%">Application</th>
-                    <th style="width: 30%">URL</th>
+                    <th style="width: 40%">URL</th>
                     <th style="width: 10%; text-align: right">Memory</th>
                     <th style="width: 10%; text-align: right">Instances</th>
-                    <th style="width: 10%; text-align: right">Services</th>
                     <th style="width: 10%; text-align: right">Options</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr ng-repeat="app in space.applications">
+                <tr ng-repeat="app in space.apps">
                     <td>
                         <div class="btn-group btn-group-xs">
                             <button type="button"
@@ -97,9 +96,6 @@
                     placeholder="{{app.instances}}"
                     ng-model="app.instances" ng-show="editingApplication === app.id"/>
                     <span ng-hide="editingApplication === app.id">{{app.instances}}</span>
-                    </td>
-                    <td style="text-align: right">
-                    {{app.serviceBindings.length}}
                     </td>
                     <td>
                         <div class="pull-right">

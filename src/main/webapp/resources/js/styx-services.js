@@ -25,7 +25,6 @@ styxServices.factory('authToken', function ($http, localStorageService) {
 styxServices.factory('notificationChannel', function ($rootScope, apiServices, authToken) {
 
     var ROOT_UPDATED = "_ROOT_UPDATED_";
-    var USER_MANAGEMENT_UPDATED = "_USER_MANAGEMENT_UPDATED_";
     var LOADING = "_LOADING_";
     var LOADED = "_LOADED_";
     var ERROR = "_ERROR_";
@@ -55,7 +54,7 @@ styxServices.factory('notificationChannel', function ($rootScope, apiServices, a
     notificationChannel.login = function(username, password){
         var tokenPromise = apiServices.getAuthToken(username, password);
         tokenPromise.success(function (response, status, headers) {
-            authToken.setToken(response.token);
+            authToken.setToken(response.tokenType + " " + response.accessToken);
             $rootScope.$broadcast(LOGIN_SUCCESS, {root: response, status: status, headers: headers});
         });
         tokenPromise.error(function (response, status, headers) {
@@ -72,16 +71,6 @@ styxServices.factory('notificationChannel', function ($rootScope, apiServices, a
 
     notificationChannel.onLoginFailure = function($scope, handler){
         $scope.$on(LOGIN_FAILURE, function(event, args) {
-            handler(args);
-        });
-    }
-
-    notificationChannel.updateUserManagement = function(){
-
-    }
-
-    notificationChannel.onUserManagementUpdated = function($scope, handler){
-        $scope.$on(USER_MANAGEMENT_UPDATED, function(event, args) {
             handler(args);
         });
     }
@@ -112,6 +101,20 @@ styxServices.factory('apiServices', function ($http, authToken) {
                 'Accept': 'application/json;charset=utf-8'},
             data: $.param({'grant_type': 'password', 'username': username, 'password': password})
         });
+    }
+
+    apiServices.updateOrganizationUser = function(orgId, user){
+        var config = {
+            method: 'PUT',
+            url: 'api/' + orgId + '/users',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': authToken.getToken(),
+                'Content-Type': 'application/json'
+            },
+            data: JSON.stringify(user)
+        }
+        return $http(config)
     }
 
     apiServices.getRoot = function(organizationId){

@@ -1,48 +1,29 @@
 package com.github.kratos.resources
 
-import com.github.kratos.http.HttpClient
-import com.github.kratos.http.UaaClient
-
 class Organization {
 
-    private final HttpClient httpClient
-    private final UaaClient uaaClient
-    private final String apiBaseUri
-
-    def Organization(HttpClient httpClient, UaaClient uaaClient, String apiBaseUri) {
-        this.httpClient = httpClient
-        this.uaaClient = uaaClient
-        this.apiBaseUri = apiBaseUri
+    static def listTransform = { result ->
+        result.resources.collect { cfOrganization -> [id: cfOrganization.metadata.guid, name: cfOrganization.entity.name, quotaId: cfOrganization.entity.quota_definition_guid] }
     }
 
-    def list(String token) {
-        final cfOrganizations = httpClient.get {
-            path "$apiBaseUri/v2/organizations"
-            headers authorization: token, accept: 'application/json'
-            queryParams 'inline-relations-depth': 0
-        }
-        cfOrganizations.resources.collect { cfOrganization -> [id: cfOrganization.metadata.guid, name: cfOrganization.entity.name, quotaId: cfOrganization.entity.quota_definition_guid] }
-    }
-
-    def get(String token, String id) {
-        final cfOrganization = httpClient.get {
-            path "$apiBaseUri/v2/organizations/$id"
-            headers authorization: token, accept: 'application/json'
-            queryParams 'inline-relations-depth': 2
-        }
+    static def getTransform = { getDetails, cfOrganization ->
+        def cfApps = cfOrganization.entity.spaces.collect { cfSpace -> cfSpace.entity.apps}.flatten()
+        def userIds = cfOrganization.entity.users.collect { cfUser -> cfUser.metadata.guid }
+        def futures = getDetails(userIds, cfApps)
         [id: cfOrganization.metadata.guid,
                 name: cfOrganization.entity.name,
-                quota: Quota.mapQuota(cfOrganization.entity.quota_definition),
-                users: mapOrganizationUsers(cfOrganization),
-                spaces: mapSpaces(cfOrganization.entity.spaces, token)]
+                quota: Quota.getTransform(cfOrganization.entity.quota_definition),
+                users: mapOrganizationUsers(cfOrganization, futures),
+                spaces: mapSpaces(cfOrganization.entity.spaces, futures)]
     }
 
-    def mapSpaceUsers(cfSpace) {
+    static def mapSpaceUsers(cfSpace, futures) {
+        def usernames = futures.findFutureById("usernames")
         def merge = { List... lists ->
             def merged = [] as Set
             lists.flatten().each { item ->
                 def searchResult = merged.find { result -> result.id == item.id }
-                searchResult ? searchResult.roles = searchResult.roles + item.roles : merged << [id: item.id, roles: item.roles]
+                searchResult ? searchResult.roles = searchResult.roles + item.roles : merged << [id: item.id, username: usernames.find{username -> username.id == item.id}?.username, roles: item.roles]
             }
             merged
         }
@@ -52,26 +33,19 @@ class Organization {
         merge(managers, developers, auditors)
     }
 
-    def mapSpaces(cfSpaces, token) {
-        cfSpaces.collect { cfSpace -> [id: cfSpace.metadata.guid, name: cfSpace.entity.name, users: mapSpaceUsers(cfSpace.entity), apps: mapApplications(cfSpace.entity.apps, token)] }
+    static def mapSpaces(cfSpaces, futures) {
+        cfSpaces.collect { cfSpace -> [id: cfSpace.metadata.guid, name: cfSpace.entity.name, users: mapSpaceUsers(cfSpace.entity, futures), apps: mapApplications(cfSpace.entity.apps, futures)] }
     }
 
-    def mapApplications(cfApps, token) {
-        def getRequests = cfApps.collect { cfApp ->
-            Closure getRequest = {
-                path "${apiBaseUri}${cfApp.entity.routes_url}"
-                headers authorization: token, accept: 'application/json'
-                queryParams 'inline-relations-depth': 1
-            }
-            getRequest
-        }
-        final futures = httpClient.get(getRequests.toArray() as Closure[])
+    static def mapApplications(cfApps, futures) {
         cfApps.collect { cfApp ->
             def urls = []
             futures.list.each { future ->
-                future.result().resources.each { route ->
-                    if (route.entity.apps.find { app -> app.metadata.guid == cfApp.metadata.guid }) {
-                        urls.add("${route.entity.host}.${route.entity.domain.entity.name}" as String)
+                if (future.id != "usernames") {
+                    future.result().resources.each { route ->
+                        if (route.entity.apps.find { app -> app.metadata.guid == cfApp.metadata.guid }) {
+                            urls.add("${route.entity.host}.${route.entity.domain.entity.name}" as String)
+                        }
                     }
                 }
             }
@@ -84,7 +58,7 @@ class Organization {
         }
     }
 
-    def mapOrganizationUsers(cfOrganization) {
+    static def mapOrganizationUsers(cfOrganization, futures) {
         def getRoles = { configs -> configs.collect { config -> config.assignees.find { assignee -> config.id == assignee.metadata.guid } ? config.name : null } }
         def organizationUsers = cfOrganization.entity.users.collect { cfUser ->
             def userRoles = getRoles([[id: cfUser.metadata.guid, assignees: cfOrganization.entity.managers, name: 'MANAGER'],
@@ -93,7 +67,7 @@ class Organization {
             userRoles.removeAll([null])
             [id: cfUser.metadata.guid, username: '', roles: userRoles]
         }
-        uaaClient.userNames(organizationUsers.collect { user -> user.id }).collect { result ->
+        futures.findFutureById("usernames").collect { result ->
             def searchResult = organizationUsers.find { user -> user.id == result.id }
             searchResult.username = result.username
             searchResult

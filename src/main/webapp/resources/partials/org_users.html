@@ -7,7 +7,7 @@
 
             <div class="form-group">
                 <select ng-model="selectedOrgId"
-                        ng-options="org.id as org.name for org in root.availableOrganizations"
+                        ng-options="org.id as org.name for org in root.organizations"
                         ng-change="changeOrganization()" class="form-control">
                 </select>
             </div>
@@ -15,7 +15,7 @@
     </div>
     <div class="row">
         <div class="col-md-12">
-            <h3 ng-hide="loading"><span class="text-muted">users //</span> organization <span class="badge">{{root.selectedOrganization.users.length}}</span></span>
+            <h3 ng-hide="loading"><span class="text-muted">users //</span> organization <span class="badge">{{root.organization.users.length}}</span></span>
             </h3>
 
             <p>All the users in this organization are listed below. <br/>To invite new users to your organization <a>click
@@ -49,12 +49,12 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr ng-repeat="user in root.selectedOrganization.users">
+                <tr ng-repeat="user in root.organization.users">
                     <td style="width: 40%">
                         {{user.username}}
                     </td>
                     <td style="width: 15%" ng-hide="editingUser.id === user.id">
-                        <span ng-class="['glyphicon', (isInRole(user, 'ORGANIZATION_MANAGER')) ? 'glyphicon-ok' : 'glyphicon-remove']"></span>
+                        <span ng-class="['glyphicon', (isInRole(user, 'MANAGER')) ? 'glyphicon-ok' : 'glyphicon-remove']"></span>
                     </td>
                     <td style="width: 15%" ng-show="editingUser.id === user.id">
                         <input type="checkbox" id="org.user.manager"
@@ -68,7 +68,7 @@
                                ng-model="editingUser.isBillingManager"/>
                     </td>
                     <td style="width: 15%" ng-hide="editingUser.id === user.id">
-                        <span ng-class="['glyphicon', (isInRole(user, 'ORGANIZATION_AUDITOR')) ? 'glyphicon-ok' : 'glyphicon-remove']"></span>
+                        <span ng-class="['glyphicon', (isInRole(user, 'AUDITOR')) ? 'glyphicon-ok' : 'glyphicon-remove']"></span>
                     </td>
                     <td style="width: 15%" ng-show="editingUser.id === user.id">
                         <input type="checkbox" id="org.user.auditor"
@@ -93,7 +93,7 @@
                     <td ng-show="editingUser.id === user.id" style="width: 15%">
                         <div class="pull-right">
                             <div class="btn-group btn-group-xs">
-                                <button type="button" class="btn btn-success" ng-click="saveUser()">
+                                <button type="button" class="btn btn-success" ng-click="updateOrganization(root.organization.id, user)">
                                     Update
                                 </button>
                                 <button type="button" class="btn btn-warning" ng-click="cancelEdit()">

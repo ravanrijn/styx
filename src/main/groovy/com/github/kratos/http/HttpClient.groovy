@@ -59,6 +59,7 @@ class HttpClient {
         private String path
         private String id
         private Object body
+        private Closure transform
         private Map<String, String> headers
         private Map<String, String> uriParams = [:]
         private Map<String, String> queryParams
@@ -78,12 +79,9 @@ class HttpClient {
                 [id: httpClientDsl.id ?: httpClientDsl.path, result: { future.get(30, TimeUnit.SECONDS) }]
             }
             def findFuture = { id ->
-                futures.find {
-                    future.id == id
-                    future.result()
-                }
+                futures.find { future -> future.id == id}?.result()
             }
-            [get: findFuture, list: futures]
+            [findFutureById: findFuture, list: futures]
         }
 
         def static newInstance(Closure closure, HttpMethod httpMethod, RestTemplate restTemplate, ObjectMapper objectMapper) {
@@ -107,6 +105,10 @@ class HttpClient {
 
         def body(Object body) {
             this.body = body
+        }
+
+        def transform(Closure transform){
+            this.transform = transform
         }
 
         def uriParams(Map<String, String> uriParams) {
@@ -141,7 +143,7 @@ class HttpClient {
             try {
                 final exchange = restTemplate.exchange(uri, httpMethod, httpEntity, new ParameterizedTypeReference<Map<String, Object>>() {})
                 if (exchange.getStatusCode().value() < 300) {
-                    return exchange.getBody()
+                    return transform ? transform(exchange.getBody()) : exchange.getBody()
                 }
                 throw new HttpClientException(body: exchange.getBody(), status: exchange.getStatusCode(), headers: exchange.getHeaders())
             } catch (HttpClientErrorException e) {

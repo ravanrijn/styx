@@ -7,7 +7,7 @@
             <thead>
             <tr>
                 <th>Name</th>
-                <th>Plan</th>
+                <th>Quota</th>
                 <th></th>
             </tr>
             </thead>
@@ -22,7 +22,7 @@
                 <td ng-hide="editingOrg === organization.id">{{organization.quotaName}}</td>
                 <td ng-show="editingOrg === organization.id">
                     <select ng-model="organization.quotaId"
-                            ng-options="plan.id as plan.name for plan in admin.plans" class="form-control">
+                            ng-options="quota.id as quota.name for quota in admin.quotas" class="form-control">
                     </select>
                 </td>
                 <td ng-hide="editingOrg === organization.id">
@@ -42,7 +42,7 @@
                 </td>
                 <td ng-show="editingOrg === organization.id">
                     <div class="pull-right">
-                        <div class="btn-group btn-group-sm">
+                        <div class="btn-group btn-group-xs">
                             <button type="button" class="btn btn-success"
                                     ng-click="saveOrg(organization.id, organization.name, organization.quotaId)">
                                 Update
@@ -58,16 +58,16 @@
                 <td>
                     <input type="text" class="form-control" id="new.org.name"
                            placeholder="Choose a name"
-                           ng-model="newOrganization.name"/>
+                           ng-model="newOrganization.name" required/>
                 </td>
                 <td>
-                    <select ng-model="newOrganization.plan"
-                            ng-options="plan.id as plan.name for plan in admin.plans" class="form-control">
+                    <select ng-model="newOrganization.quotaId"
+                            ng-options="quota.id as quota.name for quota in admin.quotas" class="form-control" required>
                     </select>
                 </td>
                 <td>
                     <div class="pull-right">
-                        <div class="btn-group btn-group-sm">
+                        <div class="btn-group btn-group-xs">
                             <button type="button" class="btn btn-success" ng-disabled="editingOrg"
                                     ng-click="createOrg(newOrganization)">
                                 Add
@@ -80,8 +80,8 @@
         </table>
     </div>
     <div>
-        <h3><span class="text-muted">plans // </span>manage <span class="badge">{{admin.plans.length}}</span></h3>
-        <p>All available plans are listed below.</p>
+        <h3><span class="text-muted">quotas // </span>manage <span class="badge">{{admin.quotas.length}}</span></h3>
+        <p>All available quotas are listed below.</p>
         <div spin="defaultSpinnerConfig" spin-if="loading"></div>
         <table class="table table-hover table-condensed">
             <thead>
@@ -95,56 +95,56 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="plan in admin.plans">
-                <td ng-hide="editingPlan === plan.id">{{plan.name}}</td>
-                <td ng-show="editingPlan === plan.id">
-                    <input type="text" class="form-control" id="plan.name"
-                           placeholder="{{plan.name}}"
-                           ng-model="plan.name"/>
+            <tr ng-repeat="quota in admin.quotas">
+                <td ng-hide="editingQuota === quota.id">{{quota.name}}</td>
+                <td ng-show="editingQuota === quota.id">
+                    <input type="text" class="form-control" id="quota.name"
+                           placeholder="{{quota.name}}"
+                           ng-model="quota.name"/>
                 </td>
-                <td class="text-right" ng-hide="editingPlan === plan.id">{{plan.services}}</td>
-                <td class="text-right" ng-show="editingPlan === plan.id">
-                    <input type="text" class="form-control text-right" id="plan.services"
-                           placeholder="{{plan.services}}"
-                           ng-model="plan.services"/>
+                <td class="text-right" ng-hide="editingQuota === quota.id">{{quota.services}}</td>
+                <td class="text-right" ng-show="editingQuota === quota.id">
+                    <input type="number" class="form-control text-right" id="quota.services"
+                           placeholder="{{quota.services}}"
+                           ng-model="quota.services"/>
                 </td>
-                <td class="text-right" ng-hide="editingPlan === plan.id">{{plan.memoryLimit}} MB</td>
-                <td class="text-right" ng-show="editingPlan === plan.id">
-                    <input type="text" class="form-control text-right" id="plan.memoryLimit"
-                           placeholder="{{plan.memoryLimit}}"
-                           ng-model="plan.memoryLimit"/>
+                <td class="text-right" ng-hide="editingQuota === quota.id">{{quota.memoryLimit}} MB</td>
+                <td class="text-right" ng-show="editingQuota === quota.id">
+                    <input type="number" class="form-control text-right" id="quota.memoryLimit"
+                           placeholder="{{quota.memoryLimit}}"
+                           ng-model="quota.memoryLimit"/>
                 </td>
-                <td class="text-center" ng-hide="editingPlan === plan.id"><span
-                        ng-class="['glyphicon', (plan.nonBasicServicesAllowed) ? 'glyphicon-ok' : 'glyphicon-remove']"></span>
+                <td class="text-center" ng-hide="editingQuota === quota.id"><span
+                        ng-class="['glyphicon', (quota.nonBasicServicesAllowed) ? 'glyphicon-ok' : 'glyphicon-remove']"></span>
                 </td>
-                <td class="text-center" ng-show="editingPlan === plan.id">
-                    <input type="checkbox" id="plan.nonBasicServicesAllowed"
-                           ng-model="plan.nonBasicServicesAllowed"/>
+                <td class="text-center" ng-show="editingQuota === quota.id">
+                    <input type="checkbox" id="quota.nonBasicServicesAllowed"
+                           ng-model="quota.nonBasicServicesAllowed"/>
                 </td>
-                <td class="text-center" ng-hide="editingPlan === plan.id"><span
-                        ng-class="['glyphicon', (plan.trialDbAllowed) ? 'glyphicon-ok' : 'glyphicon-remove']"></span>
+                <td class="text-center" ng-hide="editingQuota === quota.id"><span
+                        ng-class="['glyphicon', (quota.trialDbAllowed) ? 'glyphicon-ok' : 'glyphicon-remove']"></span>
                 </td>
-                <td class="text-center" ng-show="editingPlan === plan.id">
-                    <input type="checkbox" id="plan.trialDbAllowed"
-                           ng-model="plan.trialDbAllowed"/>
-                <td ng-hide="editingPlan === plan.id">
+                <td class="text-center" ng-show="editingQuota === quota.id">
+                    <input type="checkbox" id="quota.trialDbAllowed"
+                           ng-model="quota.trialDbAllowed"/>
+                <td ng-hide="editingQuota === quota.id">
                     <div class="pull-right">
                         <div class="dropdown">
-                            <button type="button" class="btn btn-default btn-xs" data-toggle="dropdown" ng-disabled="editingPlan">
+                            <button type="button" class="btn btn-default btn-xs" data-toggle="dropdown" ng-disabled="editingQuota">
                                 <span><span class="glyphicon glyphicon-cog"></span></span>
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu">
-                                <li><a ng-click="editPlan(plan.id)">Edit</a></li>
-                                <li><a ng-click="deletePlan(plan.id, plan.name)">Delete</a></li>
+                                <li><a ng-click="editQuota(quota.id)">Edit</a></li>
+                                <li><a ng-click="deleteQuota(quota.id, quota.name)">Delete</a></li>
                             </ul>
                         </div>
                     </div>
                 </td>
-                <td ng-show="editingPlan === plan.id">
+                <td ng-show="editingQuota === quota.id">
                     <div class="pull-right">
-                        <div class="btn-group btn-group-sm">
-                            <button type="button" class="btn btn-success" ng-click="savePlan(plan.id)">
+                        <div class="btn-group btn-group-xs">
+                            <button type="button" class="btn btn-success" ng-click="saveQuota(quota.id)">
                                 Update
                             </button>
                             <button type="button" class="btn btn-warning" ng-click="cancelEdit()">
@@ -156,33 +156,33 @@
             </tr>
             <tr>
                 <td>
-                    <input type="text" class="form-control" id="new.plan.name"
+                    <input type="text" class="form-control" id="new.quota.name"
                            placeholder="Choose a name"
-                           ng-model="newPlan.name" ng-disabled="editingPlan"/>
+                           ng-model="newQuota.name" ng-disabled="editingQuota"/>
                 </td>
                 <td class="text-right">
-                    <input type="text" class="form-control text-right" id="new.plan.totalServices"
+                    <input type="number" class="form-control text-right" id="new.quota.totalServices"
                            placeholder="Choose amount of services"
-                           ng-model="newPlan.services" ng-disabled="editingPlan"/>
+                           ng-model="newQuota.services" ng-disabled="editingQuota"/>
                 </td>
                 <td class="text-right">
-                    <input type="text" class="form-control text-right" id="new.plan.memoryLimit"
+                    <input type="number" class="form-control text-right" id="new.quota.memoryLimit"
                            placeholder="Choose a memory limit"
-                           ng-model="newPlan.memoryLimit" ng-disabled="editingPlan"/>
+                           ng-model="newQuota.memoryLimit" ng-disabled="editingQuota"/>
                 </td>
                 <td class="text-center">
-                    <input type="checkbox" id="new.plan.nonBasicServicesAllowed"
-                           ng-model="newPlan.nonBasicServicesAllowed" ng-disabled="editingPlan"/>
+                    <input type="checkbox" id="new.quota.nonBasicServicesAllowed"
+                           ng-model="newQuota.nonBasicServicesAllowed" ng-disabled="editingQuota"/>
                 </td>
                 <td class="text-center">
-                    <input type="checkbox" id="new.plan.trialDbAllowed"
-                           ng-model="newPlan.trialDbAllowed" ng-disabled="editingPlan"/>
+                    <input type="checkbox" id="new.quota.trialDbAllowed"
+                           ng-model="newQuota.trialDbAllowed" ng-disabled="editingQuota"/>
                 </td>
                 <td>
                     <div class="pull-right">
-                        <div class="btn-group btn-group-sm">
-                            <button type="button" class="btn btn-success" ng-disabled="editingPlan"
-                                    ng-click="createPlan(newPlan)">
+                        <div class="btn-group btn-group-xs">
+                            <button type="button" class="btn btn-success" ng-disabled="editingQuota"
+                                    ng-click="createQuota(newQuota)">
                                 Add
                             </button>
                         </div>
