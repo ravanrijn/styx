@@ -100,6 +100,9 @@ styxControllers.controller('OrganizationUsersController', function ($scope, $rou
         }
     }
     $scope.findUsers = function (term) {
+        if(!term || term.length < 3){
+            return {}
+        }
         var dfr = $q.defer();
         apiServices.findUserByName(term).
             success(function (data, status, headers, config) {
