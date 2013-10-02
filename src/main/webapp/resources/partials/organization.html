@@ -71,16 +71,16 @@
                                     data-toggle="dropdown" ng-disabled="editingOrganization">
                                 <span ng-show="app.state == 'STOPPED'">STOPPED</span>
                                 <span ng-show="app.state == 'STARTED'">STARTED</span>
-                                <span class="caret"></span>
+                                <!--<span class="caret"></span>-->
                             </button>
-                            <ul class="dropdown-menu">
-                                <li ng-show="app.state == 'STARTED'"><a href="#">STOP</a></li>
-                                <li ng-show="app.state == 'STOPPED'"><a href="#">START</a></li>
-                            </ul>
+                            <!--<ul class="dropdown-menu">-->
+                                <!--<li ng-show="app.state == 'STARTED'"><a href="#">STOP</a></li>-->
+                                <!--<li ng-show="app.state == 'STOPPED'"><a href="#">START</a></li>-->
+                            <!--</ul>-->
                         </div>
                     </td>
                     <td>
-                        <a>{{app.name}}</a>
+                        {{app.name}}
                     </td>
                     <td class="text-left">
                         <div class="text-left" ng-repeat="url in app.urls"><a href="http://{{url}}">http://{{url}}</a><br/></div>
@@ -108,8 +108,8 @@
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li><a href="#/app/{{app.id}}">Details</a></li>
-                                    <li><a>Stop</a></li>
-                                    <li><a>Start</a></li>
+                                    <!--<li><a>Stop</a></li>-->
+                                    <!--<li><a>Start</a></li>-->
                                     <li><a>Delete</a></li>
                                 </ul>
                             </div>
