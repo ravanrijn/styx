@@ -30,7 +30,8 @@
             </h3>
             <dl class="dl-horizontal">
                 <dt>Status</dt>
-                <dd>{{app.application.state}}</dd>
+                <dd><span ng-show="app.application.state == 'STARTED'" class="label label-success">{{app.application.state}}</span>
+                    <span ng-show="app.application.state != 'STARTED'" class="label label-danger">{{app.application.state}}</span></dd>
                 <dt>Application</dt>
                 <dd>{{app.application.name}}</dd>
                 <dt>Url</dt>
@@ -62,7 +63,8 @@
                 <tbody>
                 <tr ng-repeat="instance in app.application.instances">
                     <td>{{instance.id}}</td>
-                    <td>{{instance.state}}</td>
+                    <td><span ng-show="instance.state == 'RUNNING'" class="label label-success">{{instance.state}}</span>
+                        <span ng-show="instance.state != 'RUNNING'" class="label label-danger">{{instance.state}}</span></td>
                     <td>{{instance.host}}</td>
                     <td>{{instance.port}}</td>
                     <td>{{instance.cpu}}</td>
