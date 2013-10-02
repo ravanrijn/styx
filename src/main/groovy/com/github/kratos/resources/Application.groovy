@@ -28,6 +28,8 @@ class Application {
                 state: cfApplication.entity.state,
                 buildpack: '',
                 environment: '',
+                organization: [id: cfApplication.entity.space.entity.organization.metadata.guid, name: cfApplication.entity.space.entity.organization.entity.name],
+                space: [id: cfApplication.entity.space.metadata.guid, name: cfApplication.entity.space.entity.name],
                 instances: instances,
                 services: services,
                 events: [],

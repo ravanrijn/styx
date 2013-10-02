@@ -33,7 +33,7 @@
                 <dd><span ng-show="app.application.state == 'STARTED'" class="label label-success">{{app.application.state}}</span>
                     <span ng-show="app.application.state != 'STARTED'" class="label label-danger">{{app.application.state}}</span></dd>
                 <dt>Application</dt>
-                <dd>{{app.application.name}}</dd>
+                <dd>{{app.application.name}} (<a href="#/org/{{app.application.organization.id}}">{{app.application.organization.name}}</a> // {{app.application.space.name}})</dd>
                 <dt>Url</dt>
                 <dd><div ng-repeat="url in app.application.urls"><a href="http://{{url}}">http://{{url}}</a><br/></div></dd>
                 <dt>Memory</dt>
