@@ -53,43 +53,29 @@
                 <thead>
                 <tr>
                     <th style="width: 10%">#</th>
-                    <th style="width: 30%">State</th>
-                    <th style="width: 30%">Console IP</th>
-                    <th style="width: 30%">Console Port</th>
+                    <th style="width: 20%">State</th>
+                    <th style="width: 20%">Host</th>
+                    <th style="width: 20%">Port</th>
+                    <th style="width: 10%">CPU</th>
+                    <th style="width: 10%">Memory</th>
+                    <th style="width: 10%">Disk</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr ng-repeat="instance in app.application.instances">
                     <td>{{instance.id}}</td>
                     <td>{{instance.state}}</td>
-                    <td>{{instance.consoleIp}}</td>
-                    <td>{{instance.consolePort}}</td>
+                    <td>{{instance.host}}</td>
+                    <td>{{instance.port}}</td>
+                    <td>{{instance.cpu}}</td>
+                    <td>{{instance.memory}}</td>
+                    <td>{{instance.disk}}</td>
                 </tr>
                 </tbody>
             </table>
         </div>
     </div>
     <div class="row">
-        <div class="col-md-6">
-            <h3><span class="text-muted">{{app.application.name}} // </span> events </h3>
-            <div spin="defaultSpinnerConfig" spin-if="loading"></div>
-            <table class="table table-hover table-condensed" style="width: 100%">
-                <thead>
-                <tr>
-                    <th style="width: 10%">Status</th>
-                    <th style="width: 40%">Description</th>
-                    <th style="width: 40%">Timestamp</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr ng-repeat="event in app.application.events">
-                    <td>{{event.status}}</td>
-                    <td>{{event.description}}</td>
-                    <td>{{event.timestamp}}</td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
         <div class="col-md-6">
             <h3><span class="text-muted">{{app.application.name}} // </span> services </h3>
             <div spin="defaultSpinnerConfig" spin-if="loading"></div>
@@ -122,6 +108,28 @@
                             </div>
                         </div>
                     </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-6">
+            <h3><span class="text-muted">{{app.application.name}} // </span> events </h3>
+            <div spin="defaultSpinnerConfig" spin-if="loading"></div>
+            <table class="table table-hover table-condensed" style="width: 100%">
+                <thead>
+                <tr>
+                    <th style="width: 10%">Instance</th>
+                    <th style="width: 10%">Status</th>
+                    <th style="width: 40%">Description</th>
+                    <th style="width: 40%">Timestamp</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="event in app.application.events">
+                    <td>{{event.instance}}</td>
+                    <td>{{event.status}}</td>
+                    <td>{{event.description}}</td>
+                    <td>{{event.timestamp}}</td>
                 </tr>
                 </tbody>
             </table>

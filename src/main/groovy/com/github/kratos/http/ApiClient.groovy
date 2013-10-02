@@ -61,7 +61,7 @@ class ApiClient {
                 requests.add(
                         {->
                             id "instances"
-                            path "$apiBaseUri/v2/apps/$appId/instances"
+                            path "$apiBaseUri/v2/apps/$appId/stats"
                             headers authorization: token, accept: 'application/json'
                         }
                 )

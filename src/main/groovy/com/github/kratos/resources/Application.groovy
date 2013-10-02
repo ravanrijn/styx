@@ -45,8 +45,8 @@ class Application {
             application.urls << url
         }
         cfApplication.entity.events.each { event ->
-            application.events << [id: event.metadata.guid, status: event.entity.exit_status, description: event.entity.exit_description,
-                    timestamp: event.entity.timestamp]
+            application.events << [id: event.metadata.guid, instance: event.entity.instance_index, status: event.entity.exit_status,
+                    description: event.entity.exit_description, timestamp: event.entity.timestamp]
         }
         application
     }
@@ -75,7 +75,8 @@ class Application {
         def instances = []
         if (cfInstances) {
             cfInstances.each { key, value ->
-                instances << [id: key, state: value.state, consoleIp: value.console_ip, consolePort: value.console_port]
+                instances << [id: key, state: value.state, host: value.stats?.host, port: value.stats?.port,
+                                cpu: value.stats?.usage?.cpu, memory: value.stats?.usage?.mem, disk: value.stats?.usage?.disk]
             }
         }
         instances
