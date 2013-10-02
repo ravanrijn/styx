@@ -2,6 +2,8 @@ package com.github.kratos.resources
 
 class Application {
 
+    static final int MEGA_BYTE = 1024 * 1024
+
     static def listTransform = { result ->
         result.resources.collect{
             cfApplication -> [id: cfApplication.metadata.guid, name: cfApplication.entity.name]
@@ -21,8 +23,8 @@ class Application {
         def application = [
                 id: cfApplication.metadata.guid,
                 name: cfApplication.entity.name,
-                memory: cfApplication.entity.memory,
-                diskQuota: cfApplication.entity.disk_quota,
+                memory: cfApplication.entity.memory + 'M',
+                diskQuota: cfApplication.entity.disk_quota + 'M',
                 state: cfApplication.entity.state,
                 buildpack: '',
                 environment: '',
@@ -76,10 +78,28 @@ class Application {
         if (cfInstances) {
             cfInstances.each { key, value ->
                 instances << [id: key, state: value.state, host: value.stats?.host, port: value.stats?.port,
-                                cpu: value.stats?.usage?.cpu, memory: value.stats?.usage?.mem, disk: value.stats?.usage?.disk]
+                                cpu: percentage(value.stats?.usage?.cpu), memory: bytes(value.stats?.usage?.mem), disk: bytes(value.stats?.usage?.disk)]
             }
         }
         instances
+    }
+
+    static def bytes(value) {
+        if (value != null) {
+            if (value > MEGA_BYTE) {
+                return String.format('%.2fM', (value / MEGA_BYTE))
+            } else {
+                return String.format('%.2fB', value)
+            }
+        }
+        null
+    }
+
+    static def percentage(value) {
+        if (value != null) {
+            return String.format('%.2f%%', value)
+        }
+        null
     }
 
 }
