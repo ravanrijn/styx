@@ -23,8 +23,8 @@ class Application {
         def application = [
                 id: cfApplication.metadata.guid,
                 name: cfApplication.entity.name,
-                memory: cfApplication.entity.memory + 'M',
-                diskQuota: cfApplication.entity.disk_quota + 'M',
+                memory: cfApplication.entity.memory + ' MB',
+                diskQuota: cfApplication.entity.disk_quota + ' MB',
                 state: cfApplication.entity.state,
                 buildpack: '',
                 environment: '',
@@ -87,9 +87,9 @@ class Application {
     static def bytes(value) {
         if (value != null) {
             if (value > MEGA_BYTE) {
-                return String.format('%.2fM', (value / MEGA_BYTE))
+                return String.format('%.2f MB', (value / MEGA_BYTE))
             } else {
-                return String.format('%.2fB', value)
+                return String.format('%.2f B', value)
             }
         }
         null
