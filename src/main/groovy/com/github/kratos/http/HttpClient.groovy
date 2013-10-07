@@ -128,13 +128,11 @@ class HttpClient {
             HttpEntity httpEntity = new HttpEntity(httpHeaders)
             if (queryParams) {
                 uri = "$uri?"
-                def parameterIndex = 1
-                queryParams.each { key, value ->
+                queryParams.eachWithIndex { key, value, index ->
                     uri = "$uri$key=$value"
-                    if (parameterIndex < queryParams.size()) {
+                    if ((index + 1) < queryParams.size()) {
                         uri = "$uri&"
                     }
-                    parameterIndex++
                 }
             }
             if (body) {
