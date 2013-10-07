@@ -427,7 +427,7 @@ styxControllers.controller('AdminController', function ($scope, $http, $route, $
 
 styxControllers.controller('ApplicationController', function ($scope, $location,  $routeParams, notificationChannel) {
     $scope.changeApplication = function(){
-        if($scope.selectedAppId !== $scope.app.application.id){
+        if($scope.selectedAppId !== $scope.root.application.id){
             $location.path("/app/" + $scope.selectedAppId);
         }
     }
