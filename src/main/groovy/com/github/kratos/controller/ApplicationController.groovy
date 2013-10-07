@@ -23,7 +23,7 @@ class ApplicationController {
         final user = apiClient.user(token)
         final applications = apiClient.applications(token)
         final application = apiClient.application(token, id)
-        [user: user, applications: applications, application: application]
+        [user: user, organization: application.organization, applications: applications, application: application]
     }
 
 }

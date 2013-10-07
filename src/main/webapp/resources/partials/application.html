@@ -9,7 +9,7 @@
             <h3><span class="text-muted">your // </span> applications </h3>
             <div class="form-group">
                 <select ng-model="selectedAppId"
-                        ng-options="app.id as app.name for app in app.applications"
+                        ng-options="root.id as root.name for app in root.applications"
                         ng-change="changeApplication()" class="form-control">
                 </select>
             </div>
@@ -17,7 +17,7 @@
     </div>
     <div class="row">
         <div class="col-md-6">
-            <h3><span class="text-muted">application // </span> {{app.application.name}}
+            <h3><span class="text-muted">application // </span> {{root.application.name}}
                 <span class="dropdown">
                     <button type="button" class="btn btn-default btn-sm" data-toggle="dropdown">
                         <span><span class="glyphicon glyphicon-cog"></span></span>
@@ -30,20 +30,20 @@
             </h3>
             <dl class="dl-horizontal">
                 <dt>Status</dt>
-                <dd><span ng-show="app.application.state == 'STARTED'" class="label label-success">{{app.application.state}}</span>
-                    <span ng-show="app.application.state != 'STARTED'" class="label label-danger">{{app.application.state}}</span></dd>
+                <dd><span ng-show="root.application.state == 'STARTED'" class="label label-success">{{root.application.state}}</span>
+                    <span ng-show="root.application.state != 'STARTED'" class="label label-danger">{{root.application.state}}</span></dd>
                 <dt>Application</dt>
-                <dd>{{app.application.name}} (<a href="#/org/{{app.application.organization.id}}">{{app.application.organization.name}}</a> // {{app.application.space.name}})</dd>
+                <dd>{{root.application.name}} (<a href="#/org/{{root.application.organization.id}}">{{root.application.organization.name}}</a> // {{root.application.space.name}})</dd>
                 <dt>Url</dt>
-                <dd><div ng-repeat="url in app.application.urls"><a href="http://{{url}}">http://{{url}}</a><br/></div></dd>
+                <dd><div ng-repeat="url in root.application.urls"><a href="http://{{url}}">http://{{url}}</a><br/></div></dd>
                 <dt>Memory</dt>
-                <dd>{{app.application.memory}}</dd>
+                <dd>{{root.application.memory}}</dd>
                 <dt>Disk quota</dt>
-                <dd>{{app.application.diskQuota}}</dd>
+                <dd>{{root.application.diskQuota}}</dd>
                 <dt>Buildpack</dt>
-                <dd>{{app.application.buildpack}}</dd>
+                <dd>{{root.application.buildpack}}</dd>
                 <dt>Environment</dt>
-                <dd>{{app.application.environment}}</dd>
+                <dd>{{root.application.environment}}</dd>
             </dl>
         </div>
         <div class="col-md-6">
@@ -61,7 +61,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr ng-repeat="instance in app.application.instances">
+                <tr ng-repeat="instance in root.application.instances">
                     <td>{{instance.id}}</td>
                     <td><span ng-show="instance.state == 'RUNNING'" class="label label-success">{{instance.state}}</span>
                         <span ng-show="instance.state != 'RUNNING'" class="label label-danger">{{instance.state}}</span></td>
@@ -88,7 +88,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr ng-repeat="service in app.application.services">
+                <tr ng-repeat="service in root.application.services">
                     <td>{{service.name}}</td>
                     <td>{{service.plan.name}}</td>
                     <td>{{service.type.name}} {{service.type.version}}</td>
@@ -123,7 +123,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr ng-repeat="event in app.application.events">
+                <tr ng-repeat="event in root.application.events">
                     <td>{{event.instance}}</td>
                     <td>{{event.status}}</td>
                     <td>{{event.description}}</td>

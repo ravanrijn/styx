@@ -43,6 +43,9 @@ styxControllers.controller('StyxController', function ($scope, $route, notificat
     notificationChannel.onRootUpdated($scope, function (response) {
         $scope.root = response.root;
     });
+    notificationChannel.onAppUpdated($scope, function(response) {
+        $scope.root = response.app;
+    });
 });
 
 styxControllers.controller('SpaceUsersController', function ($scope, $location, notificationChannel, $routeParams) {
@@ -198,7 +201,7 @@ styxControllers.controller('OrganizationController', function ($scope, $location
         }
     }
     $scope.loading = true;
-    if (!$scope.root) {
+    if (!$scope.root || ($scope.root && !$scope.root.organizations)) {
         if (!$routeParams.organizationId) {
             notificationChannel.updateRoot();
         } else {
@@ -422,7 +425,7 @@ styxControllers.controller('AdminController', function ($scope, $http, $route, $
     });
 });
 
-styxControllers.controller('ApplicationController', function ($scope, $location,  $routeParams, $http, authToken) {
+styxControllers.controller('ApplicationController', function ($scope, $location,  $routeParams, notificationChannel) {
     $scope.changeApplication = function(){
         if($scope.selectedAppId !== $scope.app.application.id){
             $location.path("/app/" + $scope.selectedAppId);
@@ -430,24 +433,13 @@ styxControllers.controller('ApplicationController', function ($scope, $location,
     }
 
     $scope.loading = true;
-
-    var appId = $routeParams.applicationId;
-    var config = {
-        method: 'GET',
-        url: "api/apps/" + appId,
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Authorization': authToken.getToken()
-        }
+    if (!$routeParams.applicationId) {
+        notificationChannel.updateApp();
+    } else {
+        notificationChannel.updateApp($routeParams.applicationId);
     }
-    var promise = $http(config);
-    promise.success(function (response, status, headers) {
-        $scope.app = response;
-        $scope.selectedAppId = response.application.id;
+    notificationChannel.onAppUpdated($scope, function (response) {
+        $scope.selectedAppId = response.app.application.id;
         $scope.loading = false;
-    });
-    promise.error(function (response, status, headers) {
-
     });
 });

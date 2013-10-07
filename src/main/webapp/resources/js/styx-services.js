@@ -25,6 +25,7 @@ styxServices.factory('authToken', function ($http, localStorageService) {
 styxServices.factory('notificationChannel', function ($rootScope, apiServices, authToken) {
 
     var ROOT_UPDATED = "_ROOT_UPDATED_";
+    var APP_UPDATED = "_APP_UPDATED_";
     var LOADING = "_LOADING_";
     var LOADED = "_LOADED_";
     var ERROR = "_ERROR_";
@@ -47,6 +48,23 @@ styxServices.factory('notificationChannel', function ($rootScope, apiServices, a
 
     notificationChannel.onRootUpdated = function($scope, handler){
         $scope.$on(ROOT_UPDATED, function(event, args) {
+            handler(args);
+        });
+    }
+
+    notificationChannel.updateApp = function(applicationId) {
+        apiServices.getApp(applicationId).then(
+            function (response, status, headers) {
+                $rootScope.$broadcast(APP_UPDATED, {app: response.data, status: status, headers: headers});
+            },
+            function (response, status, headers) {
+                $rootScope.$broadcast(ERROR, {app: response.data, status: status, headers: headers});
+            }
+        );
+    }
+
+    notificationChannel.onAppUpdated = function($scope, handler){
+        $scope.$on(APP_UPDATED, function(event, args) {
             handler(args);
         });
     }
@@ -156,6 +174,22 @@ styxServices.factory('apiServices', function ($http, authToken) {
                 'Content-Type': 'application/json'}
         }
         return $http(config);
+    }
+
+    apiServices.getApp = function(applicationId) {
+        var url = "api/apps";
+        if (applicationId) {
+            url = url + "/" + applicationId;
+        }
+        var config = {
+            method: 'GET',
+            url: url,
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': authToken.getToken(),
+                'Content-Type': 'application/json'}
+        }
+        return $http(config)
     }
 
     apiServices.getUserManagement = function(){
