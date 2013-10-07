@@ -9,7 +9,7 @@
             <h3><span class="text-muted">your // </span> applications </h3>
             <div class="form-group">
                 <select ng-model="selectedAppId"
-                        ng-options="root.id as root.name for app in root.applications"
+                        ng-options="app.id as app.name for app in root.applications"
                         ng-change="changeApplication()" class="form-control">
                 </select>
             </div>
