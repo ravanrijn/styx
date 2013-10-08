@@ -76,6 +76,13 @@ class ApiClient {
         }
     }
 
+    def deleteApplication(String token, String appId) {
+        httpClient.delete {
+            path "${apiBaseUri}/v2/apps/${id}"
+            headers authorization: token, accept: 'application/json'
+        }
+    }
+
     def findUserByUsername(token, query){
         httpClient.get{
             path "$uaaBaseUri/ids/Users"
