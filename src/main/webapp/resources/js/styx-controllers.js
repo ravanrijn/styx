@@ -34,11 +34,11 @@ styxControllers.controller('CfProxyController', function ($scope, cfServices) {
         }
         cfServices.getRequest(url).
             success(function (data, status, headers, config) {
-                $scope.result = {data: JSON.stringify(data, null, 4), status: status, headers: headers};
+                $scope.result = {response: JSON.stringify(data.response, null, 4), user: data.user, status: status, headers: headers};
                 $scope.loading = false
             }).
             error(function (data, status, headers, config) {
-                $scope.result = {data: JSON.stringify(data, null, 4), status: status, headers: headers};
+                $scope.result = {response: JSON.stringify(data.response, null, 4), user: data.user, status: status, headers: headers};
                 $scope.loading = false
             });
     }

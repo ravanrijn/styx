@@ -22,10 +22,11 @@
             </div>
             <div ng-show="root">
                 <ul class="nav navbar-nav navbar-left">
-                    <li ng-show="root"><a href="#/org/{{root.organization.id}}">Dashboard</a></li>
+                    <li ng-show="root.organization"><a href="#/org/{{root.organization.id}}">Dashboard</a></li>
                     <li ng-show="isInRole(root.user, 'ADMIN')"><a href="#/admin">Administration</a></li>
+                    <li><a href="#/proxy">RAW Proxy</a></li>
                 </ul>
-                <ul class="nav navbar-nav navbar-right">
+                <ul class="nav navbar-nav navbar-right" ng-show="root.user">
                     <li><a>Welcome, <strong>{{root.user.username}}</strong></a></li>
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-cog"></span><b class="caret"></b></a>
@@ -58,7 +59,7 @@
     <nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
         <div class="container">
             <ul class="nav navbar-nav" ng-show="root">
-                <li class="navbar-text">"<span>{{root.chuckQuote}}</span>"</li>
+                <li class="navbar-text"></li>
             </ul>
         </div>
     </nav>

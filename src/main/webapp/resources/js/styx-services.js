@@ -25,6 +25,7 @@ styxServices.factory('authToken', function ($http, localStorageService) {
 styxServices.factory('notificationChannel', function ($rootScope, apiServices, authToken) {
 
     var ROOT_UPDATED = "_ROOT_UPDATED_";
+    var USER_UPDATED = "_USER_UPDATED_";
     var APP_UPDATED = "_APP_UPDATED_";
     var LOADING = "_LOADING_";
     var LOADED = "_LOADED_";

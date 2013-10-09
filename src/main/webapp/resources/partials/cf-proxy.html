@@ -50,8 +50,10 @@
     </div>
     <div class="row">
         <div spin="defaultSpinnerConfig" spin-if="loading"></div>
-        <div class="col-md-12">
-            <pre style="max-height: 400px;overflow-y: auto;" ng-show="result.data">{{result.data}}</pre>
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+            <pre style="max-height: 400px;overflow-y: auto;" ng-show="result.response">{{result.response}}</pre>
         </div>
+        <div class="col-md-1"></div>
     </div>
 </div>
