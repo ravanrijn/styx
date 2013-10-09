@@ -2,6 +2,49 @@
 
 var styxControllers = angular.module('styx.controllers', ['styx.services']);
 
+styxControllers.controller('InvitationController', function ($scope, $routeParams, notificationChannel, apiServices) {
+    apiServices.getInactiveUser($routeParams.invitationId).
+        success(function (data, status, headers, config) {
+            $scope.invitations = data
+        }).
+        error(function (data, status, headers, config) {
+            notificationChannel.changeStatus(200, "" + $routeParams.invitationId + ".")
+        });
+});
+
+styxControllers.controller('CfProxyController', function ($scope, cfServices) {
+
+    $scope.loading = false
+    $scope.type = "organizations"
+    $scope.depth = 0
+    $scope.id = ""
+
+    $scope.reset = function () {
+        $scope.type = "organizations"
+        $scope.depth = 0
+        $scope.id = ""
+        $scope.result = null
+    }
+
+    $scope.fireGetRequest = function () {
+        $scope.loading = true;
+        var url = "cf/api/v2/" + $scope.type;
+        if($scope.id.length > 20){
+            url = url + "/" + $scope.id + "?inline-relations-depth=" + $scope.depth;
+        }
+        cfServices.getRequest(url).
+            success(function (data, status, headers, config) {
+                $scope.result = {data: JSON.stringify(data, null, 4), status: status, headers: headers};
+                $scope.loading = false
+            }).
+            error(function (data, status, headers, config) {
+                $scope.result = {data: JSON.stringify(data, null, 4), status: status, headers: headers};
+                $scope.loading = false
+            });
+    }
+
+});
+
 styxControllers.controller('StyxController', function ($scope, $route, notificationChannel, authToken) {
 
     $scope.isInRole = function (user, expectedRole) {
@@ -43,7 +86,7 @@ styxControllers.controller('StyxController', function ($scope, $route, notificat
     notificationChannel.onRootUpdated($scope, function (response) {
         $scope.root = response.root;
     });
-    notificationChannel.onAppUpdated($scope, function(response) {
+    notificationChannel.onAppUpdated($scope, function (response) {
         $scope.root = response.app;
     });
 });
@@ -103,7 +146,7 @@ styxControllers.controller('OrganizationUsersController', function ($scope, $rou
         }
     }
     $scope.findUsers = function (term) {
-        if(!term || term.length < 3){
+        if (!term || term.length < 3) {
             return {}
         }
         var dfr = $q.defer();
@@ -145,13 +188,13 @@ styxControllers.controller('OrganizationUsersController', function ($scope, $rou
         apiServices.updateOrganizationUser(organization.id, user).
             success(function (data, status, headers, config) {
                 var found = false;
-                angular.forEach(organization.users, function(orgUser, orgUserIndex){
-                    if(orgUser.id == user.id){
+                angular.forEach(organization.users, function (orgUser, orgUserIndex) {
+                    if (orgUser.id == user.id) {
                         found = true;
                     }
                 })
-                if(!found){
-                    organization.users.push({id:user.id, username:user.username, roles:[]});
+                if (!found) {
+                    organization.users.push({id: user.id, username: user.username, roles: []});
                 }
                 notificationChannel.changeStatus(200, "Successfully updated " + user.username + ".");
                 $route.reload();
@@ -425,9 +468,9 @@ styxControllers.controller('AdminController', function ($scope, $http, $route, $
     });
 });
 
-styxControllers.controller('ApplicationController', function ($scope, $location,  $routeParams, notificationChannel) {
-    $scope.changeApplication = function(){
-        if($scope.selectedAppId !== $scope.root.application.id){
+styxControllers.controller('ApplicationController', function ($scope, $location, $routeParams, notificationChannel) {
+    $scope.changeApplication = function () {
+        if ($scope.selectedAppId !== $scope.root.application.id) {
             $location.path("/app/" + $scope.selectedAppId);
         }
     }

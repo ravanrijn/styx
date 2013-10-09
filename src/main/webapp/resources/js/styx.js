@@ -4,7 +4,9 @@ var styx = angular.module('styx', ['ui.bootstrap', 'angular-spin', 'styx.service
 
 styx.config(['$routeProvider', '$httpProvider', function($routeProvider, $httpProvider) {
     $routeProvider.when("/org/:organizationId", {templateUrl: 'partials/organization.html',   controller: 'OrganizationController'});
-    $routeProvider.when("/org", {templateUrl: 'partials/organization.html',   controller: 'OrganizationController'});
+    $routeProvider.when("/invitations/:invitationId", {templateUrl: 'partials/registration.html', controller: 'InvitationController'});
+    $routeProvider.when("/org", {templateUrl: 'partials/organization.html', controller: 'OrganizationController'});
+    $routeProvider.when("/proxy", {templateUrl: 'partials/cf-proxy.html', controller: 'CfProxyController'});
     $routeProvider.when("/org/:organizationId/users", {templateUrl: 'partials/org_users.html',   controller: 'OrganizationUsersController'});
     $routeProvider.when("/org/:organizationId/:spaceId/users", {templateUrl: 'partials/space_users.html',   controller: 'SpaceUsersController'});
     $routeProvider.when("/app/:applicationId", {templateUrl: 'partials/application.html', controller: 'ApplicationController'});

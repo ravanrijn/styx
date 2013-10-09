@@ -22,6 +22,9 @@ import org.springframework.core.task.TaskExecutor;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.scheduling.concurrent.ConcurrentTaskExecutor;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.client.RestTemplate;
@@ -35,6 +38,8 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.util.List;
 import java.util.concurrent.*;
+
+import static org.springframework.util.Assert.notNull;
 
 @ComponentScan(basePackages = {"com.github.styx", "com.github.kratos"})
 @Configuration
@@ -107,6 +112,13 @@ public class StyxWebConfig extends WebMvcConfigurerAdapter {
     @Bean(name = "clientSecret")
     public String getClientSecret() {
         return env.getProperty("clientSecret");
+    }
+
+    @Bean
+    public JavaMailSender getJavaMailSender(){
+        JavaMailSenderImpl sender = new JavaMailSenderImpl();
+        sender.setHost(env.getProperty("smtp.host"));
+        return sender;
     }
 
     @Override

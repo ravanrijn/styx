@@ -16,6 +16,8 @@ import java.util.concurrent.Callable
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.TimeUnit
 
+import static java.lang.String.format
+
 @Component
 class HttpClient {
 
@@ -147,7 +149,7 @@ class HttpClient {
                 }
                 throw new HttpClientException(body: exchange.getBody(), status: exchange.getStatusCode(), headers: exchange.getHeaders())
             } catch (HttpClientErrorException e) {
-                LOG.error("Unable to retrieve result.", e)
+                LOG.error(format("HTTP call resulted in a %s status with body %s.", e.getStatusCode(), e.getResponseBodyAsString()), e)
                 throw new HttpClientException(body: objectMapper.readValue(e.getResponseBodyAsString(), objectMapper.getTypeFactory().constructMapType(HashMap.class, String.class, Object.class)),
                         status: e.getStatusCode(), headers: e.getResponseHeaders())
             }

@@ -5,8 +5,20 @@ import org.springframework.http.HttpStatus
 
 class HttpClientException extends RuntimeException {
 
-    HttpHeaders headers
-    HttpStatus status
-    Map<String, Object> body
+    final HttpHeaders headers
+    final HttpStatus status
+    final Map<String, Object> body
+
+    def HttpClientException(headers, status, body){
+        this.headers = headers
+        this.status = status
+        this.body = body
+    }
+
+    def HttpClientException(status, body){
+        this.status = status
+        this.body = body
+        headers = null
+    }
 
 }

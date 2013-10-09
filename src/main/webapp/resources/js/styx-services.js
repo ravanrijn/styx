@@ -107,6 +107,27 @@ styxServices.factory('notificationChannel', function ($rootScope, apiServices, a
 
 });
 
+styxServices.factory('cfServices', function($http, authToken, apiServices){
+
+    var cfServices = {};
+
+    cfServices.getRequest = function(url){
+        var config = {
+            method: 'GET',
+            url: url,
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': authToken.getToken(),
+                'Content-Type': 'application/json'
+            }
+        }
+        return $http(config)
+    }
+
+    return cfServices;
+
+});
+
 styxServices.factory('apiServices', function ($http, authToken) {
 
     var apiServices = {};
@@ -165,6 +186,19 @@ styxServices.factory('apiServices', function ($http, authToken) {
         if(organizationId){
             url = url + "/" + organizationId;
         }
+        var config = {
+            method: 'GET',
+            url: url,
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': authToken.getToken(),
+                'Content-Type': 'application/json'}
+        }
+        return $http(config);
+    }
+
+    apiServices.getInactiveUser = function(invitationId) {
+        var url = "api/invitations/" + invitationId;
         var config = {
             method: 'GET',
             url: url,
