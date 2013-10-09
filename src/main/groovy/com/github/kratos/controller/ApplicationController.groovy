@@ -26,4 +26,10 @@ class ApplicationController {
         [user: user, organization: application.organization, applications: applications, application: application]
     }
 
+    @RequestMapping(value = "/apps/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    def remove(@RequestHeader("Authorization") token, @PathVariable("id") id) {
+        apiClient.deleteApplication(token, id);
+    }
+
 }

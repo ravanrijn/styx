@@ -475,6 +475,27 @@ styxControllers.controller('ApplicationController', function ($scope, $location,
         }
     }
 
+    $scope.deleteApplication = function (id, name) {
+        $scope.loading = true;
+        var config = {
+            method: 'DELETE',
+            url: "api/apps/" + id,
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': authToken.getToken(),
+                'Content-Type': 'application/json'}
+        }
+        var promise = $http(config);
+        promise.success(function (response, status, headers) {
+            notificationChannel.changeStatus(200, "Application " + name + " has been successfully deleted.");
+            $route.reload();
+        });
+        promise.error(function (response, status, headers) {
+            notificationChannel.changeStatus(500, "Unable to delete application " + name + ".");
+            $route.reload();
+        });
+    }
+
     $scope.loading = true;
     if (!$routeParams.applicationId) {
         notificationChannel.updateApp();

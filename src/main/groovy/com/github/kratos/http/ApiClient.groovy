@@ -48,7 +48,7 @@ class ApiClient {
         }
     }
 
-    def application(String token, String appId) {
+    def application(String token, String appId){
         def getDetails = { cfApp ->
             def requests = []
             requests.add(
@@ -78,38 +78,45 @@ class ApiClient {
         }
     }
 
-    def findUserByUsername(token, query) {
-        httpClient.get {
-            path "$uaaBaseUri/ids/Users"
-            headers authorization: token, accept: "application/json"
-            queryParams "filter": "userName like \'${query}%\'"
-            transform { result -> result.resources.collect { item -> [id: item.id, username: item.userName] } }
+    def deleteApplication(String token, String appId) {
+        httpClient.delete {
+            path "${apiBaseUri}/v2/apps/${id}"
+            headers authorization: token, accept: 'application/json'
         }
     }
 
-    def deleteOrganizationUser(token, organizationId, userId) {
+    def findUserByUsername(token, query){
+        httpClient.get{
+            path "$uaaBaseUri/ids/Users"
+            headers authorization: token, accept: "application/json"
+            queryParams "filter": "userName like \'${query}%\'"
+            transform {result -> result.resources.collect{item -> [id:item.id,username:item.userName]}}
+        }
+    }
+
+    def deleteOrganizationUser(token, organizationId, userId){
         def appToken = appToken()
-        def userDetails = httpClient.get {
+        def userDetails = httpClient.get{
             path "$apiBaseUri/v2/users/${userId}"
             headers authorization: "${appToken.tokenType} ${appToken.accessToken}", accept: 'application/json'
             queryParams 'inline-relations-depth': 1
         }
         def doesNotMatchProvidedOrganization = { item ->
-            if (item.entity?.organization_guid) {
+            if(item.entity?.organization_guid){
                 return item.entity.organization_guid != organizationId
             }
             return item.metadata.guid != organizationId
         }
         def updateUserRequest = [
-                space_guids: userDetails.entity.spaces.findAll { space -> doesNotMatchProvidedOrganization(space) }.collect { space -> space.metadata.guid },
-                organization_guids: userDetails.entity.organizations.findAll { organization -> doesNotMatchProvidedOrganization(organization) }.collect { org -> org.metadata.guid },
-                managed_organization_guids: userDetails.entity.managed_organizations.findAll { organization -> doesNotMatchProvidedOrganization(organization) }.collect { org -> org.metadata.guid },
-                billing_managed_organization_guids: userDetails.entity.billing_managed_organizations.findAll { organization -> doesNotMatchProvidedOrganization(organization) }.collect { org -> org.metadata.guid },
-                audited_organization_guids: userDetails.entity.audited_organizations.findAll { organization -> doesNotMatchProvidedOrganization(organization) }.collect { org -> org.metadata.guid },
-                managed_space_guids: userDetails.entity.managed_spaces.findAll { space -> doesNotMatchProvidedOrganization(space) }.collect { space -> space.metadata.guid },
-                audited_space_guids: userDetails.entity.audited_spaces.findAll { space -> doesNotMatchProvidedOrganization(space) }.collect { space -> space.metadata.guid }
+                space_guids: userDetails.entity.spaces.findAll{space -> doesNotMatchProvidedOrganization(space)}.collect {space -> space.metadata.guid},
+                organization_guids: userDetails.entity.organizations.findAll {organization -> doesNotMatchProvidedOrganization(organization)}.collect{org -> org.metadata.guid},
+                managed_organization_guids: userDetails.entity.managed_organizations.findAll {organization -> doesNotMatchProvidedOrganization(organization)}.collect{org -> org.metadata.guid},
+                billing_managed_organization_guids: userDetails.entity.billing_managed_organizations.findAll {organization -> doesNotMatchProvidedOrganization(organization)}.collect{org -> org.metadata.guid},
+                audited_organization_guids: userDetails.entity.audited_organizations.findAll {organization -> doesNotMatchProvidedOrganization(organization)}.collect{org -> org.metadata.guid},
+                managed_space_guids: userDetails.entity.managed_spaces.findAll {space -> doesNotMatchProvidedOrganization(space)}.collect{space -> space.metadata.guid},
+                audited_space_guids: userDetails.entity.audited_spaces.findAll {space -> doesNotMatchProvidedOrganization(space)}.collect{space -> space.metadata.guid}
         ]
-        httpClient.put {
+        httpClient.put{
             path "$apiBaseUri/v2/users/${userId}"
             headers authorization: "${appToken.tokenType} ${appToken.accessToken}", accept: 'application/json'
             body mapper.writeValueAsString(updateUserRequest)
@@ -118,33 +125,33 @@ class ApiClient {
         }
     }
 
-    def updateOrganizationUser(token, id, user) {
+    def updateOrganizationUser(token, id, user){
         def userDetails = httpClient.get {
             path "$apiBaseUri/v2/users/${user.id}"
             headers authorization: token, accept: 'application/json'
             queryParams 'inline-relations-depth': 1
         }
         def doesNotMatchProvidedOrganization = { item ->
-            if (item.entity?.organization_guid) {
+            if(item.entity?.organization_guid){
                 return item.entity.organization_guid != id
             }
             return item.metadata.guid != id
         }
         def updateUserRequest = [
-                space_guids: userDetails.entity.spaces.findAll { space -> doesNotMatchProvidedOrganization(space) }.collect { space -> space.metadata.guid },
-                organization_guids: userDetails.entity.organizations.findAll { organization -> doesNotMatchProvidedOrganization(organization) }.collect { org -> org.metadata.guid },
-                managed_organization_guids: userDetails.entity.managed_organizations.findAll { organization -> doesNotMatchProvidedOrganization(organization) }.collect { org -> org.metadata.guid },
-                billing_managed_organization_guids: userDetails.entity.billing_managed_organizations.findAll { organization -> doesNotMatchProvidedOrganization(organization) }.collect { org -> org.metadata.guid },
-                audited_organization_guids: userDetails.entity.audited_organizations.findAll { organization -> doesNotMatchProvidedOrganization(organization) }.collect { org -> org.metadata.guid },
-                managed_space_guids: userDetails.entity.managed_spaces.findAll { space -> doesNotMatchProvidedOrganization(space) }.collect { space -> space.metadata.guid },
-                audited_space_guids: userDetails.entity.audited_spaces.findAll { space -> doesNotMatchProvidedOrganization(space) }.collect { space -> space.metadata.guid }
+                space_guids: userDetails.entity.spaces.findAll{space -> doesNotMatchProvidedOrganization(space)}.collect {space -> space.metadata.guid},
+                organization_guids: userDetails.entity.organizations.findAll {organization -> doesNotMatchProvidedOrganization(organization)}.collect{org -> org.metadata.guid},
+                managed_organization_guids: userDetails.entity.managed_organizations.findAll {organization -> doesNotMatchProvidedOrganization(organization)}.collect{org -> org.metadata.guid},
+                billing_managed_organization_guids: userDetails.entity.billing_managed_organizations.findAll {organization -> doesNotMatchProvidedOrganization(organization)}.collect{org -> org.metadata.guid},
+                audited_organization_guids: userDetails.entity.audited_organizations.findAll {organization -> doesNotMatchProvidedOrganization(organization)}.collect{org -> org.metadata.guid},
+                managed_space_guids: userDetails.entity.managed_spaces.findAll {space -> doesNotMatchProvidedOrganization(space)}.collect{space -> space.metadata.guid},
+                audited_space_guids: userDetails.entity.audited_spaces.findAll {space -> doesNotMatchProvidedOrganization(space)}.collect{space -> space.metadata.guid}
         ]
-        if (updateUserRequest.organization_guids.find { org_id -> org_id == id } && user.roles.isEmpty()) {
+        if(updateUserRequest.organization_guids.find{org_id -> org_id == id} && user.roles.isEmpty()){
             return getTransformCfUser(userDetails)
         }
         updateUserRequest.organization_guids.add(id)
-        user?.roles.each { role ->
-            switch (role) {
+        user?.roles.each{role ->
+            switch(role){
                 case "BILLING_MANAGER":
                     updateUserRequest.billing_managed_organization_guids << id as String
                     break
@@ -161,11 +168,11 @@ class ApiClient {
             headers authorization: token, accept: 'application/json'
             body mapper.writeValueAsString(updateUserRequest)
             queryParams 'collection-method': 'add'
-            transform { result -> [id: result.metadata.guid, name: result.entity.name] }
+            transform {result -> [id:result.metadata.guid, name:result.entity.name]}
         }
     }
 
-    def organizations(String token) {
+    def organizations(String token){
         httpClient.get {
             path "$apiBaseUri/v2/organizations"
             headers authorization: token, accept: 'application/json'
@@ -174,51 +181,51 @@ class ApiClient {
         }
     }
 
-    def createOrganization(token, org) {
+    def createOrganization(token, org){
         httpClient.post {
             path "${apiBaseUri}/v2/organizations"
             headers authorization: token, accept: 'application/json'
-            body mapper.writeValueAsString([name: org.name, quota_definition_guid: org.quotaId])
-            transform { result -> [id: result.metadata.guid, name: result.entity.name, quotaId: result.entity.quota_definition_guid] }
+            body mapper.writeValueAsString([name:org.name, quota_definition_guid:org.quotaId])
+            transform {result -> [id:result.metadata.guid, name:result.entity.name, quotaId:result.entity.quota_definition_guid]}
         }
     }
 
-    def updateOrganization(token, org) {
+    def updateOrganization(token, org){
         httpClient.put {
             path "${apiBaseUri}/v2/organizations/${org.id}"
             headers authorization: token, accept: 'application/json'
-            body mapper.writeValueAsString([name: org.name, quota_definition_guid: org.quotaId])
-            transform { result -> [id: result.metadata.guid, name: result.entity.name, quotaId: result.entity.quota_definition_guid] }
+            body mapper.writeValueAsString([name:org.name, quota_definition_guid:org.quotaId])
+            transform {result -> [id:result.metadata.guid, name:result.entity.name, quotaId:result.entity.quota_definition_guid]}
         }
     }
 
-    def deleteOrganization(token, id) {
+    def deleteOrganization(token, id){
         httpClient.delete {
             path "${apiBaseUri}/v2/organizations/${id}"
             headers authorization: token, accept: 'application/json'
         }
     }
 
-    def organization(String token, String orgId) {
+    def organization(String token, String orgId){
         def getDetails = { userIds, cfApps ->
             def appToken = appToken()
-            def requests = cfApps.collect { cfApp ->
-                {->
+            def requests = cfApps.collect{cfApp ->
+                { ->
                     path "${apiBaseUri}${cfApp.entity.routes_url}"
                     headers authorization: token, accept: 'application/json'
                     queryParams 'inline-relations-depth': 1
                 }
             }
-            if (userIds.size() > 0) {
+            if(userIds.size() > 0){
                 String usernamesUri = "$uaaBaseUri/ids/Users?filter="
                 userIds.each { userId -> usernamesUri = "${usernamesUri}id eq \'$userId\' or " }
                 requests.add(
-                        {->
-                            id "usernames"
-                            path usernamesUri[0..-4]
-                            headers authorization: "${appToken.tokenType} ${appToken.accessToken}" as String, accept: 'application/json'
-                            transform { result -> result.resources.collect { item -> [id: item.id, username: item.userName] } }
-                        }
+                    { ->
+                        id "usernames"
+                        path usernamesUri[0..-4]
+                        headers authorization: "${appToken.tokenType} ${appToken.accessToken}" as String, accept: 'application/json'
+                        transform {result -> result.resources.collect { item -> [id: item.id, username: item.userName] }}
+                    }
                 )
             }
             httpClient.get(requests.toArray() as Closure[])
@@ -229,13 +236,13 @@ class ApiClient {
             queryParams 'inline-relations-depth': 2
             transform transformOrganization.curry(getDetails)
         }
-    }
+    }    
 
     def createQuota(String token, quota) {
-        httpClient.post {
+        httpClient.post{
             path "$apiBaseUri/v2/quota_definitions"
             headers authorization: token, accept: 'application/json'
-            body mapper.writeValueAsString([name: quota.name, non_basic_services_allowed: quota.nonBasicServicesAllowed, total_services: quota.services, memory_limit: quota.memoryLimit, trial_db_allowed: quota.trialDbAllowed])
+            body mapper.writeValueAsString([name:quota.name, non_basic_services_allowed:quota.nonBasicServicesAllowed, total_services:quota.services, memory_limit:quota.memoryLimit, trial_db_allowed:quota.trialDbAllowed])
             transform transformQuota
         }
     }
@@ -248,10 +255,10 @@ class ApiClient {
     }
 
     def updateQuota(token, quota) {
-        httpClient.put {
+        httpClient.put{
             path "$apiBaseUri/v2/quota_definitions/${quota.id}"
             headers authorization: token, accept: 'application/json'
-            body mapper.writeValueAsString([name: quota.name, non_basic_services_allowed: quota.nonBasicServicesAllowed, total_services: quota.services, memory_limit: quota.memoryLimit, trial_db_allowed: quota.trialDbAllowed])
+            body mapper.writeValueAsString([name:quota.name, non_basic_services_allowed:quota.nonBasicServicesAllowed, total_services:quota.services, memory_limit:quota.memoryLimit, trial_db_allowed:quota.trialDbAllowed])
             transform transformQuota
         }
     }
@@ -274,15 +281,15 @@ class ApiClient {
         }
     }
 
-    def info() {
+    def info(){
         final info = httpClient.get {
             path "$apiBaseUri/v2/info"
             headers accept: 'application/json'
         }
-        [description: info.description, authorizationEndpoint: info.authorization_endpoint, apiVersion: info.api_version]
+        [description:info.description, authorizationEndpoint:info.authorization_endpoint, apiVersion:info.api_version]
     }
 
-    def appToken() {
+    def appToken(){
         final MultiValueMap<String, String> requestBody = new LinkedMultiValueMap();
         requestBody.add("grant_type", "client_credentials");
         requestBody.add("response_type", "token");
@@ -294,7 +301,7 @@ class ApiClient {
         [tokenType: token.token_type, accessToken: token.access_token, refreshToken: token.refresh_token]
     }
 
-    def userToken(username, password) {
+    def userToken(username, password){
         final MultiValueMap<String, String> requestBody = new LinkedMultiValueMap();
         requestBody.add("grant_type", "password");
         requestBody.add("username", username);
@@ -303,11 +310,11 @@ class ApiClient {
             path "${info().authorizationEndpoint}/oauth/token"
             body requestBody
             headers authorizationHeaders()
-            transform { result -> [tokenType: result.token_type, accessToken: result.access_token, refreshToken: result.refresh_token] }
+            transform {result -> [tokenType: result.token_type, accessToken: result.access_token, refreshToken: result.refresh_token]}
         }
     }
 
-    def user(String token) {
+    def user(String token){
         def appToken = appToken()
         final uaaUser = httpClient.get {
             path "$uaaBaseUri/userinfo"
@@ -318,7 +325,7 @@ class ApiClient {
             path "${apiBaseUri}/v2/users/${uaaUser.id}"
             headers authorization: "${appToken.tokenType} ${appToken.accessToken}" as String, accept: 'application/json'
             queryParams 'inline-relations-depth': 0
-            transform { result ->
+            transform {result ->
                 uaaUser.roles = transformCfUser(result).roles + uaaUser.roles
                 uaaUser
             }
