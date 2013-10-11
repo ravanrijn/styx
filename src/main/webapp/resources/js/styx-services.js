@@ -198,6 +198,32 @@ styxServices.factory('apiServices', function ($http, authToken) {
         return $http(config);
     }
 
+    apiServices.inviteUser = function(email, organizationId){
+        var config = {
+            method: 'POST',
+            url: "api/invitations",
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': authToken.getToken(),
+                'Content-Type': 'application/json'},
+            data: JSON.stringify({email:email, organization:{id:organizationId}})
+        }
+        return $http(config);
+    }
+
+    apiServices.activateUser = function(invitationId, user) {
+        var config = {
+            method: 'PUT',
+            url: "api/invitations/" + invitationId,
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': authToken.getToken(),
+                'Content-Type': 'application/json'},
+            data: JSON.stringify(user)
+        }
+        return $http(config);
+    }
+
     apiServices.getInactiveUser = function(invitationId) {
         var url = "api/invitations/" + invitationId;
         var config = {
@@ -225,10 +251,6 @@ styxServices.factory('apiServices', function ($http, authToken) {
                 'Content-Type': 'application/json'}
         }
         return $http(config)
-    }
-
-    apiServices.getUserManagement = function(){
-        return null;
     }
 
     return apiServices;

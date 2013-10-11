@@ -2,44 +2,60 @@
 
 var styxControllers = angular.module('styx.controllers', ['styx.services']);
 
-styxControllers.controller('InvitationController', function ($scope, $routeParams, notificationChannel, apiServices) {
+styxControllers.controller('InvitationController', function ($scope, $routeParams, $route, notificationChannel, apiServices) {
+    $scope.activated = false;
     apiServices.getInactiveUser($routeParams.invitationId).
         success(function (data, status, headers, config) {
             $scope.invitations = data
         }).
         error(function (data, status, headers, config) {
-            notificationChannel.changeStatus(200, "" + $routeParams.invitationId + ".")
+            notificationChannel.changeStatus(data.id, data.message)
         });
+    $scope.activate = function (user) {
+        if (user.password !== user.retypedPassword) {
+            notificationChannel.changeStatus(401, "Password's do not match, please retype your passwords.")
+        } else {
+            apiServices.activateUser($routeParams.invitationId, user).
+                success(function (data, status, headers, config) {
+                    console.log(data)
+                    notificationChannel.changeStatus(200, "Successfully activated user.")
+                    $scope.activated = true
+                }).
+                error(function (data, status, headers, config) {
+                    notificationChannel.changeStatus(data.id, data.message)
+                });
+        }
+    };
 });
 
 styxControllers.controller('CfProxyController', function ($scope, cfServices) {
 
-    $scope.loading = false
-    $scope.type = "organizations"
-    $scope.depth = 0
-    $scope.id = ""
+    $scope.loading = false;
+    $scope.type = "organizations";
+    $scope.depth = 0;
+    $scope.id = "";
 
     $scope.reset = function () {
-        $scope.type = "organizations"
-        $scope.depth = 0
-        $scope.id = ""
-        $scope.result = null
+        $scope.type = "organizations";
+        $scope.depth = 0;
+        $scope.id = "";
+        $scope.result = null;
     }
 
     $scope.fireGetRequest = function () {
         $scope.loading = true;
         var url = "cf/api/v2/" + $scope.type;
-        if($scope.id.length > 20){
+        if ($scope.id.length > 20) {
             url = url + "/" + $scope.id + "?inline-relations-depth=" + $scope.depth;
         }
         cfServices.getRequest(url).
             success(function (data, status, headers, config) {
                 $scope.result = {response: JSON.stringify(data.response, null, 4), user: data.user, status: status, headers: headers};
-                $scope.loading = false
+                $scope.loading = false;
             }).
             error(function (data, status, headers, config) {
                 $scope.result = {response: JSON.stringify(data.response, null, 4), user: data.user, status: status, headers: headers};
-                $scope.loading = false
+                $scope.loading = false;
             });
     }
 
@@ -126,6 +142,21 @@ styxControllers.controller('SpaceUsersController', function ($scope, $location, 
 });
 
 styxControllers.controller('OrganizationUsersController', function ($scope, $route, $location, $q, notificationChannel, apiServices, $routeParams) {
+    $scope.newUser = ""
+    $scope.user = {email: "", firstname: "", lastname: "", password: "", retypedPassword: ""};
+    $scope.inviteUser = function (email, organizationId) {
+        apiServices.inviteUser(email, organizationId).
+            success(function (data, status, headers, config) {
+                $scope.root.organization.users.push({id: data.id, username: email, roles: []})
+                notificationChannel.changeStatus(200, "Successfully invited " + email)
+                $route.reload();
+            }).
+            error(function (data, status, headers, config) {
+                notificationChannel.changeStatus(data.id, data.message)
+                $route.reload();
+
+            });
+    }
     $scope.loading = false;
     $scope.editUser = function (user) {
         var editingUser = user;

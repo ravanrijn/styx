@@ -358,12 +358,38 @@ class ApiClient {
         }
     }
 
+    def activateUser(user){
+        if (user == null || user.password == null || user.firstname == null || user.lastname == null){
+            throw new HttpClientException(HttpStatus.BAD_REQUEST, [message: "Invalid request, missing required fields."])
+        }
+        def appToken = appToken()
+        def uaaUser = httpClient.get{
+            id "uaaUser"
+            path "${uaaBaseUri}/Users/${user.id}"
+            headers Authorization: "${appToken.tokenType} ${appToken.accessToken}" as String, Accept: APPLICATION_JSON_VALUE, "Content-Type": APPLICATION_JSON_VALUE
+        }
+        final pwdChangeResponse = httpClient.put {
+            path "${uaaBaseUri}/Users/${user.id}/password"
+            headers Authorization: "${appToken.tokenType} ${appToken.accessToken}" as String, Accept: APPLICATION_JSON_VALUE, "Content-Type": APPLICATION_JSON_VALUE, "If-Match": "*"
+            body mapper.writeValueAsString([oldPassword:user.email, password:user.password])
+        }
+        uaaUser.active = true
+        uaaUser.name.givenName = user.firstname
+        uaaUser.name.familyName = user.lastname
+        final updatedUaaUser = httpClient.put {
+            path "${uaaBaseUri}/Users/${user.id}"
+            headers Authorization: "${appToken.tokenType} ${appToken.accessToken}" as String, Accept: APPLICATION_JSON_VALUE, "Content-Type": APPLICATION_JSON_VALUE, "If-Match": "*"
+            body mapper.writeValueAsString(uaaUser)
+        }
+        [uaaUser:updatedUaaUser, pwdChange:pwdChangeResponse]
+    }
+
     def createInactiveUser(request) {
         def appToken = appToken()
         def uaaUser = httpClient.post {
             path "${uaaBaseUri}/Users"
             headers Authorization: "${appToken.tokenType} ${appToken.accessToken}" as String, Accept: APPLICATION_JSON_VALUE, "Content-Type": APPLICATION_JSON_VALUE
-            body mapper.writeValueAsString([username: request.email, emails: [[value: request.email]], name:[givenName: request.email, familyName: request.email], active:false])
+            body mapper.writeValueAsString([username: request.email, emails: [[value: request.email]], password: request.email, name:[givenName: request.email, familyName: request.email], active:false])
         }
         httpClient.post {
             path "${apiBaseUri}/v2/users"
@@ -373,6 +399,7 @@ class ApiClient {
         def organization = httpClient.get {
             path "${apiBaseUri}/v2/organizations/${request.organization.id}"
             headers Authorization: "${appToken.tokenType} ${appToken.accessToken}" as String, Accept: APPLICATION_JSON_VALUE
+            queryParams 'inline-relations-depth': 1
         }
         def users = organization.entity.users.collect {user -> user.metadata.guid}
         users.add(uaaUser.id)
