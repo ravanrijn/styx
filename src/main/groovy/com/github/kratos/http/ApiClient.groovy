@@ -86,10 +86,11 @@ class ApiClient {
     }
 
     def updateApplication(token, app) {
+        def intValue = { s -> Integer.parseInt(s.split(" ")[0]) }
         httpClient.put {
             path "${apiBaseUri}/v2/apps/${app.id}"
             headers authorization: token, accept: 'application/json'
-            body mapper.writeValueAsString([name:app.name, memory: Integer.parseInt(app.memory.split(" ")[0]), disk_quota: Integer.parseInt(app.diskQuota.split(" ")[0])])
+            body mapper.writeValueAsString([name:app.name, memory: intValue(app.memory), disk_quota: intValue(app.diskQuota)])
             transform {result -> [id:result.metadata.guid, name:result.entity.name, memory: result.entity.memory, diskQuota: result.entity.disk_quota]}
         }
     }
