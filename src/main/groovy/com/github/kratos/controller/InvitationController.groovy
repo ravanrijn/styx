@@ -32,8 +32,6 @@ class InvitationController {
     private final JavaMailSender mailSender
     private final ApiClient apiClient
     private final SecretKey key
-    private final BASE64Encoder base64Encoder = new BASE64Encoder()
-    private final BASE64Decoder base64Decoder = new BASE64Decoder()
 
     @Autowired
     def InvitationController(JavaMailSender mailSender, ApiClient apiClient, String clientSecret) {
