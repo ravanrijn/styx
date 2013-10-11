@@ -2,6 +2,7 @@ package com.github.kratos.controller
 
 import com.github.kratos.http.ApiClient
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
@@ -30,6 +31,14 @@ class ApplicationController {
     @ResponseBody
     def remove(@RequestHeader("Authorization") token, @PathVariable("id") id) {
         apiClient.deleteApplication(token, id);
+    }
+
+    @RequestMapping(value = "/apps/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    def update(@RequestHeader("Authorization") token, @PathVariable("id") String id, @RequestBody app) {
+        app.id = id
+        apiClient.updateApplication(token, app)
     }
 
 }

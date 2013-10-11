@@ -24,27 +24,79 @@
                         <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu">
+                        <li><a ng-click="editApplication()">Edit</a></li>
                         <li><a ng-click="deleteApplication(root.application.id, root.application.name)">Delete</a></li>
                     </ul>
                 </span>
             </h3>
-            <dl class="dl-horizontal">
-                <dt>Status</dt>
-                <dd><span ng-show="root.application.state == 'STARTED'" class="label label-success">{{root.application.state}}</span>
-                    <span ng-show="root.application.state != 'STARTED'" class="label label-danger">{{root.application.state}}</span></dd>
-                <dt>Application</dt>
-                <dd>{{root.application.name}} (<a href="#/org/{{root.application.organization.id}}">{{root.application.organization.name}}</a> // {{root.application.space.name}})</dd>
-                <dt>Url</dt>
-                <dd><div ng-repeat="url in root.application.urls"><a href="http://{{url}}">http://{{url}}</a><br/></div></dd>
-                <dt>Memory</dt>
-                <dd>{{root.application.memory}}</dd>
-                <dt>Disk quota</dt>
-                <dd>{{root.application.diskQuota}}</dd>
-                <dt>Buildpack</dt>
-                <dd>{{root.application.buildpack}}</dd>
-                <dt>Environment</dt>
-                <dd>{{root.application.environment}}</dd>
-            </dl>
+            <form class="form-horizontal" role="form">
+                <div class="form-group">
+                    <label class="col-lg-3 control-label">Status</label>
+                    <div class="col-lg-9">
+                        <p class="form-control-static">
+                            <span ng-show="root.application.state == 'STARTED'" class="label label-success">{{root.application.state}}</span>
+                            <span ng-show="root.application.state != 'STARTED'" class="label label-danger">{{root.application.state}}</span>
+                        </p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-lg-3 control-label">Application</label>
+                    <div class="col-lg-9">
+                        <p ng-hide="editApp" class="form-control-static">{{root.application.name}} (<a href="#/org/{{root.application.organization.id}}">{{root.application.organization.name}}</a> // {{root.application.space.name}})</p>
+                        <input ng-show="editApp" type="text" class="form-control" ng-model="root.application.name" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-lg-3 control-label">Memory</label>
+                    <div class="col-lg-9">
+                        <p ng-hide="editApp" class="form-control-static">{{root.application.memory}}</p>
+                        <select ng-show="editApp" class="form-control" ng-model="root.application.memory">
+                            <option>128 MB</option>
+                            <option>256 MB</option>
+                            <option>512 MB</option>
+                            <option>1024 MB</option>
+                            <option>2048 MB</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-lg-3 control-label">Disk quota</label>
+                    <div class="col-lg-9">
+                        <p ng-hide="editApp" class="form-control-static">{{root.application.diskQuota}}</p>
+                        <select ng-show="editApp" class="form-control" ng-model="root.application.diskQuota">
+                            <option>128 MB</option>
+                            <option>256 MB</option>
+                            <option>512 MB</option>
+                            <option>1024 MB</option>
+                            <option>2048 MB</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-lg-3 control-label">Buildpack</label>
+                    <div class="col-lg-9">
+                        <p class="form-control-static">{{root.application.buildpack}}</p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-lg-3 control-label">Environment</label>
+                    <div class="col-lg-9">
+                        <p class="form-control-static">{{root.application.environment}}</p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-lg-3 control-label">Url</label>
+                    <div class="col-lg-9">
+                        <p class="form-control-static"><div ng-repeat="url in root.application.urls"><a href="http://{{url}}">http://{{url}}</a><br/></div></p>
+                    </div>
+                </div>
+                <div ng-show="editApp" class="form-group">
+                    <div class="col-lg-offset-3 col-lg-9">
+                        <button class="btn btn-success" ng-click="updateApplication()">Update</button>
+                        <button class="btn btn-warning" ng-click="cancelEdit()">Cancel</button>
+                    </div>
+                </div>
+            </form>
         </div>
         <div class="col-md-6">
             <h3><span class="text-muted">instances</span></h3>

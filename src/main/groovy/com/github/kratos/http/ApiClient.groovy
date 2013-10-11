@@ -48,7 +48,7 @@ class ApiClient {
         }
     }
 
-    def application(String token, String appId){
+    def application(token, appId){
         def getDetails = { cfApp ->
             def requests = []
             requests.add(
@@ -78,10 +78,19 @@ class ApiClient {
         }
     }
 
-    def deleteApplication(String token, String appId) {
+    def deleteApplication(token, appId) {
         httpClient.delete {
-            path "${apiBaseUri}/v2/apps/${id}"
+            path "${apiBaseUri}/v2/apps/${appId}"
             headers authorization: token, accept: 'application/json'
+        }
+    }
+
+    def updateApplication(token, app) {
+        httpClient.put {
+            path "${apiBaseUri}/v2/apps/${app.id}"
+            headers authorization: token, accept: 'application/json'
+            body mapper.writeValueAsString([name:app.name, memory: Integer.parseInt(app.memory.split(" ")[0]), disk_quota: Integer.parseInt(app.diskQuota.split(" ")[0])])
+            transform {result -> [id:result.metadata.guid, name:result.entity.name, memory: result.entity.memory, diskQuota: result.entity.disk_quota]}
         }
     }
 
