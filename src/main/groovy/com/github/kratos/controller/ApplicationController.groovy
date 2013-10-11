@@ -27,6 +27,12 @@ class ApplicationController {
         [user: user, organization: application.organization, applications: applications, application: application]
     }
 
+    @RequestMapping(value = "/apps/{id}/instances", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    def instances(@RequestHeader("Authorization") token, @PathVariable("id") id) {
+        apiClient.instances(token, id)
+    }
+
     @RequestMapping(value = "/apps/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     def remove(@RequestHeader("Authorization") token, @PathVariable("id") id) {

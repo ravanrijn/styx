@@ -19,6 +19,15 @@ class Application {
         mapApplication(cfApplication, services, instances)
     }
 
+    static def instancesTransform = { cfInstances ->
+        def instances = []
+        cfInstances.each { key, value ->
+            instances << [id: key, state: value.state, host: value.stats?.host, port: value.stats?.port,
+                    cpu: percentage(value.stats?.usage?.cpu), memory: bytes(value.stats?.usage?.mem), disk: bytes(value.stats?.usage?.disk)]
+        }
+        instances
+    }
+
     static def mapApplication(cfApplication, services, instances) {
         def application = [
                 id: cfApplication.metadata.guid,
@@ -78,10 +87,7 @@ class Application {
         def cfInstances = futures.findFutureById("instances")
         def instances = []
         if (cfInstances) {
-            cfInstances.each { key, value ->
-                instances << [id: key, state: value.state, host: value.stats?.host, port: value.stats?.port,
-                                cpu: percentage(value.stats?.usage?.cpu), memory: bytes(value.stats?.usage?.mem), disk: bytes(value.stats?.usage?.disk)]
-            }
+            instances = instancesTransform(cfInstances)
         }
         instances
     }

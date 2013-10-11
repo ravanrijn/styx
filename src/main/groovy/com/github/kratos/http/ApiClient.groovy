@@ -10,6 +10,7 @@ import org.springframework.util.MultiValueMap
 
 import static com.github.kratos.resources.Application.getTransform as transformApplication
 import static com.github.kratos.resources.Application.listTransform as transformApplications
+import static com.github.kratos.resources.Application.instancesTransform as transformInstances
 import static com.github.kratos.resources.Organization.getTransform as transformOrganization
 import static com.github.kratos.resources.Organization.listTransform as transformOrganizations
 import static com.github.kratos.resources.Quota.getTransform as transformQuota
@@ -92,6 +93,14 @@ class ApiClient {
             headers authorization: token, accept: 'application/json'
             body mapper.writeValueAsString([name:app.name, memory: intValue(app.memory), disk_quota: intValue(app.diskQuota)])
             transform {result -> [id:result.metadata.guid, name:result.entity.name, memory: result.entity.memory, diskQuota: result.entity.disk_quota]}
+        }
+    }
+
+    def instances(token, appId) {
+        httpClient.get {
+            path "$apiBaseUri/v2/apps/${appId}/stats"
+            headers authorization: token, accept: 'application/json'
+            transform transformInstances
         }
     }
 
