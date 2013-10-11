@@ -35,7 +35,7 @@ styx.config(['$routeProvider', '$httpProvider', function($routeProvider, $httpPr
 
 styx.run(function($rootScope, $location, authToken){
     $rootScope.$on( "$routeChangeStart", function(event, next, current) {
-        if(!authToken.getToken() && next.templateUrl !== "/login") {
+        if(!authToken.getToken() && next.templateUrl !== "partials/login.html" && next.templateUrl !== "partials/registration.html") {
             $location.path("/login");
         }
     });

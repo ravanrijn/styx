@@ -3,7 +3,7 @@
         <div class="col-md-12">
             <h3><span class="text-muted">your // </span> organizations</h3>
 
-            <p>Select one of your organizations.</p>
+            <p>Select one of your organizations. To invite new users <a class="btn-link" data-toggle="modal" data-toggle="modal" data-target="#myModal">click here</a>.</p>
 
             <div class="form-group">
                 <select ng-model="selectedOrgId"
@@ -14,12 +14,41 @@
         </div>
     </div>
     <div class="row">
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Invite a new user to your organization!</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-horizontal" role="form">
+                            <div class="form-group">
+                                <label for="email" class="col-lg-2 control-label">Email</label>
+                                <div class="col-lg-10">
+                                    <input type="email" class="form-control" id="email" placeholder="Email address" ng-model="newUser">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="organization" class="col-lg-2 control-label">Organization</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="organization" placeholder="{{root.organization.name}}" ng-disabled="true" ng-model="root.organization.name">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="inviteUser(newUser, root.organization.id)">Invite</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="col-md-12">
             <h3 ng-hide="loading"><span class="text-muted">users //</span> organization <span class="badge">{{root.organization.users.length}}</span></span>
             </h3>
 
-            <p>All the users in this organization are listed below. <br/>To invite new users to your organization <a>click
-                here</a>.</p>
+            <p>All the users in this organization are listed below.</p>
             <hr/>
             <div spin="defaultSpinnerConfig" spin-if="loading"></div>
             <table class="table table-hover" ng-hide="loading">
@@ -45,10 +74,10 @@
                     </th>
                     <th>
                         <div class="input-group input-group-sm" style="width: 250px">
-                            <input type="text" placeholder="Find by username" ng-model="selectedUser" typeahead="user as user.username for user in findUsers($viewValue) | filter:$viewValue" class="form-control input-text ng-pristine ng-valid">
+                            <input type="text" placeholder="Enter username" ng-model="selectedUser" typeahead="user as user.username for user in findUsers($viewValue) | filter:$viewValue" class="form-control input-text ng-pristine ng-valid">
                             <div class="input-group-btn">
                                 <a class="btn btn-default btn-success" ng-click="updateOrganization(root.organization, selectedUser)">
-                                    <i class="icon-save icon-white"></i>&nbsp;add
+                                    <i class="glyphicon glyphicon-plus"></i>
                                 </a>
                             </div>
                         </div>
