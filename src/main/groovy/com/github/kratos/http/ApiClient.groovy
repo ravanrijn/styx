@@ -3,7 +3,6 @@ package com.github.kratos.http
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
-import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.util.MultiValueMap
@@ -45,7 +44,7 @@ class ApiClient {
             path "$apiBaseUri/v2/apps"
             headers authorization: token, accept: 'application/json'
             queryParams 'inline-relations-depth': 0
-            transform transformApplications
+            onSuccess transformApplications
         }
     }
 
@@ -60,22 +59,13 @@ class ApiClient {
                         queryParams 'inline-relations-depth': 2
                     }
             )
-            if (cfApp.entity.state == 'STARTED') {
-                requests.add(
-                        {->
-                            id "instances"
-                            path "$apiBaseUri/v2/apps/$appId/stats"
-                            headers authorization: token, accept: 'application/json'
-                        }
-                )
-            }
             httpClient.get(requests.toArray() as Closure[])
         }
         httpClient.get {
             path "$apiBaseUri/v2/apps/${appId}"
             headers authorization: token, accept: 'application/json'
             queryParams 'inline-relations-depth': 3
-            transform transformApplication.curry(getDetails)
+            onSuccess transformApplication.curry(getDetails)
         }
     }
 
@@ -92,15 +82,27 @@ class ApiClient {
             path "${apiBaseUri}/v2/apps/${app.id}"
             headers authorization: token, accept: 'application/json'
             body mapper.writeValueAsString([name:app.name, memory: intValue(app.memory), disk_quota: intValue(app.diskQuota)])
-            transform {result -> [id:result.metadata.guid, name:result.entity.name, memory: result.entity.memory, diskQuota: result.entity.disk_quota]}
+            onSuccess {result -> [id:result.metadata.guid, name:result.entity.name, memory: result.entity.memory, diskQuota: result.entity.disk_quota]}
         }
     }
 
     def instances(token, appId) {
+        def getStats = {->
+            def requests = []
+            requests.add(
+                {->
+                    id "stats"
+                    path "$apiBaseUri/v2/apps/${appId}/stats"
+                    headers authorization: token, accept: 'application/json'
+                }
+            )
+            httpClient.get(requests.toArray() as Closure[])
+        }
         httpClient.get {
-            path "$apiBaseUri/v2/apps/${appId}/stats"
+            path "$apiBaseUri/v2/apps/${appId}/instances"
             headers authorization: token, accept: 'application/json'
-            transform transformInstances
+            onSuccess transformInstances.curry(getStats)
+            onError transformInstances.curry(getStats)
         }
     }
 
@@ -109,7 +111,7 @@ class ApiClient {
             path "$uaaBaseUri/ids/Users"
             headers authorization: token, accept: "application/json"
             queryParams "filter": "userName like \'${query}%\'"
-            transform {result -> result.resources.collect{item -> [id:item.id,username:item.userName]}}
+            onSuccess {result -> result.resources.collect{item -> [id:item.id,username:item.userName]}}
         }
     }
 
@@ -140,7 +142,7 @@ class ApiClient {
             headers authorization: "${appToken.tokenType} ${appToken.accessToken}", accept: 'application/json'
             body mapper.writeValueAsString(updateUserRequest)
             queryParams 'collection-method': 'replace'
-            transform transformCfUser
+            onSuccess transformCfUser
         }
     }
 
@@ -187,7 +189,7 @@ class ApiClient {
             headers authorization: token, accept: 'application/json'
             body mapper.writeValueAsString(updateUserRequest)
             queryParams 'collection-method': 'add'
-            transform {result -> [id:result.metadata.guid, name:result.entity.name]}
+            onSuccess {result -> [id:result.metadata.guid, name:result.entity.name]}
         }
     }
 
@@ -196,7 +198,7 @@ class ApiClient {
             path "$apiBaseUri/v2/organizations"
             headers authorization: token, accept: 'application/json'
             queryParams 'inline-relations-depth': 0
-            transform transformOrganizations
+            onSuccess transformOrganizations
         }
     }
 
@@ -205,7 +207,7 @@ class ApiClient {
             path "${apiBaseUri}/v2/organizations"
             headers authorization: token, accept: 'application/json'
             body mapper.writeValueAsString([name:org.name, quota_definition_guid:org.quotaId])
-            transform {result -> [id:result.metadata.guid, name:result.entity.name, quotaId:result.entity.quota_definition_guid]}
+            onSuccess {result -> [id:result.metadata.guid, name:result.entity.name, quotaId:result.entity.quota_definition_guid]}
         }
     }
 
@@ -214,7 +216,7 @@ class ApiClient {
             path "${apiBaseUri}/v2/organizations/${org.id}"
             headers authorization: token, accept: 'application/json'
             body mapper.writeValueAsString([name:org.name, quota_definition_guid:org.quotaId])
-            transform {result -> [id:result.metadata.guid, name:result.entity.name, quotaId:result.entity.quota_definition_guid]}
+            onSuccess {result -> [id:result.metadata.guid, name:result.entity.name, quotaId:result.entity.quota_definition_guid]}
         }
     }
 
@@ -243,7 +245,7 @@ class ApiClient {
                         id "usernames"
                         path usernamesUri[0..-4]
                         headers authorization: "${appToken.tokenType} ${appToken.accessToken}" as String, accept: 'application/json'
-                        transform {result -> result.resources.collect { item -> [id: item.id, username: item.userName] }}
+                        onSuccess {result -> result.resources.collect { item -> [id: item.id, username: item.userName] }}
                     }
                 )
             }
@@ -253,7 +255,7 @@ class ApiClient {
             path "$apiBaseUri/v2/organizations/${orgId}"
             headers authorization: token, accept: 'application/json'
             queryParams 'inline-relations-depth': 2
-            transform transformOrganization.curry(getDetails)
+            onSuccess transformOrganization.curry(getDetails)
         }
     }    
 
@@ -262,7 +264,7 @@ class ApiClient {
             path "$apiBaseUri/v2/quota_definitions"
             headers authorization: token, accept: 'application/json'
             body mapper.writeValueAsString([name:quota.name, non_basic_services_allowed:quota.nonBasicServicesAllowed, total_services:quota.services, memory_limit:quota.memoryLimit, trial_db_allowed:quota.trialDbAllowed])
-            transform transformQuota
+            onSuccess transformQuota
         }
     }
 
@@ -278,7 +280,7 @@ class ApiClient {
             path "$apiBaseUri/v2/quota_definitions/${quota.id}"
             headers authorization: token, accept: 'application/json'
             body mapper.writeValueAsString([name:quota.name, non_basic_services_allowed:quota.nonBasicServicesAllowed, total_services:quota.services, memory_limit:quota.memoryLimit, trial_db_allowed:quota.trialDbAllowed])
-            transform transformQuota
+            onSuccess transformQuota
         }
     }
 
@@ -287,7 +289,7 @@ class ApiClient {
             path "$apiBaseUri/v2/quota_definitions"
             headers authorization: token, accept: 'application/json'
             queryParams 'inline-relations-depth': 0
-            transform transformQuotas
+            onSuccess transformQuotas
         }
     }
 
@@ -296,7 +298,7 @@ class ApiClient {
             path "$apiBaseUri/v2/quota_definitions/$id"
             headers authorization: token, accept: 'application/json'
             queryParams 'inline-relations-depth': 0
-            transform transformQuota
+            onSuccess transformQuota
         }
     }
 
@@ -329,7 +331,7 @@ class ApiClient {
             path "${info().authorizationEndpoint}/oauth/token"
             body requestBody
             headers authorizationHeaders()
-            transform {result -> [tokenType: result.token_type, accessToken: result.access_token, refreshToken: result.refresh_token]}
+            onSuccess {result -> [tokenType: result.token_type, accessToken: result.access_token, refreshToken: result.refresh_token]}
         }
     }
 
@@ -338,13 +340,13 @@ class ApiClient {
         final uaaUser = httpClient.get {
             path "$uaaBaseUri/userinfo"
             headers authorization: token, accept: 'application/json'
-            transform transformUaaUser
+            onSuccess transformUaaUser
         }
         httpClient.get {
             path "${apiBaseUri}/v2/users/${uaaUser.id}"
             headers authorization: "${appToken.tokenType} ${appToken.accessToken}" as String, accept: 'application/json'
             queryParams 'inline-relations-depth': 0
-            transform {result ->
+            onSuccess {result ->
                 uaaUser.roles = transformCfUser(result).roles + uaaUser.roles
                 uaaUser
             }
@@ -364,7 +366,7 @@ class ApiClient {
         httpClient.get {
             path "${uaaBaseUri}/Users/${id}"
             headers Authorization: "${appToken.tokenType} ${appToken.accessToken}" as String, Accept: APPLICATION_JSON_VALUE, "Content-Type": APPLICATION_JSON_VALUE
-            transform {result -> [id:result.id, username:result.userName, organizations:user.entity.organizations.collect{org -> [id:org.metadata.guid]}]}
+            onSuccess {result -> [id:result.id, username:result.userName, organizations:user.entity.organizations.collect{org -> [id:org.metadata.guid]}]}
         }
     }
 

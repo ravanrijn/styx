@@ -21,10 +21,16 @@ class ApplicationController {
     @RequestMapping(value = "/apps/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     def show(@RequestHeader("Authorization") token, @PathVariable("id") id) {
+        try{
         final user = apiClient.user(token)
         final applications = apiClient.applications(token)
         final application = apiClient.application(token, id)
+        final instances = apiClient.instances(token, id)
+        application.instances = instances
         [user: user, organization: application.organization, applications: applications, application: application]
+        } catch (Exception e) {
+            e.printStackTrace()
+        }
     }
 
     @RequestMapping(value = "/apps/{id}/instances", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

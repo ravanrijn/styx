@@ -1,5 +1,7 @@
 package com.github.kratos.resources
 
+import java.text.DecimalFormat
+
 class Application {
 
     static final int MEGA_BYTE = 1024 * 1024
@@ -15,20 +17,28 @@ class Application {
     static def getTransform = { getDetails, cfApplication ->
         def futures = getDetails(cfApplication)
         def services = mapServices(cfApplication, futures)
-        def instances = mapInstances(futures)
-        mapApplication(cfApplication, services, instances)
+        mapApplication(cfApplication, services)
     }
 
-    static def instancesTransform = { cfInstances ->
+    static def instancesTransform = { getStats, cfInstances ->
+        def futures = getStats()
+        def stats = futures.findFutureById("stats")
         def instances = []
-        cfInstances.each { key, value ->
-            instances << [id: key, state: value.state, host: value.stats?.host, port: value.stats?.port,
-                    cpu: percentage(value.stats?.usage?.cpu), memory: bytes(value.stats?.usage?.mem), disk: bytes(value.stats?.usage?.disk)]
+        stats.each { key, value ->
+            def state
+            if (cfInstances.code) {
+                state = cfInstances.code == 170001 ? 'STAGING FAILED' : 'STOPPED'
+            } else {
+                state = cfInstances[key].state
+            }
+            instances << [id: key, state: state, host: value.stats?.host, port: value.stats?.port,
+                    cpu: percentage(value.stats?.usage?.cpu), memory: bytes(value.stats?.usage?.mem),
+                    disk: bytes(value.stats?.usage?.disk)]
         }
         instances
     }
 
-    static def mapApplication(cfApplication, services, instances) {
+    static def mapApplication(cfApplication, services) {
         def application = [
                 id: cfApplication.metadata.guid,
                 name: cfApplication.entity.name,
@@ -39,7 +49,6 @@ class Application {
                 environment: '',
                 organization: [id: cfApplication.entity.space.entity.organization.metadata.guid, name: cfApplication.entity.space.entity.organization.entity.name],
                 space: [id: cfApplication.entity.space.metadata.guid, name: cfApplication.entity.space.entity.name],
-                instances: instances,
                 services: services,
                 events: [],
                 urls: []
@@ -83,31 +92,21 @@ class Application {
         services
     }
 
-    static def mapInstances(futures) {
-        def cfInstances = futures.findFutureById("instances")
-        def instances = []
-        if (cfInstances) {
-            instances = instancesTransform(cfInstances)
-        }
-        instances
-    }
-
     static def bytes(value) {
         if (value != null) {
-            if (value > MEGA_BYTE) {
-                return String.format('%.2f MB', (value / MEGA_BYTE))
-            } else {
-                return String.format('%.2f B', value)
-            }
+            return (value > MEGA_BYTE) ? format(value / MEGA_BYTE) + " MB" : format(value) + " B"
         }
         null
     }
 
     static def percentage(value) {
-        if (value != null) {
-            return String.format('%.2f%%', value)
-        }
-        null
+        print 'percentage->' + value
+        return (value != null) ? format(value) + " %" : value
+    }
+
+    static def format(value) {
+        print 'format->' + value
+        return (value != null) ? new DecimalFormat("0.00").format(value) : value
     }
 
 }
