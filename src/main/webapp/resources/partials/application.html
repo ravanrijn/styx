@@ -29,74 +29,64 @@
                     </ul>
                 </span>
             </h3>
-            <form class="form-horizontal" role="form">
-                <div class="form-group">
-                    <label class="col-lg-3 control-label">Status</label>
-                    <div class="col-lg-9">
-                        <p class="form-control-static">
-                            <span ng-show="root.application.state == 'STARTED'" class="label label-success">{{root.application.state}}</span>
-                            <span ng-show="root.application.state != 'STARTED'" class="label label-danger">{{root.application.state}}</span>
-                        </p>
-                    </div>
+            <div class="row">
+                <div class="col-md-3 text-right"><strong>Status</strong></div>
+                <div class="col-md-9">
+                    <span ng-show="root.application.state == 'STARTED'" class="label label-success">{{root.application.state}}</span>
+                    <span ng-show="root.application.state != 'STARTED'" class="label label-danger">{{root.application.state}}</span>
                 </div>
-                <div class="form-group">
-                    <label class="col-lg-3 control-label">Application</label>
-                    <div class="col-lg-9">
-                        <p ng-hide="editApp" class="form-control-static">{{root.application.name}} (<a href="#/org/{{root.application.organization.id}}">{{root.application.organization.name}}</a> // {{root.application.space.name}})</p>
-                        <input ng-show="editApp" type="text" class="form-control" ng-model="root.application.name" />
-                    </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 text-right"><strong>Application</strong></div>
+                <div class="col-md-9" ng-hide="editApp">{{root.application.name}} (<a href="#/org/{{root.application.organization.id}}">{{root.application.organization.name}}</a> // {{root.application.space.name}})</div>
+                <div class="col-md-9" ng-show="editApp"><input type="text" class="form-control" ng-model="root.application.name"/></div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 text-right"><strong>Memory</strong></div>
+                <div class="col-md-9" ng-hide="editApp">{{root.application.memory}}</div>
+                <div class="col-md-9" ng-show="editApp">
+                    <select class="form-control" ng-model="root.application.memory">
+                        <option>128 MB</option>
+                        <option>256 MB</option>
+                        <option>512 MB</option>
+                        <option>1024 MB</option>
+                        <option>2048 MB</option>
+                    </select>
                 </div>
-                <div class="form-group">
-                    <label class="col-lg-3 control-label">Memory</label>
-                    <div class="col-lg-9">
-                        <p ng-hide="editApp" class="form-control-static">{{root.application.memory}}</p>
-                        <select ng-show="editApp" class="form-control" ng-model="root.application.memory">
-                            <option>128 MB</option>
-                            <option>256 MB</option>
-                            <option>512 MB</option>
-                            <option>1024 MB</option>
-                            <option>2048 MB</option>
-                        </select>
-                    </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 text-right"><strong>Disk quota</strong></div>
+                <div class="col-md-9" ng-hide="editApp">{{root.application.diskQuota}}</div>
+                <div class="col-md-9" ng-show="editApp">
+                    <select class="form-control" ng-model="root.application.diskQuota">
+                        <option>128 MB</option>
+                        <option>256 MB</option>
+                        <option>512 MB</option>
+                        <option>1024 MB</option>
+                        <option>2048 MB</option>
+                    </select>
                 </div>
-                <div class="form-group">
-                    <label class="col-lg-3 control-label">Disk quota</label>
-                    <div class="col-lg-9">
-                        <p ng-hide="editApp" class="form-control-static">{{root.application.diskQuota}}</p>
-                        <select ng-show="editApp" class="form-control" ng-model="root.application.diskQuota">
-                            <option>128 MB</option>
-                            <option>256 MB</option>
-                            <option>512 MB</option>
-                            <option>1024 MB</option>
-                            <option>2048 MB</option>
-                        </select>
-                    </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 text-right"><strong>Buildpack</strong></div>
+                <div class="col-md-9">{{root.application.buildpack}}</div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 text-right"><strong>Environment</strong></div>
+                <div class="col-md-9">{{root.application.environment}}</div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 text-right"><strong>URL</strong></div>
+                <div class="col-md-9">
+                    <div ng-repeat="url in root.application.urls"><a href="http://{{url}}">http://{{url}}</a><br/></div>
                 </div>
-                <div class="form-group">
-                    <label class="col-lg-3 control-label">Buildpack</label>
-                    <div class="col-lg-9">
-                        <p class="form-control-static">{{root.application.buildpack}}</p>
-                    </div>
+            </div>
+            <div class="row" ng-show="editApp">
+                <div class="col-md-9 col-md-offset-3">
+                    <button class="btn btn-success" ng-click="updateApplication()">Update</button>
+                    <button class="btn btn-warning" ng-click="cancelEdit()">Cancel</button>
                 </div>
-                <div class="form-group">
-                    <label class="col-lg-3 control-label">Environment</label>
-                    <div class="col-lg-9">
-                        <p class="form-control-static">{{root.application.environment}}</p>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-lg-3 control-label">Url</label>
-                    <div class="col-lg-9">
-                        <p class="form-control-static"><div ng-repeat="url in root.application.urls"><a href="http://{{url}}">http://{{url}}</a><br/></div></p>
-                    </div>
-                </div>
-                <div ng-show="editApp" class="form-group">
-                    <div class="col-lg-offset-3 col-lg-9">
-                        <button class="btn btn-success" ng-click="updateApplication()">Update</button>
-                        <button class="btn btn-warning" ng-click="cancelEdit()">Cancel</button>
-                    </div>
-                </div>
-            </form>
+            </div>
         </div>
         <div class="col-md-6">
             <h3><span class="text-muted">instances</span></h3>
