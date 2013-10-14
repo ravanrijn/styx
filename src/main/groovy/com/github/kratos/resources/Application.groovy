@@ -100,12 +100,10 @@ class Application {
     }
 
     static def percentage(value) {
-        print 'percentage->' + value
         return (value != null) ? format(value) + " %" : value
     }
 
     static def format(value) {
-        print 'format->' + value
         return (value != null) ? new DecimalFormat("0.00").format(value) : value
     }
 
