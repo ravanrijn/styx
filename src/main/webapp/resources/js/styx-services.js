@@ -78,7 +78,7 @@ styxServices.factory('notificationChannel', function ($rootScope, apiServices, a
         });
         tokenPromise.error(function (response, status, headers) {
             authToken.clear();
-            $rootScope.$broadcast(ERROR, {root: response, status: status, headers: headers});
+            $rootScope.$broadcast(LOGIN_FAILURE, {root: response, status: status, headers: headers});
         });
     }
 
