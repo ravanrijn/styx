@@ -1,4 +1,4 @@
-package com.github.styx.logging;
+package com.github.kratos.logging;
 
 import ch.qos.logback.classic.PatternLayout;
 import ch.qos.logback.classic.spi.ILoggingEvent;

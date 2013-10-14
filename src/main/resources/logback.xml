@@ -1,7 +1,7 @@
 <configuration scan="true">
 
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
-        <layout class="com.github.styx.logging.MaskedPatternLayout">
+        <layout class="com.github.kratos.logging.MaskedPatternLayout">
             <Pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %X{req.requestURI} %logger %ex{short} - %msg%n</Pattern>
         </layout>
     </appender>

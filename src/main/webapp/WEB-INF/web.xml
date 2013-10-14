@@ -15,7 +15,7 @@
         </init-param>
         <init-param>
             <param-name>contextConfigLocation</param-name>
-            <param-value>com.github.styx.config.StyxWebConfig</param-value>
+            <param-value>com.github.kratos.config.KratosWebConfig</param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>

@@ -1,4 +1,4 @@
-package com.github.styx.logging;
+package com.github.kratos.logging;
 
 import org.junit.Test;
 

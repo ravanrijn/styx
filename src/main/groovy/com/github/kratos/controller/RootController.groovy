@@ -29,7 +29,7 @@ class RootController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
     def String htmlResource(){
-        return "styx";
+        return "kratos";
     }
 
     @RequestMapping(value = "/api", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
