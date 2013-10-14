@@ -300,7 +300,7 @@ styxControllers.controller('LoginController', function ($scope, $location, notif
         notificationChannel.login(userForm.email, userForm.password);
     }
     notificationChannel.onLoginFailure($scope, function (response) {
-
+        notificationChannel.changeStatus(403, "Not authorized.")
     });
     notificationChannel.onSuccessfulLogin($scope, function (response) {
         $location.path("/org");
