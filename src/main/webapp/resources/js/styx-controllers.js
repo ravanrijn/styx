@@ -499,7 +499,7 @@ styxControllers.controller('AdminController', function ($scope, $http, $route, $
     });
 });
 
-styxControllers.controller('ApplicationController', function ($scope, $location, $routeParams, notificationChannel) {
+styxControllers.controller('ApplicationController', function ($scope, $location, $routeParams, $http, $route, notificationChannel, authToken) {
     $scope.changeApplication = function () {
         if ($scope.selectedAppId !== $scope.root.application.id) {
             $location.path("/app/" + $scope.selectedAppId);
@@ -523,6 +523,37 @@ styxControllers.controller('ApplicationController', function ($scope, $location,
         });
         promise.error(function (response, status, headers) {
             notificationChannel.changeStatus(500, "Unable to delete application " + name + ".");
+            $route.reload();
+        });
+    }
+
+    $scope.cancelEdit = function() {
+        $scope.editApp = false;
+    }
+
+    $scope.editApplication = function() {
+        $scope.editApp = true;
+    }
+
+    $scope.updateApplication = function() {
+        $scope.loading = true;
+        var app = $scope.root.application;
+        var config = {
+            method: 'PUT',
+            url: "api/apps/" + app.id,
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': authToken.getToken(),
+                'Content-Type': 'application/json'},
+            data: JSON.stringify({name: app.name, memory: app.memory, diskQuota: app.diskQuota})
+        }
+        var promise = $http(config);
+        promise.success(function (response, status, headers) {
+            notificationChannel.changeStatus(200, "Application " + app.name + " has been successfully updated.");
+            $route.reload();
+        });
+        promise.error(function (response, status, headers) {
+            notificationChannel.changeStatus(500, "Unable to update application " + app.name + ".");
             $route.reload();
         });
     }

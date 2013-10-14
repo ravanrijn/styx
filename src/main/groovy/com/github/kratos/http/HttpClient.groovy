@@ -61,7 +61,8 @@ class HttpClient {
         private String path
         private String id
         private Object body
-        private Closure transform
+        private Closure onSuccess
+        private Closure onError
         private Map<String, String> headers
         private Map<String, String> uriParams = [:]
         private Map<String, String> queryParams
@@ -109,8 +110,12 @@ class HttpClient {
             this.body = body
         }
 
-        def transform(Closure transform){
-            this.transform = transform
+        def onSuccess(Closure transform){
+            this.onSuccess = transform
+        }
+
+        def onError(Closure transform) {
+            this.onError = transform;
         }
 
         def uriParams(Map<String, String> uriParams) {
@@ -143,10 +148,15 @@ class HttpClient {
             try {
                 final exchange = restTemplate.exchange(uri, httpMethod, httpEntity, new ParameterizedTypeReference<Map<String, Object>>() {})
                 if (exchange.getStatusCode().value() < 300) {
-                    return transform ? transform(exchange.getBody()) : exchange.getBody()
+                    return onSuccess ? onSuccess(exchange.getBody()) : exchange.getBody()
+                } else if (onError) {
+                    return onError(exchange.getBody())
                 }
                 throw new HttpClientException(body: exchange.getBody(), status: exchange.getStatusCode(), headers: exchange.getHeaders())
             } catch (HttpClientErrorException e) {
+                if (onError) {
+                    return onError(objectMapper.readValue(e.getResponseBodyAsString(), objectMapper.getTypeFactory().constructMapType(HashMap.class, String.class, Object.class)))
+                }
                 LOG.error(format("HTTP call resulted in a %s status with body %s.", e.getStatusCode(), e.getResponseBodyAsString()), e)
                 throw new HttpClientException(body: objectMapper.readValue(e.getResponseBodyAsString(), objectMapper.getTypeFactory().constructMapType(HashMap.class, String.class, Object.class)),
                         status: e.getStatusCode(), headers: e.getResponseHeaders())
