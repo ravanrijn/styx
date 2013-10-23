@@ -309,7 +309,15 @@ class ApiClient {
             queryParams 'inline-relations-depth': 2
             onSuccess transformOrganization.curry(getDetails)
         }
-    }    
+    }
+
+    def createSpace(token, orgId, name) {
+        httpClient.post{
+            path "$apiBaseUri/v2/spaces"
+            headers authorization: token, accept: 'application/json'
+            body mapper.writeValueAsString([name:name, organization_guid:orgId])
+        }
+    }
 
     def createQuota(String token, quota) {
         httpClient.post{

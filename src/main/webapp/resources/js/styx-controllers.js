@@ -324,11 +324,23 @@ styxControllers.controller('OrganizationUsersController', function ($scope, $rou
     });
 });
 
-styxControllers.controller('OrganizationController', function ($scope, $location, $routeParams, notificationChannel) {
+styxControllers.controller('OrganizationController', function ($scope, $location, $routeParams, $route, notificationChannel, apiServices) {
     $scope.changeOrganization = function () {
         if ($scope.selectedOrgId !== $scope.root.organization.id) {
             $location.path("/org/" + $scope.selectedOrgId);
         }
+    }
+    $scope.addSpace = function(name) {
+        $scope.loading = true
+        apiServices.createSpace($scope.root.organization.id, name).
+            success(function (data, status, headers, config) {
+                notificationChannel.changeStatus(200, "Successfully added space " + name + " to " + $scope.root.organization.name + ".")
+                $route.reload()
+            }).
+            error(function (data, status, headers, config) {
+                notificationChannel.changeStatus(500, "Unable to add space " + name + " to " + $scope.root.organization.name + ".")
+                $route.reload()
+            });
     }
     $scope.loading = true;
     if (!$scope.root || ($scope.root && !$scope.root.organizations)) {

@@ -2,13 +2,16 @@ package com.github.kratos.controller
 
 import com.github.kratos.http.ApiClient
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.ResponseBody
+import org.springframework.web.bind.annotation.ResponseStatus
 
 @Controller
 class RootController {
@@ -42,6 +45,13 @@ class RootController {
     @ResponseBody
     def get(@RequestHeader("Authorization") String token, @PathVariable("id") String id){
         constructRoot(token, id)
+    }
+
+    @RequestMapping(value = "/api/org/{orgId}/space", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.CREATED)
+    def createSpace(@RequestHeader("Authorization") String token, @PathVariable("orgId") String orgId, @RequestBody space) {
+        apiClient.createSpace(token, orgId, space.name)
     }
 
 }
