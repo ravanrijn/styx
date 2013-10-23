@@ -3,7 +3,7 @@
         <div class="col-md-12">
             <h3><span class="text-muted">your // </span> spaces</h3>
 
-            <p>Select one of your spaces.</p>
+            <p>Select one of your spaces. To invite new users to this space <a>click here</a>.</p>
 
             <div class="form-group">
                 <select ng-model="selectedSpaceId"
@@ -20,8 +20,7 @@
         <div class="col-md-12">
             <h3 ng-hide="loading"><span class="text-muted">users //</span> {{space.name}} <span class="badge">{{space.users.length}}</span></span>
             </h3>
-            <p>All the users in this space are listed below.<br/>To invite new users to this space <a>click
-                here</a>.</p>
+            <p>All the users in this space are listed below.</p>
             <hr/>
             <table class="table table-hover">
                 <thead>
@@ -39,7 +38,14 @@
                         Auditor <span data-toggle="tooltip" title="View only access to all space information, settings, reports, logs"><span class="glyphicon glyphicon-info-sign"></span></span>
                     </th>
                     <th>
-
+                        <div class="input-group input-group-sm" style="width: 250px">
+                            <input type="text" placeholder="Enter username" ng-model="selectedUser" typeahead="user as user.username for user in findUsers($viewValue) | filter:$viewValue" class="form-control input-text ng-pristine ng-valid">
+                            <div class="input-group-btn">
+                                <a class="btn btn-default btn-success" ng-click="updateSpace(space, selectedUser)">
+                                    <i class="glyphicon glyphicon-plus"></i>
+                                </a>
+                            </div>
+                        </div>
                     </th>
                 </tr>
                 </thead>
@@ -49,13 +55,13 @@
                         {{user.username}}
                     </td>
                     <td style="width: 20%">
-                        <span ng-class="['glyphicon', (isInRole(user, 'SPACE_MANAGER')) ? 'glyphicon-ok' : 'glyphicon-remove']"></span>
+                        <span ng-class="['glyphicon', (isInRole(user, 'MANAGER')) ? 'glyphicon-ok' : 'glyphicon-remove']"></span>
                     </td>
                     <td style="width: 20%">
-                        <span ng-class="['glyphicon', (isInRole(user, 'SPACE_DEVELOPER')) ? 'glyphicon-ok' : 'glyphicon-remove']"></span>
+                        <span ng-class="['glyphicon', (isInRole(user, 'DEVELOPER')) ? 'glyphicon-ok' : 'glyphicon-remove']"></span>
                     </td>
                     <td style="width: 20%">
-                        <span ng-class="['glyphicon', (isInRole(user, 'SPACE_AUDITOR')) ? 'glyphicon-ok' : 'glyphicon-remove']"></span>
+                        <span ng-class="['glyphicon', (isInRole(user, 'AUDITOR')) ? 'glyphicon-ok' : 'glyphicon-remove']"></span>
                     </td>
                     <td>
                         <div class="pull-right">
@@ -68,7 +74,7 @@
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li><a>Edit</a></li>
-                                    <li><a>Delete</a></li>
+                                    <li><a ng-click="removeUserFromSpace(space, user)>Delete</a></li>
                                 </ul>
                             </div>
                         </div>

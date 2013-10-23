@@ -107,7 +107,7 @@ styxControllers.controller('StyxController', function ($scope, $route, notificat
     });
 });
 
-styxControllers.controller('SpaceUsersController', function ($scope, $location, notificationChannel, $routeParams) {
+styxControllers.controller('SpaceUsersController', function ($scope, $location, $q, notificationChannel, apiServices, $routeParams, $route) {
     $scope.selectedSpaceId = $routeParams.spaceId;
     $scope.editUser = function (user) {
         var editingUser = user;
@@ -126,6 +126,64 @@ styxControllers.controller('SpaceUsersController', function ($scope, $location, 
         if (newSpaceId !== currentSpaceId) {
             $location.path("/org/" + $scope.selectedOrgId + "/" + newSpaceId + "/users")
         }
+    }
+    $scope.findUsers = function (term) {
+        if (!term || term.length < 3) {
+            return {}
+        }
+        var dfr = $q.defer();
+        apiServices.findUserByName(term).
+            success(function (data, status, headers, config) {
+                dfr.resolve(data);
+            }).
+            error(function (data, status, headers, config) {
+
+            });
+        return dfr.promise;
+    }
+    $scope.updateSpace = function (space, user) {
+        $scope.loading = true;
+        user.roles = []
+        if (user.isManager) {
+            user.roles.push("MANAGER")
+        }
+        if (user.isAuditor) {
+            user.roles.push("DEVELOPER")
+        }
+        if (user.isBillingManager) {
+            user.roles.push("AUDITOR")
+        }
+        apiServices.updateSpaceUser(space.id, user).
+            success(function (data, status, headers, config) {
+                var found = false;
+                angular.forEach(space.users, function (spaceUser, spaceUserIndex) {
+                    if (spaceUser.id == user.id) {
+                        found = true;
+                    }
+                })
+                if (!found) {
+                    space.users.push({id: user.id, username: user.username, roles: []});
+                }
+                notificationChannel.changeStatus(200, "Successfully updated " + user.username + ".");
+                $route.reload();
+            }).
+            error(function (data, status, headers, config) {
+                notificationChannel.changeStatus(500, "Unable to successfully update " + user.username + ".");
+                $route.reload();
+            });
+    }
+    $scope.removeUserFromSpace = function (space, user) {
+        $scope.loading = true;
+        apiServices.deleteSpaceUser(space.id, user.id).
+            success(function (data, status, headers, config) {
+                space.users.splice(space.users.indexOf(user), 1)
+                notificationChannel.changeStatus(200, "Successfully removed " + user.username + " from " + space.name + ".")
+                $route.reload()
+            }).
+            error(function (data, status, headers, config) {
+                notificationChannel.changeStatus(500, "Unable to removed user " + user.username + " from " + space.name + ".")
+                $route.reload()
+            });
     }
     if (!$scope.root) {
         $scope.loading = true;

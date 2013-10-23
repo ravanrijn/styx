@@ -115,27 +115,38 @@ class ApiClient {
         }
     }
 
-    def deleteOrganizationUser(token, organizationId, userId){
+    def deleteSpaceUser(token, spaceId, userId) {
+        // TODO check space rights
+        deleteUser(userId, { item ->
+            item.metadata.guid != spaceId
+        })
+    }
+
+    def deleteOrganizationUser(token, organizationId, userId) {
+        // TODO check organization rights
+        deleteUser(userId, { item ->
+            if(item.entity?.organization_guid){
+                return item.entity.organization_guid != organizationId
+            }
+            return item.metadata.guid != organizationId
+        })
+    }
+
+    def deleteUser(userId, shouldIncludeItem){
         def appToken = appToken()
         def userDetails = httpClient.get{
             path "$apiBaseUri/v2/users/${userId}"
             headers authorization: "${appToken.tokenType} ${appToken.accessToken}", accept: 'application/json'
             queryParams 'inline-relations-depth': 1
         }
-        def doesNotMatchProvidedOrganization = { item ->
-            if(item.entity?.organization_guid){
-                return item.entity.organization_guid != organizationId
-            }
-            return item.metadata.guid != organizationId
-        }
         def updateUserRequest = [
-                space_guids: userDetails.entity.spaces.findAll{space -> doesNotMatchProvidedOrganization(space)}.collect {space -> space.metadata.guid},
-                organization_guids: userDetails.entity.organizations.findAll {organization -> doesNotMatchProvidedOrganization(organization)}.collect{org -> org.metadata.guid},
-                managed_organization_guids: userDetails.entity.managed_organizations.findAll {organization -> doesNotMatchProvidedOrganization(organization)}.collect{org -> org.metadata.guid},
-                billing_managed_organization_guids: userDetails.entity.billing_managed_organizations.findAll {organization -> doesNotMatchProvidedOrganization(organization)}.collect{org -> org.metadata.guid},
-                audited_organization_guids: userDetails.entity.audited_organizations.findAll {organization -> doesNotMatchProvidedOrganization(organization)}.collect{org -> org.metadata.guid},
-                managed_space_guids: userDetails.entity.managed_spaces.findAll {space -> doesNotMatchProvidedOrganization(space)}.collect{space -> space.metadata.guid},
-                audited_space_guids: userDetails.entity.audited_spaces.findAll {space -> doesNotMatchProvidedOrganization(space)}.collect{space -> space.metadata.guid}
+                space_guids: userDetails.entity.spaces.findAll{space -> shouldIncludeItem(space)}.collect {space -> space.metadata.guid},
+                organization_guids: userDetails.entity.organizations.findAll {organization -> shouldIncludeItem(organization)}.collect{org -> org.metadata.guid},
+                managed_organization_guids: userDetails.entity.managed_organizations.findAll {organization -> shouldIncludeItem(organization)}.collect{org -> org.metadata.guid},
+                billing_managed_organization_guids: userDetails.entity.billing_managed_organizations.findAll {organization -> shouldIncludeItem(organization)}.collect{org -> org.metadata.guid},
+                audited_organization_guids: userDetails.entity.audited_organizations.findAll {organization -> shouldIncludeItem(organization)}.collect{org -> org.metadata.guid},
+                managed_space_guids: userDetails.entity.managed_spaces.findAll {space -> shouldIncludeItem(space)}.collect{space -> space.metadata.guid},
+                audited_space_guids: userDetails.entity.audited_spaces.findAll {space -> shouldIncludeItem(space)}.collect{space -> space.metadata.guid}
         ]
         httpClient.put{
             path "$apiBaseUri/v2/users/${userId}"
@@ -143,6 +154,47 @@ class ApiClient {
             body mapper.writeValueAsString(updateUserRequest)
             queryParams 'collection-method': 'replace'
             onSuccess transformCfUser
+        }
+    }
+
+    def updateSpaceUser(token, id, user) {
+        def userDetails = httpClient.get {
+            path "$apiBaseUri/v2/users/${user.id}"
+            headers authorization: token, accept: 'application/json'
+            queryParams 'inline-relations-depth': 1
+        }
+        def doesNotMathProvidedSpace = { item ->
+            item.metadata.guid != id
+        }
+        def updateUserRequest = [
+                space_guids: userDetails.entity.spaces.findAll{space -> doesNotMathProvidedSpace(space)}.collect {space -> space.metadata.guid},
+                organization_guids: userDetails.entity.organizations.collect{org -> org.metadata.guid},
+                managed_organization_guids: userDetails.entity.managed_organizations.collect{org -> org.metadata.guid},
+                billing_managed_organization_guids: userDetails.entity.billing_managed_organizations.collect{org -> org.metadata.guid},
+                audited_organization_guids: userDetails.entity.audited_organizations.collect{org -> org.metadata.guid},
+                managed_space_guids: userDetails.entity.managed_spaces.findAll {space -> doesNotMathProvidedSpace(space)}.collect{space -> space.metadata.guid},
+                audited_space_guids: userDetails.entity.audited_spaces.findAll {space -> doesNotMathProvidedSpace(space)}.collect{space -> space.metadata.guid}
+        ]
+        if(updateUserRequest.space_guids.find{spaceId -> spaceId == id} && user.roles.isEmpty()){
+            return getTransformCfUser(userDetails)
+        }
+        updateUserRequest.space_guids.add(id)
+        user?.roles.each{role ->
+            switch(role){
+                case "MANAGER":
+                    updateUserRequest.managed_space_guids << id as String
+                    break
+                case "AUDITOR":
+                    updateUserRequest.audited_space_guids << id as String
+                    break
+            }
+        }
+        httpClient.put {
+            path "$apiBaseUri/v2/users/${user.id}"
+            headers authorization: token, accept: 'application/json'
+            body mapper.writeValueAsString(updateUserRequest)
+            queryParams 'collection-method': 'add'
+            onSuccess {result -> [id:result.metadata.guid, name:result.entity.name]}
         }
     }
 

@@ -8,6 +8,7 @@ class Organization {
 
     static def getTransform = { getDetails, cfOrganization ->
         def cfApps = cfOrganization.entity.spaces.collect { cfSpace -> cfSpace.entity.apps}.flatten()
+        // TODO add space user ids
         def userIds = cfOrganization.entity.users.collect { cfUser -> cfUser.metadata.guid }
         def futures = getDetails(userIds, cfApps)
         [id: cfOrganization.metadata.guid,

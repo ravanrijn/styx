@@ -25,14 +25,28 @@ class UserController {
         this.apiClient = apiClient
     }
 
-    @RequestMapping(value = "/{orgId}/users", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/space/{spaceId}/users", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    def updateSpaceUser(@RequestHeader("Authorization") String token, @PathVariable("spaceId") String spaceId, @RequestBody user){
+        apiClient.updateSpaceUser(token, spaceId, user)
+    }
+
+    @RequestMapping(value = "/org/{orgId}/users", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     def updateOrganizationUser(@RequestHeader("Authorization") String token, @PathVariable("orgId") String orgId, @RequestBody user){
         apiClient.updateOrganizationUser(token, orgId, user)
     }
 
-    @RequestMapping(value = "/{orgId}/users/{userId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/space/{spaceId}/users/{userId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    def deleteSpaceUser(@RequestHeader("Authorization") String token, @PathVariable("spaceId") String spaceId, @PathVariable("userId") String userId){
+        apiClient.deleteSpaceUser(token, spaceId, userId)
+    }
+
+    @RequestMapping(value = "/org/{orgId}/users/{userId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @ResponseStatus(HttpStatus.NO_CONTENT)
     def deleteOrganizationUser(@RequestHeader("Authorization") String token, @PathVariable("orgId") String orgId, @PathVariable("userId") String userId){

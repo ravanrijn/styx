@@ -143,10 +143,23 @@ styxServices.factory('apiServices', function ($http, authToken) {
         });
     }
 
+    apiServices.deleteSpaceUser = function(spaceId, userId){
+        var config = {
+            method: 'DELETE',
+            url: 'api/space/' + spaceId + '/users/' + userId,
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': authToken.getToken(),
+                'Content-Type': 'application/json'
+            }
+        }
+        return $http(config)
+    }
+
     apiServices.deleteOrganizationUser = function(orgId, userId){
         var config = {
             method: 'DELETE',
-            url: 'api/' + orgId + '/users/' + userId,
+            url: 'api/org/' + orgId + '/users/' + userId,
             headers: {
                 'Accept': 'application/json',
                 'Authorization': authToken.getToken(),
@@ -171,7 +184,21 @@ styxServices.factory('apiServices', function ($http, authToken) {
     apiServices.updateOrganizationUser = function(orgId, user){
         var config = {
             method: 'PUT',
-            url: 'api/' + orgId + '/users',
+            url: 'api/org/' + orgId + '/users',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': authToken.getToken(),
+                'Content-Type': 'application/json'
+            },
+            data: JSON.stringify(user)
+        }
+        return $http(config)
+    }
+
+    apiServices.updateSpaceUser = function(spaceId, user){
+        var config = {
+            method: 'PUT',
+            url: 'api/space/' + spaceId + '/users',
             headers: {
                 'Accept': 'application/json',
                 'Authorization': authToken.getToken(),
