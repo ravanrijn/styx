@@ -334,12 +334,29 @@ styxControllers.controller('OrganizationController', function ($scope, $location
         $scope.loading = true
         apiServices.createSpace($scope.root.organization.id, name).
             success(function (data, status, headers, config) {
-                notificationChannel.changeStatus(200, "Successfully added space " + name + " to " + $scope.root.organization.name + ".");
                 $scope.root.organization.spaces.push(data);
+                notificationChannel.changeStatus(200, "Successfully added space " + name + " to " + $scope.root.organization.name + ".");
                 $route.reload();
             }).
             error(function (data, status, headers, config) {
                 notificationChannel.changeStatus(500, "Unable to add space " + name + " to " + $scope.root.organization.name + ".");
+                $route.reload();
+            });
+    }
+    $scope.deleteSpace = function(spaceId) {
+        $scope.loading = true
+        apiServices.deleteSpace(spaceId).
+            success(function (data, status, headers, config) {
+                angular.forEach($scope.root.organization.spaces, function(space, spaceIndex){
+                    if (space.id == spaceId) {
+                        $scope.root.organization.spaces.splice(spaceIndex, 1);
+                    }
+                });
+                notificationChannel.changeStatus(200, "Successfully deleted space " + spaceId + ".");
+                $route.reload();
+            }).
+            error(function (data, status, headers, config) {
+                notificationChannel.changeStatus(500, "Unable to delete space " + spaceId + ".");
                 $route.reload();
             });
     }

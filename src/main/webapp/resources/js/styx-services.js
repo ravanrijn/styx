@@ -170,6 +170,19 @@ styxServices.factory('apiServices', function ($http, authToken) {
         return $http(config)
     }
 
+    apiServices.deleteSpace = function(spaceId) {
+        var config = {
+            method: 'DELETE',
+            url: 'api/spaces/' + spaceId,
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': authToken.getToken(),
+                'Content-Type': 'application/json'
+            }
+        }
+        return $http(config)
+    }
+
     apiServices.deleteOrganizationUser = function(orgId, userId){
         var config = {
             method: 'DELETE',

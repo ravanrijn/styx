@@ -54,4 +54,11 @@ class RootController {
         apiClient.createSpace(token, orgId, space.name)
     }
 
+    @RequestMapping(value = "/api/spaces/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    def deleteSpace(@RequestHeader("Authorization") String token, @PathVariable("id") String id) {
+        apiClient.deleteSpace(token, id)
+    }
+
 }

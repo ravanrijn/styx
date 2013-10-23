@@ -320,6 +320,13 @@ class ApiClient {
         }
     }
 
+    def deleteSpace(token, id) {
+        httpClient.delete {
+            path "$apiBaseUri/v2/spaces/$id"
+            headers authorization: token, accept: 'application/json'
+        }
+    }
+
     def createQuota(String token, quota) {
         httpClient.post{
             path "$apiBaseUri/v2/quota_definitions"
