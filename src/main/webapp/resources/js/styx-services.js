@@ -159,7 +159,7 @@ styxServices.factory('apiServices', function ($http, authToken) {
     apiServices.createSpace = function(orgId, name) {
         var config = {
             method: 'POST',
-            url: 'api/org/' + orgId + '/space',
+            url: 'api/org/' + orgId + '/spaces',
             headers: {
                 'Accept': 'application/json',
                 'Authorization': authToken.getToken(),

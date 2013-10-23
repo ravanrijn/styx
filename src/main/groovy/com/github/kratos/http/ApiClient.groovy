@@ -316,6 +316,7 @@ class ApiClient {
             path "$apiBaseUri/v2/spaces"
             headers authorization: token, accept: 'application/json'
             body mapper.writeValueAsString([name:name, organization_guid:orgId])
+            onSuccess {result -> [id: result.metadata.guid, name: result.entity.name, users: [], apps: []]}
         }
     }
 

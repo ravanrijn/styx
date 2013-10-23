@@ -47,7 +47,7 @@ class RootController {
         constructRoot(token, id)
     }
 
-    @RequestMapping(value = "/api/org/{orgId}/space", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/api/org/{orgId}/spaces", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
     def createSpace(@RequestHeader("Authorization") String token, @PathVariable("orgId") String orgId, @RequestBody space) {

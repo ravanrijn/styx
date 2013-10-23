@@ -334,12 +334,13 @@ styxControllers.controller('OrganizationController', function ($scope, $location
         $scope.loading = true
         apiServices.createSpace($scope.root.organization.id, name).
             success(function (data, status, headers, config) {
-                notificationChannel.changeStatus(200, "Successfully added space " + name + " to " + $scope.root.organization.name + ".")
-                $route.reload()
+                notificationChannel.changeStatus(200, "Successfully added space " + name + " to " + $scope.root.organization.name + ".");
+                $scope.root.organization.spaces.push(data);
+                $route.reload();
             }).
             error(function (data, status, headers, config) {
-                notificationChannel.changeStatus(500, "Unable to add space " + name + " to " + $scope.root.organization.name + ".")
-                $route.reload()
+                notificationChannel.changeStatus(500, "Unable to add space " + name + " to " + $scope.root.organization.name + ".");
+                $route.reload();
             });
     }
     $scope.loading = true;
