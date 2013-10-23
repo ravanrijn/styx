@@ -54,16 +54,28 @@
                     <td style="width: 40%">
                         {{user.username}}
                     </td>
-                    <td style="width: 20%">
+                    <td style="width: 20%" ng-hide="editingUser.id === user.id">
                         <span ng-class="['glyphicon', (isInRole(user, 'MANAGER')) ? 'glyphicon-ok' : 'glyphicon-remove']"></span>
                     </td>
-                    <td style="width: 20%">
+                    <td style="width: 15%" ng-show="editingUser.id === user.id">
+                        <input type="checkbox" id="org.user.manager"
+                               ng-model="editingUser.isManager"/>
+                    </td>
+                    <td style="width: 20%" ng-hide="editingUser.id === user.id">
                         <span ng-class="['glyphicon', (isInRole(user, 'DEVELOPER')) ? 'glyphicon-ok' : 'glyphicon-remove']"></span>
                     </td>
-                    <td style="width: 20%">
+                    <td style="width: 15%" ng-show="editingUser.id === user.id">
+                        <input type="checkbox" id="org.user.developer"
+                               ng-model="editingUser.isDeveloper"/>
+                    </td>
+                    <td style="width: 20%" ng-hide="editingUser.id === user.id">
                         <span ng-class="['glyphicon', (isInRole(user, 'AUDITOR')) ? 'glyphicon-ok' : 'glyphicon-remove']"></span>
                     </td>
-                    <td>
+                    <td style="width: 15%" ng-show="editingUser.id === user.id">
+                        <input type="checkbox" id="org.user.auditor"
+                               ng-model="editingUser.isAuditor"/>
+                    </td>
+                    <td ng-hide="editingUser.id === user.id">
                         <div class="pull-right">
                             <div class="btn-group btn-group-xs">
                                 <button type="button"
@@ -73,9 +85,21 @@
                                     <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <li><a>Edit</a></li>
+                                    <li><a ng-click="editUser(user)">Edit</a></li>
                                     <li><a ng-click="removeUserFromSpace(space, user)">Delete</a></li>
                                 </ul>
+                            </div>
+                        </div>
+                    </td>
+                    <td ng-show="editingUser.id === user.id" style="width: 15%">
+                        <div class="pull-right">
+                            <div class="btn-group btn-group-xs">
+                                <button type="button" class="btn btn-success" ng-click="updateSpace(space, user)">
+                                    Update
+                                </button>
+                                <button type="button" class="btn btn-warning" ng-click="cancelEdit()">
+                                    Cancel
+                                </button>
                             </div>
                         </div>
                     </td>

@@ -111,13 +111,13 @@ styxControllers.controller('SpaceUsersController', function ($scope, $location, 
     $scope.selectedSpaceId = $routeParams.spaceId;
     $scope.editUser = function (user) {
         var editingUser = user;
-        if ($scope.isInRole(user, 'SPACE_MANAGER')) {
+        if ($scope.isInRole(user, 'MANAGER')) {
             editingUser.isManager = true;
         }
         if ($scope.isInRole(user, 'DEVELOPER')) {
             editingUser.isDeveloper = true;
         }
-        if ($scope.isInRole(user, 'SPACE_AUDITOR')) {
+        if ($scope.isInRole(user, 'AUDITOR')) {
             editingUser.isAuditor = true;
         }
         $scope.editingUser = editingUser;
@@ -145,10 +145,10 @@ styxControllers.controller('SpaceUsersController', function ($scope, $location, 
         if (user.isManager) {
             user.roles.push("MANAGER")
         }
-        if (user.isAuditor) {
+        if (user.isDeveloper) {
             user.roles.push("DEVELOPER")
         }
-        if (user.isBillingManager) {
+        if (user.isAuditor) {
             user.roles.push("AUDITOR")
         }
         apiServices.updateSpaceUser(space.id, user).
