@@ -131,15 +131,13 @@ styxControllers.controller('SpaceUsersController', function ($scope, $location, 
         if (!term || term.length < 3) {
             return {}
         }
-        var dfr = $q.defer();
-        apiServices.findUserByName(term).
-            success(function (data, status, headers, config) {
-                dfr.resolve(data);
-            }).
-            error(function (data, status, headers, config) {
-
-            });
-        return dfr.promise;
+        var users = []
+        angular.forEach($scope.root.organization.users, function(user, userIndex) {
+            if (user.username.indexOf(term) == 0) {
+                users.push(user);
+            }
+        });
+        return users;
     }
     $scope.updateSpace = function (space, user) {
         $scope.loading = true;
@@ -154,36 +152,36 @@ styxControllers.controller('SpaceUsersController', function ($scope, $location, 
             user.roles.push("AUDITOR")
         }
         apiServices.updateSpaceUser(space.id, user).
-            success(function (data, status, headers, config) {
-                var found = false;
-                angular.forEach(space.users, function (spaceUser, spaceUserIndex) {
-                    if (spaceUser.id == user.id) {
-                        found = true;
-                    }
-                })
-                if (!found) {
-                    space.users.push({id: user.id, username: user.username, roles: []});
+        success(function (data, status, headers, config) {
+            var found = false;
+            angular.forEach(space.users, function (spaceUser, spaceUserIndex) {
+                if (spaceUser.id == user.id) {
+                    found = true;
                 }
-                notificationChannel.changeStatus(200, "Successfully updated " + user.username + ".");
-                $route.reload();
-            }).
-            error(function (data, status, headers, config) {
-                notificationChannel.changeStatus(500, "Unable to successfully update " + user.username + ".");
-                $route.reload();
-            });
+            })
+            if (!found) {
+                space.users.push({id: user.id, username: user.username, roles: []});
+            }
+            notificationChannel.changeStatus(200, "Successfully updated " + user.username + ".");
+            $route.reload();
+        }).
+        error(function (data, status, headers, config) {
+            notificationChannel.changeStatus(500, "Unable to successfully update " + user.username + ".");
+            $route.reload();
+        });
     }
     $scope.removeUserFromSpace = function (space, user) {
         $scope.loading = true;
         apiServices.deleteSpaceUser(space.id, user.id).
-            success(function (data, status, headers, config) {
-                space.users.splice(space.users.indexOf(user), 1)
-                notificationChannel.changeStatus(200, "Successfully removed " + user.username + " from " + space.name + ".")
-                $route.reload()
-            }).
-            error(function (data, status, headers, config) {
-                notificationChannel.changeStatus(500, "Unable to removed user " + user.username + " from " + space.name + ".")
-                $route.reload()
-            });
+        success(function (data, status, headers, config) {
+            space.users.splice(space.users.indexOf(user), 1)
+            notificationChannel.changeStatus(200, "Successfully removed " + user.username + " from " + space.name + ".")
+            $route.reload()
+        }).
+        error(function (data, status, headers, config) {
+            notificationChannel.changeStatus(500, "Unable to removed user " + user.username + " from " + space.name + ".")
+            $route.reload()
+        });
     }
     if (!$scope.root) {
         $scope.loading = true;
@@ -204,16 +202,16 @@ styxControllers.controller('OrganizationUsersController', function ($scope, $rou
     $scope.user = {email: "", firstname: "", lastname: "", password: "", retypedPassword: ""};
     $scope.inviteUser = function (email, organizationId) {
         apiServices.inviteUser(email, organizationId).
-            success(function (data, status, headers, config) {
-                $scope.root.organization.users.push({id: data.id, username: email, roles: []})
-                notificationChannel.changeStatus(200, "Successfully invited " + email)
-                $route.reload();
-            }).
-            error(function (data, status, headers, config) {
-                notificationChannel.changeStatus(data.id, data.message)
-                $route.reload();
+        success(function (data, status, headers, config) {
+            $scope.root.organization.users.push({id: data.id, username: email, roles: []})
+            notificationChannel.changeStatus(200, "Successfully invited " + email)
+            $route.reload();
+        }).
+        error(function (data, status, headers, config) {
+            notificationChannel.changeStatus(data.id, data.message)
+            $route.reload();
 
-            });
+        });
     }
     $scope.loading = false;
     $scope.editUser = function (user) {
