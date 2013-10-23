@@ -4,5 +4,4 @@ applications:
   memory: 1G
   instances: 1
   path: target/kratos-0.0.1-SNAPSHOT.war
-  buildPack: git://github.com/cloudfoundry/cloudfoundry-buildPack-java.git
 
