@@ -13,14 +13,14 @@ styx.config(['$routeProvider', '$httpProvider', function($routeProvider, $httpPr
     $routeProvider.when("/login", {templateUrl: 'partials/login.html',   controller: 'LoginController'});
     $routeProvider.when("/admin", {templateUrl: 'partials/admin.html',   controller: 'AdminController'});
     $routeProvider.otherwise({redirectTo: "/org"});
-    function requestInterceptor($q,$log,$location) {
+    function requestInterceptor($q, $rootScope) {
         function success(response) {
             return response;
         }
         function error(response) {
             var status = response.status;
-            if (status === 401) {
-                $location.path('/login')
+            if (status === 401 || status === 403) {
+                $rootScope.$broadcast("_NOT_AUTHORIZED_", response);
             }
             else {
                 return $q.reject(response);

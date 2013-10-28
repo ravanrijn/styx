@@ -24,11 +24,11 @@ class ExceptionController {
     @ExceptionHandler(Exception.class)
     def handleException(Exception exception) {
         if (exception instanceof HttpClientException){
-            HttpClientException httpClientException = (HttpClientException)exception;
-            return new ResponseEntity<>(mapper.writeValueAsString(httpClientException.getBody()), httpClientException.getStatus());
+            final HttpClientException httpClientException = (HttpClientException)exception;
+            return new ResponseEntity(mapper.writeValueAsString(httpClientException.getBody()), httpClientException.getStatus());
         } else {
-            LOG.error("", exception);
-            return new ResponseEntity<>("Unable to process request.", HttpStatus.INTERNAL_SERVER_ERROR);
+            LOG.error("Unable to process request.", exception);
+            return new ResponseEntity("Unable to process request.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

@@ -152,14 +152,13 @@ class HttpClient {
                 } else if (onError) {
                     return onError(exchange.getBody())
                 }
-                throw new HttpClientException(body: exchange.getBody(), status: exchange.getStatusCode(), headers: exchange.getHeaders())
+                throw new HttpClientException(exchange.getHeaders(), exchange.getStatusCode(), exchange.getBody())
             } catch (HttpClientErrorException e) {
                 if (onError) {
                     return onError(objectMapper.readValue(e.getResponseBodyAsString(), objectMapper.getTypeFactory().constructMapType(HashMap.class, String.class, Object.class)))
                 }
                 LOG.error(format("HTTP call resulted in a %s status with body %s.", e.getStatusCode(), e.getResponseBodyAsString()), e)
-                throw new HttpClientException(body: objectMapper.readValue(e.getResponseBodyAsString(), objectMapper.getTypeFactory().constructMapType(HashMap.class, String.class, Object.class)),
-                        status: e.getStatusCode(), headers: e.getResponseHeaders())
+                throw new HttpClientException(e.getResponseHeaders(), e.getStatusCode(), objectMapper.readValue(e.getResponseBodyAsString(), objectMapper.getTypeFactory().constructMapType(HashMap.class, String.class, Object.class)))
             }
         }
     }

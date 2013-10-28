@@ -32,7 +32,8 @@ styxServices.factory('notificationChannel', function ($rootScope, apiServices, a
     var ERROR = "_ERROR_";
     var STATUS = "_STATUS_";
     var LOGIN_SUCCESS = "_LOGIN_";
-    var LOGIN_FAILURE
+    var LOGIN_FAILURE = "_LOGIN_FAILED_";
+    var NOT_AUTHORIZED = "_NOT_AUTHORIZED_";
 
     var notificationChannel = {};
 
@@ -102,6 +103,16 @@ styxServices.factory('notificationChannel', function ($rootScope, apiServices, a
         $scope.$on(STATUS, function(event, args) {
             handler(args);
         });
+    }
+
+    notificationChannel.notAuthorized = function(response){
+        $rootScope.$broadcast(NOT_AUTHORIZED, response);
+    }
+
+    notificationChannel.onNotAuthorized = function($scope, handler){
+        $scope.$on(NOT_AUTHORIZED, function(event, args){
+            handler(args);
+        })
     }
 
     return notificationChannel;

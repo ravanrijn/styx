@@ -61,7 +61,7 @@ styxControllers.controller('CfProxyController', function ($scope, cfServices) {
 
 });
 
-styxControllers.controller('StyxController', function ($scope, $route, notificationChannel, authToken) {
+styxControllers.controller('StyxController', function ($scope, $route, notificationChannel, authToken, $location) {
 
     $scope.isInRole = function (user, expectedRole) {
         if (!$scope.root) {
@@ -102,6 +102,11 @@ styxControllers.controller('StyxController', function ($scope, $route, notificat
     notificationChannel.onRootUpdated($scope, function (response) {
         $scope.root = response.root;
     });
+    notificationChannel.onNotAuthorized($scope, function(response){
+//        notificationChannel.changeStatus(403, response.description);
+        authToken.clear();
+        $location.path("/login");
+    })
     notificationChannel.onAppUpdated($scope, function (response) {
         $scope.root = response.app;
     });
@@ -528,7 +533,7 @@ styxControllers.controller('AdminController', function ($scope, $http, $route, $
             $route.reload();
         });
         promise.error(function (response, status, headers) {
-            notificationChannel.changeStatus(500, "Unable to delete organization " + name + ".");
+            notificationChannel.changeStatus(500, "Unable to delete organization " + name + ". [" + response.description + "]");
             $route.reload();
         });
     }

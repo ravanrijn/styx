@@ -9,13 +9,13 @@ class HttpClientException extends RuntimeException {
     final HttpStatus status
     final Map<String, Object> body
 
-    def HttpClientException(headers, status, body){
+    def HttpClientException(HttpHeaders headers, HttpStatus status, Map<String, Object> body){
         this.headers = headers
         this.status = status
         this.body = body
     }
 
-    def HttpClientException(status, body){
+    def HttpClientException(HttpStatus status, Map<String, Object> body){
         this.status = status
         this.body = body
         headers = null
