@@ -329,7 +329,7 @@ styxControllers.controller('OrganizationUsersController', function ($scope, $rou
     });
 });
 
-styxControllers.controller('OrganizationController', function ($scope, $location, $routeParams, $route, notificationChannel, apiServices) {
+styxControllers.controller('OrganizationController', function ($scope, $http, $location, $routeParams, $route, notificationChannel, apiServices, authToken) {
     $scope.changeOrganization = function () {
         if ($scope.selectedOrgId !== $scope.root.organization.id) {
             $location.path("/org/" + $scope.selectedOrgId);
@@ -364,6 +364,30 @@ styxControllers.controller('OrganizationController', function ($scope, $location
                 notificationChannel.changeStatus(500, "Unable to delete space " + spaceId + ".");
                 $route.reload();
             });
+    }
+    $scope.deleteApplication = function (id, name) {
+        $scope.loading = true;
+        var config = {
+            method: 'DELETE',
+            url: "api/apps/" + id,
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': authToken.getToken(),
+                'Content-Type': 'application/json'}
+        }
+        var promise = $http(config);
+        promise.success(function (response, status, headers) {
+            notificationChannel.changeStatus(200, "Application " + name + " has been successfully deleted.");
+            $route.reload();
+        });
+        promise.error(function (response, status, headers) {
+            if(status === 400){
+                notificationChannel.changeStatus(400, "Unable to delete application " + name + ", " + response.description + ".");
+            }else{
+                notificationChannel.changeStatus(500, "Unable to delete application " + name + ".");
+            }
+            $route.reload();
+        });
     }
     $scope.loading = true;
     if (!$scope.root || ($scope.root && !$scope.root.organizations)) {
