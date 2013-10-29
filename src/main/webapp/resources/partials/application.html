@@ -113,7 +113,7 @@
                     <td>{{instance.disk}}</td>
                     <td>
                         <div ng-repeat="log in instance.logs">
-                            <a ng-click="getLog(log.link)">{{log.name}} : {{log.size}}</a>
+                            <a ng-click="getLog(log.link)" class="btn-link">{{log.name}} : {{log.size}}</a>
                         </div>
                     </td>
                 </tr>
