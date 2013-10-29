@@ -3,8 +3,6 @@
         <div class="col-md-12">
             <h3><span class="text-muted">your // </span> spaces</h3>
 
-            <p>Select one of your spaces. To invite new users to this space <a>click here</a>.</p>
-
             <div class="form-group">
                 <select ng-model="selectedSpaceId"
                         ng-options="space.id as space.name for space in root.organization.spaces"

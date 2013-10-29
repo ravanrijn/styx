@@ -16,7 +16,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-4">
             <h3><span class="text-muted">application // </span> {{root.application.name}}
                 <span class="dropdown">
                     <button type="button" class="btn btn-default btn-sm" data-toggle="dropdown">
@@ -88,18 +88,18 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-8">
             <h3><span class="text-muted">instances</span></h3>
             <table class="table table-hover table-condensed" style="width: 100%">
                 <thead>
                 <tr>
                     <th style="width: 5%">#</th>
-                    <th style="width: 20%">State</th>
-                    <th style="width: 20%">Host</th>
-                    <th style="width: 10%">Port</th>
+                    <th style="width: 10%">State</th>
+                    <th style="width: 15%">URL</th>
                     <th style="width: 15%">CPU</th>
                     <th style="width: 15%">Memory</th>
                     <th style="width: 15%">Disk</th>
+                    <th style="width: 25%">Logs</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -107,11 +107,15 @@
                     <td>{{instance.id}}</td>
                     <td><span ng-show="instance.state == 'RUNNING'" class="label label-success">{{instance.state}}</span>
                         <span ng-show="instance.state != 'RUNNING'" class="label label-danger">{{instance.state}}</span></td>
-                    <td>{{instance.host}}</td>
-                    <td>{{instance.port}}</td>
+                    <td>{{instance.host}}:{{instance.port}}</td>
                     <td>{{instance.cpu}}</td>
                     <td>{{instance.memory}}</td>
                     <td>{{instance.disk}}</td>
+                    <td>
+                        <div ng-repeat="log in instance.logs">
+                            <a ng-click="getLog(log.link)">{{log.name}} : {{log.size}}</a>
+                        </div>
+                    </td>
                 </tr>
                 </tbody>
             </table>
@@ -173,6 +177,12 @@
                 </tr>
                 </tbody>
             </table>
+        </div>
+    </div>
+    <div class="row" ng-show="log">
+        <div class="col-md-12">
+            <h5 class="text-center">{{log.link}}</h5>
+            <pre style="max-height: 400px;overflow-y: auto;">{{log.data}}</pre>
         </div>
     </div>
 </div>

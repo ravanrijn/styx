@@ -207,6 +207,18 @@ styxServices.factory('apiServices', function ($http, authToken) {
         return $http(config)
     }
 
+    apiServices.getLogs = function(applicationId, instance){
+        var config = {
+            method: 'GET',
+            url: "api/apps/" + applicationId + "/instances/" + instance + "/logs",
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': authToken.getToken()
+            }
+        }
+        return $http(config)
+    }
+
     apiServices.findUserByName = function(term){
         var config = {
             method: 'GET',

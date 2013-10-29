@@ -614,7 +614,7 @@ styxControllers.controller('AdminController', function ($scope, $http, $route, $
     });
 });
 
-styxControllers.controller('ApplicationController', function ($scope, $location, $routeParams, $http, $route, notificationChannel, authToken) {
+styxControllers.controller('ApplicationController', function ($scope, $location, $routeParams, $http, $route, notificationChannel, authToken, apiServices) {
     $scope.changeApplication = function () {
         if ($scope.selectedAppId !== $scope.root.application.id) {
             $location.path("/app/" + $scope.selectedAppId);
@@ -673,6 +673,24 @@ styxControllers.controller('ApplicationController', function ($scope, $location,
         });
     }
 
+    $scope.getLog = function(link){
+        $scope.loading = true;
+        var config = {
+            method: 'GET',
+            url: link,
+            headers: {'Authorization': authToken.getToken()}
+        }
+        var promise = $http(config);
+        promise.success(function (response, status, headers) {
+            $scope.log = {link:link, data:response};
+            $scope.loading = false;
+        });
+        promise.error(function (response, status, headers) {
+            notificationChannel.changeStatus(500, "Unable to log log " + link + ".");
+            $scope.loading = false;
+        });
+    }
+
     $scope.loading = true;
     if (!$routeParams.applicationId) {
         notificationChannel.updateApp();
@@ -681,6 +699,16 @@ styxControllers.controller('ApplicationController', function ($scope, $location,
     }
     notificationChannel.onAppUpdated($scope, function (response) {
         $scope.selectedAppId = response.app.application.id;
+        angular.forEach(response.app.application.instances, function (instance) {
+            apiServices.getLogs(response.app.application.id, instance.id).then(
+                function (response, status, headers) {
+                    instance.logs = response.data.logs
+                },
+                function (response, status, headers) {
+                    //TODO add error handling here
+                }
+            );
+        });
         $scope.loading = false;
     });
 });
